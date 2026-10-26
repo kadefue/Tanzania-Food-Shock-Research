@@ -213,15 +213,28 @@ The pipeline trains and evaluates dedicated sub-models for each of Tanzania's 27
 
 ### 5. Output Artifacts Inventory
 
+- **Scientific Defense Dossier:** [`artifacts/yield_volatility/publication_defense_dossier.md`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/publication_defense_dossier.md) (Comprehensive publication portfolio compiling all 7 figures with defense captions and all 7 empirical tables).
 - **Benchmark Metrics:** [`artifacts/yield_volatility/pipeline_metrics.json`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/pipeline_metrics.json)
 - **Leakage Audit Report:** [`artifacts/yield_volatility/leakage_audit_report.json`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/leakage_audit_report.json)
 - **Grandmaster Feature Rankings:** [`artifacts/yield_volatility/grandmaster_feature_ranking.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/grandmaster_feature_ranking.csv)
-- **Visual Model Comparison:** [`artifacts/yield_volatility/model_comparison.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/model_comparison.png)
-- **Regional Performance Breakdown:** [`artifacts/yield_volatility/regional_performance.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/regional_performance.csv)
-- **Regional Performance Visualization:** [`artifacts/yield_volatility/regional_performance.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/regional_performance.png)
-- **SHAP Global Summary:** [`artifacts/yield_volatility/interpretability/shap_summary_plot.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/interpretability/shap_summary_plot.png)
-- **SHAP Importance Bar:** [`artifacts/yield_volatility/interpretability/shap_importance_bar.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/interpretability/shap_importance_bar.png)
-- **Household Waterfall:** [`artifacts/yield_volatility/interpretability/household_0_waterfall.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/interpretability/household_0_waterfall.png)
+
+#### 7 Publication-Ready Visual Figures (300 DPI Multi-Panel):
+1. **Figure 1 (Target Distribution & Seasonal Dynamics):** [`artifacts/yield_volatility/figures/fig1_target_distribution_and_seasonal_dynamics.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig1_target_distribution_and_seasonal_dynamics.png)
+2. **Figure 2 (Model Benchmark & Spatial CV Calibration):** [`artifacts/yield_volatility/figures/fig2_model_benchmark_spatial_cv.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig2_model_benchmark_spatial_cv.png)
+3. **Figure 3 (Grandmaster Feature Scree & Domain Composition):** [`artifacts/yield_volatility/figures/fig3_grandmaster_feature_importance_and_selection.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig3_grandmaster_feature_importance_and_selection.png)
+4. **Figure 4 (SHAP Global Feature Attributions):** [`artifacts/yield_volatility/figures/fig4_shap_global_feature_attributions.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig4_shap_global_feature_attributions.png)
+5. **Figure 5 (Regional Heterogeneity & Transferability):** [`artifacts/yield_volatility/figures/fig5_regional_heterogeneity_and_spatial_transferability.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig5_regional_heterogeneity_and_spatial_transferability.png)
+6. **Figure 6 (Non-Linear Agronomic Interactions):** [`artifacts/yield_volatility/figures/fig6_agronomic_non_linear_interactions.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig6_agronomic_non_linear_interactions.png)
+7. **Figure 7 (Leakage Audit & Household Explanations):** [`artifacts/yield_volatility/figures/fig7_leakage_audit_and_household_counterfactuals.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig7_leakage_audit_and_household_counterfactuals.png)
+
+#### 7 Publication-Ready Empirical Tables:
+1. **Table 1 (Summary Statistics of Holdings N=4,564):** [`artifacts/yield_volatility/tables/table1_summary_statistics.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table1_summary_statistics.csv)
+2. **Table 2 (Multi-Model Spatial Benchmark):** [`artifacts/yield_volatility/tables/table2_model_benchmark.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table2_model_benchmark.csv)
+3. **Table 3 (Top-25 Grandmaster Feature Importance & Domains):** [`artifacts/yield_volatility/tables/table3_top25_feature_importance.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table3_top25_feature_importance.csv)
+4. **Table 4 (Regional Heterogeneity Breakdown across 27 Regions):** [`artifacts/yield_volatility/tables/table4_regional_performance_breakdown.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table4_regional_performance_breakdown.csv)
+5. **Table 5 (5-Pillar Leakage Audit Certificate):** [`artifacts/yield_volatility/tables/table5_leakage_audit_certificate.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table5_leakage_audit_certificate.csv)
+6. **Table 6 (Agronomic Stratification by Volatility Quartiles):** [`artifacts/yield_volatility/tables/table6_volatility_quartile_stratification.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table6_volatility_quartile_stratification.csv)
+7. **Table 7 (Smallholder Archetypes & Counterfactuals):** [`artifacts/yield_volatility/tables/table7_household_counterfactual_archetypes.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table7_household_counterfactual_archetypes.csv)
 
 ---
 
