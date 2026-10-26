@@ -1,89 +1,132 @@
 {
-    "model_type": "lightgbm",
+    "champion_model": "xgboost",
     "holdings_count": 4564,
-    "features_count": 140,
+    "features_count": 179,
     "enumeration_areas_count": 921,
-    "spatial_cv_rmse": 0.563813666879107,
-    "spatial_cv_mae": 0.45646299859829115,
-    "spatial_cv_r2": 0.3980519450771357,
-    "top_5_predictive_features": [
+    "champion_spatial_cv_rmse": 0.5621076407757254,
+    "champion_spatial_cv_mae": 0.4547501330804903,
+    "champion_spatial_cv_r2": 0.40168926521818227,
+    "model_comparison": [
         {
-            "feature": "permanent_crop_share",
-            "mean_abs_shap": 0.17297097398766909
+            "Model": "XGBOOST",
+            "Spatial RMSE": 0.5621076407757254,
+            "Spatial MAE": 0.4547501330804903,
+            "Spatial R2": 0.40168926521818227,
+            "Train Time (s)": 1.78
         },
         {
-            "feature": "shannon_diversity_vuli",
-            "mean_abs_shap": 0.09535149496417553
+            "Model": "LIGHTGBM",
+            "Spatial RMSE": 0.5628605473076981,
+            "Spatial MAE": 0.4528679918516107,
+            "Spatial R2": 0.4000853953660658,
+            "Train Time (s)": 3.4
+        },
+        {
+            "Model": "RANDOM_FOREST",
+            "Spatial RMSE": 0.5848800676511081,
+            "Spatial MAE": 0.501376519563731,
+            "Spatial R2": 0.3522290618755931,
+            "Train Time (s)": 0.81
+        }
+    ],
+    "top_10_predictive_features": [
+        {
+            "feature": "permanent_crop_share",
+            "mean_abs_shap": 0.16883477568626404
         },
         {
             "feature": "labor_bottleneck_masika",
-            "mean_abs_shap": 0.0886343976627106
+            "mean_abs_shap": 0.08540365844964981
         },
         {
             "feature": "seasonal_crop_rotation_index",
-            "mean_abs_shap": 0.06472701181255022
+            "mean_abs_shap": 0.056238073855638504
         },
         {
-            "feature": "shannon_diversity_masika",
-            "mean_abs_shap": 0.042702587476374614
+            "feature": "evenness_vuli",
+            "mean_abs_shap": 0.05503341183066368
+        },
+        {
+            "feature": "shannon_vuli",
+            "mean_abs_shap": 0.028430460020899773
+        },
+        {
+            "feature": "fallow_share_vuli",
+            "mean_abs_shap": 0.028395643457770348
+        },
+        {
+            "feature": "delta_evenness",
+            "mean_abs_shap": 0.027375902980566025
+        },
+        {
+            "feature": "fertilizer_seasonal_ratio",
+            "mean_abs_shap": 0.025981243699789047
+        },
+        {
+            "feature": "delta_pesticide_qty",
+            "mean_abs_shap": 0.023547612130641937
+        },
+        {
+            "feature": "region_id_20",
+            "mean_abs_shap": 0.021972550079226494
         }
     ],
     "sample_local_explanation": {
         "household_index": 0,
-        "base_expected_volatility": 1.0842820958787094,
-        "predicted_volatility": 0.6424130209234872,
+        "base_expected_volatility": 1.0844327211380005,
+        "predicted_volatility": 0.40278559923171997,
         "top_risk_drivers": [
             {
                 "feature": "labor_bottleneck_masika",
                 "value": 1.0,
-                "shap_value": 0.396210472398236
-            },
-            {
-                "feature": "plot_count",
-                "value": -0.5,
-                "shap_value": 0.026307984666951664
-            },
-            {
-                "feature": "head_age",
-                "value": 0.4583333333333333,
-                "shap_value": 0.017900442923516637
+                "shap_value": 0.2761656939983368
             },
             {
                 "feature": "stratum_id_242.0",
                 "value": 1.0,
-                "shap_value": 0.011253547084912056
+                "shap_value": 0.012110503390431404
+            },
+            {
+                "feature": "plot_area_mean",
+                "value": 2.6153947537990465,
+                "shap_value": 0.010913684032857418
             },
             {
                 "feature": "region_id_20",
                 "value": 0.0,
-                "shap_value": 0.009146784559918616
+                "shap_value": 0.0106989536434412
+            },
+            {
+                "feature": "plot_count",
+                "value": -0.5,
+                "shap_value": 0.007066473830491304
             }
         ],
         "top_protective_drivers": [
             {
-                "feature": "shannon_diversity_masika",
+                "feature": "shannon_masika",
                 "value": 0.7370385493970052,
-                "shap_value": -0.1758909368521664
-            },
-            {
-                "feature": "shannon_diversity_vuli",
-                "value": 1.4786855971638877,
-                "shap_value": -0.15638985003318734
-            },
-            {
-                "feature": "permanent_crop_share",
-                "value": 1.0,
-                "shap_value": -0.06809138670384011
+                "shap_value": -0.14016194641590118
             },
             {
                 "feature": "fertilizer_seasonal_ratio",
                 "value": 2.2372881038015904,
-                "shap_value": -0.06672031413605786
+                "shap_value": -0.07229854166507721
             },
             {
-                "feature": "irrigation_share_vuli",
+                "feature": "permanent_crop_share",
                 "value": 1.0,
-                "shap_value": -0.05574069265453287
+                "shap_value": -0.06200641021132469
+            },
+            {
+                "feature": "seasonal_crop_rotation_index",
+                "value": -0.5,
+                "shap_value": -0.05234565958380699
+            },
+            {
+                "feature": "num_crops_masika",
+                "value": 2.0,
+                "shap_value": -0.05118696764111519
             }
         ],
         "plot_saved_to": "artifacts/yield_volatility/interpretability/household_0_waterfall.png"
