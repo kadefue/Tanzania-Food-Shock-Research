@@ -816,19 +816,20 @@ class GrandmasterEnsembleRegressor:
         weights: Optional[Dict[str, float]] = None
     ) -> None:
         self.random_state = random_state
-        self.weights = weights or {"lgb": 0.45, "xgb": 0.45, "rf": 0.10}
+        self.weights = weights or {"lgb": 0.50, "xgb": 0.40, "rf": 0.10}
         self.model_lgb = lgb.LGBMRegressor(
-            n_estimators=220, learning_rate=0.035, max_depth=6, num_leaves=31,
-            subsample=0.8, colsample_bytree=0.75, reg_alpha=0.1, reg_lambda=1.0,
+            n_estimators=320, learning_rate=0.03, max_depth=6, num_leaves=35,
+            subsample=0.8, colsample_bytree=0.7, reg_alpha=0.2, reg_lambda=1.5,
             random_state=self.random_state, verbose=-1, n_jobs=-1
         )
         self.model_xgb = xgb.XGBRegressor(
-            n_estimators=220, learning_rate=0.035, max_depth=5,
-            subsample=0.8, colsample_bytree=0.75, reg_alpha=0.1, reg_lambda=1.0,
+            n_estimators=300, learning_rate=0.03, max_depth=5,
+            subsample=0.8, colsample_bytree=0.7, reg_alpha=0.2, reg_lambda=1.5,
             random_state=self.random_state, verbosity=0, n_jobs=-1
         )
         self.model_rf = RandomForestRegressor(
-            n_estimators=120, max_depth=14, max_features="sqrt",
+            n_estimators=100, max_depth=16, max_features="sqrt",
+            min_samples_split=4, min_samples_leaf=2,
             random_state=self.random_state, n_jobs=-1
         )
 
@@ -842,11 +843,12 @@ class GrandmasterEnsembleRegressor:
         p_lgb = self.model_lgb.predict(X)
         p_xgb = self.model_xgb.predict(X)
         p_rf = self.model_rf.predict(X)
-        return (
+        raw_pred = (
             self.weights["lgb"] * p_lgb
             + self.weights["xgb"] * p_xgb
             + self.weights["rf"] * p_rf
         )
+        return np.clip(raw_pred, 0.0, 2.0)
 
 
 # ==============================================================================
@@ -878,14 +880,14 @@ class VolatilityPredictor:
             if not HAS_LIGHTGBM:
                 raise ImportError("lightgbm is not installed.")
             default_params = {
-                "n_estimators": 220,
-                "learning_rate": 0.035,
+                "n_estimators": 320,
+                "learning_rate": 0.03,
                 "max_depth": 6,
-                "num_leaves": 31,
+                "num_leaves": 35,
                 "subsample": 0.8,
-                "colsample_bytree": 0.75,
-                "reg_alpha": 0.1,
-                "reg_lambda": 1.0,
+                "colsample_bytree": 0.7,
+                "reg_alpha": 0.2,
+                "reg_lambda": 1.5,
                 "random_state": self.random_state,
                 "verbose": -1,
                 "n_jobs": -1,
@@ -897,13 +899,13 @@ class VolatilityPredictor:
             if not HAS_XGBOOST:
                 raise ImportError("xgboost is not installed.")
             default_params = {
-                "n_estimators": 220,
-                "learning_rate": 0.035,
+                "n_estimators": 300,
+                "learning_rate": 0.03,
                 "max_depth": 5,
                 "subsample": 0.8,
-                "colsample_bytree": 0.75,
-                "reg_alpha": 0.1,
-                "reg_lambda": 1.0,
+                "colsample_bytree": 0.7,
+                "reg_alpha": 0.2,
+                "reg_lambda": 1.5,
                 "random_state": self.random_state,
                 "verbosity": 0,
                 "n_jobs": -1,
@@ -913,10 +915,10 @@ class VolatilityPredictor:
 
         elif mtype in ["random_forest", "rf"]:
             default_params = {
-                "n_estimators": 120,
-                "max_depth": 14,
-                "min_samples_split": 5,
-                "min_samples_leaf": 3,
+                "n_estimators": 100,
+                "max_depth": 16,
+                "min_samples_split": 4,
+                "min_samples_leaf": 2,
                 "max_features": "sqrt",
                 "random_state": self.random_state,
                 "n_jobs": -1,
@@ -964,7 +966,7 @@ class VolatilityPredictor:
             fold_model = self._instantiate_model(target_mtype, self.model_params)
             fold_model.fit(X_train, y_train)
 
-            preds = fold_model.predict(X_val)
+            preds = np.clip(fold_model.predict(X_val), 0.0, 2.0)
             oof_predictions[val_idx] = preds
 
             rmse = np.sqrt(mean_squared_error(y_val, preds))
@@ -1034,7 +1036,7 @@ class VolatilityPredictor:
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """Generates predictions for yield volatility."""
-        return self.model.predict(X)
+        return np.clip(self.model.predict(X), 0.0, 2.0)
 
 
 # ==============================================================================
