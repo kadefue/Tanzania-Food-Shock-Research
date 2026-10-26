@@ -1,5 +1,8 @@
 # Tanzania Food Shock Research
 
+**Author:** Kadeghe Goodluck Fue (<kadefue@sua.ac.tz>)  
+**Affiliation:** Sokoine University of Agriculture (SUA)  
+
 Empirical data repository and microdata processing pipeline for analyzing agricultural production, household shocks, and food security dynamics in Tanzania.
 
 This research integrates multi-wave microdata from the **Tanzania National Bureau of Statistics (NBS)**, the **Office of the Chief Government Statistician (OCGS) Zanzibar**, and macroeconomic/crop statistics from **FAOSTAT**.
@@ -135,7 +138,9 @@ To merge microdata files within a given survey round:
 
 ---
 
-## 📄 License & Attribution
+## 📄 Author & Attribution
 
+- **Principal Investigator / Author**: Kadeghe Goodluck Fue ([kadefue@sua.ac.tz](mailto:kadefue@sua.ac.tz)), Sokoine University of Agriculture (SUA).
 - **Survey Microdata**: Collected and provided by the [National Bureau of Statistics (NBS) Tanzania](https://www.nbs.go.tz/) and [OCGS Zanzibar](https://www.ocgs.go.tz/).
 - **International Statistics**: [FAOSTAT, Food and Agriculture Organization of the United Nations](https://www.fao.org/faostat/).
+

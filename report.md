@@ -1,7 +1,7 @@
 # Comprehensive Data Report: NBS Microdata & FAOSTAT Datasets for Tanzania Food Shock Research
 
-**Author:** Food Shock Research Group  
-**Institution:** Sokoine University of Agriculture (SUA) & Research Collaborators  
+**Author:** Kadeghe Goodluck Fue (<kadefue@sua.ac.tz>)  
+**Institution:** Sokoine University of Agriculture (SUA)  
 **Scope:** Multi-Wave Household Agricultural Microdata (2022–2025) and Macroeconomic Timeseries (1961–2024)  
 **Date of Assessment:** October 2026  
 
