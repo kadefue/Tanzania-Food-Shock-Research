@@ -293,6 +293,9 @@ class FeatureEngineer:
         # Require positive average yield across seasons
         positive_yield_mask = mean_yield > 0
         sub_df = sub_df[positive_yield_mask].copy()
+        if "HHFARMID" in sub_df.columns:
+            sub_df = sub_df.set_index("HHFARMID")
+
         y_m = sub_df["yield_masika"]
         y_v = sub_df["yield_vuli"]
         mean_yield = (y_m + y_v) / 2.0
@@ -331,7 +334,11 @@ class FeatureEngineer:
             DataFrame containing engineered features indexed by HHFARMID.
         """
         logger.info("Engineering agricultural features...")
-        holdings = base_df[["HHFARMID"]].drop_duplicates().set_index("HHFARMID")
+        if "HHFARMID" in base_df.columns:
+            base_indexed = base_df.set_index("HHFARMID")
+        else:
+            base_indexed = base_df.copy()
+        holdings = pd.DataFrame(index=base_indexed.index)
 
         # ----------------------------------------------------------------------
         # A. Input Deltas (Fertilizer and Pesticide quantities)
@@ -462,7 +469,7 @@ class FeatureEngineer:
 
         # Combine all features onto base holding roster
         features = holdings.join([
-            base_df.set_index("HHFARMID")[["area_ha_masika", "area_ha_vuli"]],
+            base_indexed[["area_ha_masika", "area_ha_vuli"]],
             input_df,
             shannon_m,
             shannon_v,
@@ -486,7 +493,7 @@ class FeatureEngineer:
             plot_count,
             rotation_proxy,
             master_geo
-        ], how="inner").fillna(0.0)
+        ], how="left").fillna(0.0)
 
         # Derived composite ratios
         features["total_farm_area_ha"] = features["area_ha_masika"] + features["area_ha_vuli"]
