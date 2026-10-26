@@ -340,8 +340,14 @@ class FeatureEngineer:
         iv = tables["inputs_vuli"].copy()
 
         # Harmonize input units (Unit 1 = Gram -> / 1000 to get kg; Unit 2 = kg)
-        im["qty_kg"] = np.where(im["s11q01b_unit"] == 1, im["s11q01b"] / 1000.0, im["s11q01b"]).fillna(0.0)
-        iv["qty_kg"] = np.where(iv["s11q01a_unit"] == 1, iv["s11q01a"] / 1000.0, iv["s11q01a"]).fillna(0.0)
+        im["qty_kg"] = pd.Series(
+            np.where(im["s11q01b_unit"] == 1, im["s11q01b"] / 1000.0, im["s11q01b"]),
+            index=im.index
+        ).fillna(0.0)
+        iv["qty_kg"] = pd.Series(
+            np.where(iv["s11q01a_unit"] == 1, iv["s11q01a"] / 1000.0, iv["s11q01a"]),
+            index=iv.index
+        ).fillna(0.0)
 
         # Fertilizer kg
         fert_m = (
@@ -956,6 +962,8 @@ class PipelineOrchestrator:
         tables = self.preprocessor.load_raw_data()
         crops_m_harm = self.preprocessor.harmonize_units(tables["masikacrop"], season="masika")
         crops_v_harm = self.preprocessor.harmonize_units(tables["vulicrop"], season="vuli")
+        tables["masikacrop"] = crops_m_harm
+        tables["vulicrop"] = crops_v_harm
 
         seasonal_yields = self.preprocessor.calculate_seasonal_yields(
             crops_masika=crops_m_harm,
