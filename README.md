@@ -211,30 +211,36 @@ The pipeline trains and evaluates dedicated sub-models for each of Tanzania's 27
 
 ---
 
-### 5. Output Artifacts Inventory
+### 5. 📄 Publication Package & Deliverables (`Paper/`)
 
-- **Scientific Defense Dossier:** [`artifacts/yield_volatility/publication_defense_dossier.md`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/publication_defense_dossier.md) (Comprehensive publication portfolio compiling all 7 figures with defense captions and all 7 empirical tables).
-- **Benchmark Metrics:** [`artifacts/yield_volatility/pipeline_metrics.json`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/pipeline_metrics.json)
-- **Leakage Audit Report:** [`artifacts/yield_volatility/leakage_audit_report.json`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/leakage_audit_report.json)
-- **Grandmaster Feature Rankings:** [`artifacts/yield_volatility/grandmaster_feature_ranking.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/grandmaster_feature_ranking.csv)
+All publication manuscripts, figures, tables, and defense assets are consolidated into the self-contained [`Paper/`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper) directory, formatted according to the official **Taylor & Francis *Cogent Food & Agriculture*** author guidelines:
 
-#### 7 Publication-Ready Visual Figures (300 DPI Multi-Panel):
-1. **Figure 1 (Target Distribution & Seasonal Dynamics):** [`artifacts/yield_volatility/figures/fig1_target_distribution_and_seasonal_dynamics.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig1_target_distribution_and_seasonal_dynamics.png)
-2. **Figure 2 (Model Benchmark & Spatial CV Calibration):** [`artifacts/yield_volatility/figures/fig2_model_benchmark_spatial_cv.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig2_model_benchmark_spatial_cv.png)
-3. **Figure 3 (Grandmaster Feature Scree & Domain Composition):** [`artifacts/yield_volatility/figures/fig3_grandmaster_feature_importance_and_selection.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig3_grandmaster_feature_importance_and_selection.png)
-4. **Figure 4 (SHAP Global Feature Attributions):** [`artifacts/yield_volatility/figures/fig4_shap_global_feature_attributions.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig4_shap_global_feature_attributions.png)
-5. **Figure 5 (Regional Heterogeneity & Transferability):** [`artifacts/yield_volatility/figures/fig5_regional_heterogeneity_and_spatial_transferability.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig5_regional_heterogeneity_and_spatial_transferability.png)
-6. **Figure 6 (Non-Linear Agronomic Interactions):** [`artifacts/yield_volatility/figures/fig6_agronomic_non_linear_interactions.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig6_agronomic_non_linear_interactions.png)
-7. **Figure 7 (Leakage Audit & Household Explanations):** [`artifacts/yield_volatility/figures/fig7_leakage_audit_and_household_counterfactuals.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/figures/fig7_leakage_audit_and_household_counterfactuals.png)
+- **Manuscript in Word format (with embedded figures & tables):** [`Paper/manuscript.docx`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/manuscript.docx)
+- **Manuscript in GitHub Markdown:** [`Paper/manuscript.md`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/manuscript.md)
+- **Manuscript in LaTeX format:** [`Paper/manuscript.tex`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/manuscript.tex)
+- **Comprehensive Defense Dossier:** [`Paper/publication_defense_dossier.md`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/publication_defense_dossier.md)
+- **Automated Manuscript Generator Script:** [`build_manuscript.py`](file:///Users/kadefue/Research/Food%20Shock%20Research/build_manuscript.py)
 
-#### 7 Publication-Ready Empirical Tables:
-1. **Table 1 (Summary Statistics of Holdings N=4,564):** [`artifacts/yield_volatility/tables/table1_summary_statistics.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table1_summary_statistics.csv)
-2. **Table 2 (Multi-Model Spatial Benchmark):** [`artifacts/yield_volatility/tables/table2_model_benchmark.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table2_model_benchmark.csv)
-3. **Table 3 (Top-25 Grandmaster Feature Importance & Domains):** [`artifacts/yield_volatility/tables/table3_top25_feature_importance.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table3_top25_feature_importance.csv)
-4. **Table 4 (Regional Heterogeneity Breakdown across 27 Regions):** [`artifacts/yield_volatility/tables/table4_regional_performance_breakdown.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table4_regional_performance_breakdown.csv)
-5. **Table 5 (5-Pillar Leakage Audit Certificate):** [`artifacts/yield_volatility/tables/table5_leakage_audit_certificate.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table5_leakage_audit_certificate.csv)
-6. **Table 6 (Agronomic Stratification by Volatility Quartiles):** [`artifacts/yield_volatility/tables/table6_volatility_quartile_stratification.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table6_volatility_quartile_stratification.csv)
-7. **Table 7 (Smallholder Archetypes & Counterfactuals):** [`artifacts/yield_volatility/tables/table7_household_counterfactual_archetypes.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/tables/table7_household_counterfactual_archetypes.csv)
+#### 10 Publication-Ready Visual Figures (300 DPI Multi-Panel):
+1. **Figure 1 (Target Distribution & Seasonal Dynamics):** [`Paper/figures/fig1_target_distribution_and_seasonal_dynamics.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig1_target_distribution_and_seasonal_dynamics.png)
+2. **Figure 2 (Model Benchmark & Spatial CV Calibration):** [`Paper/figures/fig2_model_benchmark_spatial_cv.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig2_model_benchmark_spatial_cv.png)
+3. **Figure 3 (Grandmaster Feature Scree & Domain Composition):** [`Paper/figures/fig3_grandmaster_feature_importance_and_selection.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig3_grandmaster_feature_importance_and_selection.png)
+4. **Figure 4 (SHAP Global Feature Attributions & Directional Effects):** [`Paper/figures/fig4_shap_global_feature_attributions.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig4_shap_global_feature_attributions.png)
+5. **Figure 5 (Regional Heterogeneity & Spatial Transferability):** [`Paper/figures/fig5_regional_heterogeneity_and_spatial_transferability.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig5_regional_heterogeneity_and_spatial_transferability.png)
+6. **Figure 6 (Non-Linear Agronomic Interactions & Thresholds):** [`Paper/figures/fig6_agronomic_non_linear_interactions.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig6_agronomic_non_linear_interactions.png)
+7. **Figure 7 (Redesigned Leakage Audit Scorecard, Local SHAP Waterfall & Archetype Profiles):** [`Paper/figures/fig7_leakage_audit_and_household_counterfactuals.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig7_leakage_audit_and_household_counterfactuals.png)
+8. **Figure 8 (NEW: Spatial Hotspots & Agro-Ecological Zones):** [`Paper/figures/fig8_spatial_hotspots_and_agroecological_zones.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig8_spatial_hotspots_and_agroecological_zones.png)
+9. **Figure 9 (NEW: Agro-Economic Partial Dependence Surfaces):** [`Paper/figures/fig9_agroeconomic_partial_dependence_surfaces.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig9_agroeconomic_partial_dependence_surfaces.png)
+10. **Figure 10 (NEW: Policy Counterfactual Stress-Testing & Simulated Mitigation Scenarios):** [`Paper/figures/fig10_policy_simulation_and_counterfactual_interventions.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/figures/fig10_policy_simulation_and_counterfactual_interventions.png)
+
+#### 7 Publication-Ready Empirical Tables (CSV & Markdown):
+1. **Table 1 (Summary Statistics of Holdings N=4,564):** [`Paper/tables/table1_summary_statistics.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/tables/table1_summary_statistics.csv)
+2. **Table 2 (Multi-Model Spatial Benchmark):** [`Paper/tables/table2_model_benchmark.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/tables/table2_model_benchmark.csv)
+3. **Table 3 (Top-25 Grandmaster Feature Importance & Domains):** [`Paper/tables/table3_top25_feature_importance.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/tables/table3_top25_feature_importance.csv)
+4. **Table 4 (Regional Heterogeneity Breakdown across 27 Regions):** [`Paper/tables/table4_regional_performance_breakdown.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/tables/table4_regional_performance_breakdown.csv)
+5. **Table 5 (5-Pillar Leakage Audit Certificate):** [`Paper/tables/table5_leakage_audit_certificate.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/tables/table5_leakage_audit_certificate.csv)
+6. **Table 6 (Agronomic Stratification by Volatility Quartiles):** [`Paper/tables/table6_volatility_quartile_stratification.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/tables/table6_volatility_quartile_stratification.csv)
+7. **Table 7 (Smallholder Archetypes & Counterfactuals):** [`Paper/tables/table7_household_counterfactual_archetypes.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/Paper/tables/table7_household_counterfactual_archetypes.csv)
 
 ---
 

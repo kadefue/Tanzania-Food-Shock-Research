@@ -7,12 +7,13 @@
 ---
 
 ## Executive Summary of Findings
-This defense portfolio compiles **7 publication-grade figures** and **7 publication-grade tables** defending the empirical and methodological integrity of our supervised machine learning pipeline predicting smallholder seasonal yield volatility ($Y_{vol}$) across Mainland Tanzania and Zanzibar ($N=4,564$ holdings across 921 Enumeration Areas).
+This defense portfolio compiles **10 publication-grade figures** and **7 publication-grade tables** defending the empirical and methodological integrity of our supervised machine learning pipeline predicting smallholder seasonal yield volatility ($Y_{vol}$) across Mainland Tanzania and Zanzibar ($N=4,564$ holdings across 921 Enumeration Areas).
 Key empirical proofs established:
 1. **Pruned Champion Performance**: Selecting the Top-100 Grandmaster features out of 246 candidates prunes 146 noisy/zero-importance features, boosting Spatial Cross-Validation $R^2$ to **0.5920** and reducing Spatial RMSE to **0.4642** under strictly independent 5-fold EA Group Cross-Validation.
 2. **Zero Data Leakage Certified**: Formal 5-pillar audit proves complete spatial, target, scaler, clustering/PCA, and feature selection boundary isolation (`CERTIFIED_LEAKAGE_FREE`).
 3. **National Model Spatial Efficiency**: In 21 of 27 regions, the Unified National Weighted Ensemble substantially outperforms regional sub-models ($\Delta R^2 > 0$), providing variance reduction and transferability across heterogeneous agro-ecological zones.
 4. **Agronomic Tipping Points**: Planting month disparity (`plant_month_delta`), harvest failure share (`m_no_harvest_share`), and crop diversity divergence (`shannon_diff_from_region_mean`) are the primary causal predictors of volatility, buffered non-linearly by Tropical Livestock Units (TLU).
+5. **Actionable Policy Scenarios**: Counterfactual stress-testing reveals that an integrated Climate-Smart Agriculture package (asset transfer + crop diversification + planting synchronization) cuts hyper-volatile smallholders by 63.3%.
 
 ---
 
@@ -66,11 +67,35 @@ Panel A depicts the interaction between seasonal planting delays and livestock a
 
 ---
 
-### Figure 7: 5-Pillar Leakage Audit Verification and Household Counterfactuals
-![Figure 7: 5-Pillar Leakage Audit Verification and Household Counterfactuals](file:///Users/kadefue/Research/Food Shock Research/artifacts/yield_volatility/figures/fig7_leakage_audit_and_household_counterfactuals.png)
+### Figure 7: Redesigned 5-Pillar Leakage Audit Verification and Household Counterfactuals
+![Figure 7: Redesigned 5-Pillar Leakage Audit Verification and Household Counterfactuals](file:///Users/kadefue/Research/Food Shock Research/artifacts/yield_volatility/figures/fig7_leakage_audit_and_household_counterfactuals.png)
 
 **Figure 7 Scientific Caption & Defense Commentary:**  
-Panel A provides the official audit certificate confirming 100% pass across all 5 leakage prevention pillars. Panel B displays a micro-level SHAP waterfall explanation for household #0. Panel C presents counterfactual profiles across three distinct smallholder vulnerability archetypes.
+Panel A provides the 5-pillar isolation audit scorecard showing 100% compliance across spatial, target, scaler, latent representation, and feature selection boundaries. Panel B displays a micro-level SHAP waterfall explanation for household #0. Panel C presents comparative capacity profiles across three distinct smallholder archetypes.
+
+---
+
+### Figure 8: Agro-Ecological Zones and Volatility Hotspots
+![Figure 8: Agro-Ecological Zones and Volatility Hotspots](file:///Users/kadefue/Research/Food Shock Research/artifacts/yield_volatility/figures/fig8_spatial_hotspots_and_agroecological_zones.png)
+
+**Figure 8 Scientific Caption & Defense Commentary:**  
+Panel A details mean yield volatility across Tanzania's seven agro-ecological zones with 95% confidence intervals. Panel B charts harvest failure rate against seasonal yield gap by zone. Panel C displays the Agro-Ecological Resilience Index ($1 - Y_{vol}/2$).
+
+---
+
+### Figure 9: Agro-Economic Partial Dependence and Marginal Response Surfaces
+![Figure 9: Agro-Economic Partial Dependence and Marginal Response Surfaces](file:///Users/kadefue/Research/Food Shock Research/artifacts/yield_volatility/figures/fig9_agroeconomic_partial_dependence_surfaces.png)
+
+**Figure 9 Scientific Caption & Defense Commentary:**  
+Displays 1D and 2D partial dependence response curves for the top 4 non-linear continuous drivers: seasonal planting disparity, livestock TLU assets, crop diversity divergence, and harvest plot abandonment percentage.
+
+---
+
+### Figure 10: Policy Counterfactual Stress-Testing & Volatility Mitigation Scenarios
+![Figure 10: Policy Counterfactual Stress-Testing & Volatility Mitigation Scenarios](file:///Users/kadefue/Research/Food Shock Research/artifacts/yield_volatility/figures/fig10_policy_simulation_and_counterfactual_interventions.png)
+
+**Figure 10 Scientific Caption & Defense Commentary:**  
+Panel A simulates the leftward distribution shift of yield volatility under three targeted interventions versus the status quo. Panel B illustrates the sharp drop in hyper-volatile smallholders ($Y_{vol} \ge 1.50$) from 38.4% to 14.1% under an integrated Climate-Smart Agriculture package. Panel C illustrates net risk mitigation efficiency.
 
 ---
 

@@ -1,0 +1,26 @@
+Rank,Feature Identifier,Agronomic Domain,Split Frequency,Gain Importance,Agronomic Rationale
+1,plant_month_delta,Agronomic Timing,300,11375.621198922396,Misalignment in seasonal onset and crop establishment timing
+2,m_harvest_pct_mean,Harvest Outcomes,212,2608.2398702949286,Average proportion of cultivated area successfully harvested
+3,v_plant_month_mean,Agronomic Timing,205,2502.782231401652,Timing of Vuli short-rain planting relative to dry-season onset
+4,shannon_diff_from_region_mean,Crop Diversity,187,423.7402494875714,Portfolio diversification relative to local peer average
+5,delta_evenness,Crop Diversity,142,356.96481865644455,Seasonal shift in Pielou evenness across plot cultivars
+6,total_livestock_tlu,Asset Buffers,141,132.90854026190937,Tropical Livestock Units providing buffer capital against crop failure
+7,m_no_harvest_share,Failure Shocks,131,1812.2642360620666,Share of plots suffering total crop abandonment in Masika
+8,dist_agronomic_archetype_1,Latent Archetype,119,222.6489774324,KMeans distance to Commercial Mixed Cropping cluster
+9,land_per_adult_labor,Labor Dynamics,118,155.70445528649725,Farm capitalization ratio (cultivated hectares per adult laborer)
+10,plot_area_mean,Plot Heterogeneity,117,127.80957027175464,Mean operational plot area across household holding
+11,head_age,Demographics,115,124.76832518726587,Farming experience and human capital adaptive capacity
+12,area_diff_from_region_mean,Farm Structure,113,155.38820579648018,Deviation of farm size from regional agro-ecological mean
+13,total_livestock_head,Asset Buffers,105,106.06291057169437,Total count of livestock animals owned by holding
+14,dist_agronomic_archetype_0,Latent Archetype,101,133.0876188725233,KMeans distance to Subsistence Cereals cluster
+15,v_drought_fail,Climatic Shocks,98,1689.5927903056145,Reported severe drought failure during Vuli season
+16,fert_diff_from_region_mean,Input Technology,97,112.17919182777405,Chemical fertilizer usage relative to regional community peer rate
+17,pest_per_ha_masika,Input Technology,95,101.7402223944664,Pesticide application intensity per cultivated hectare
+18,plot_area_std,Agro-economic,95,101.4867440611124,Predictive feature
+19,fallow_share_masika,Soil Management,92,389.37052926421165,Proportion of land held fallow for fertility regeneration
+20,plot_area_cv,Plot Heterogeneity,92,145.99791755527258,Spatial plot dispersion and fragmentation coefficient of variation
+21,pca_latent_comp_2,Latent PCA,92,128.79270536266267,Orthogonal factor capturing input capital vs labor intensity
+22,pca_latent_comp_3,Latent PCA,88,100.97827336192131,Orthogonal factor capturing agro-ecological elevation & humidity
+23,m_plant_month_mean,Agronomic Timing,87,288.5986138804583,Calendar month of Masika long-rain planting establishment
+24,m_harvest_pct_min,Agro-economic,85,439.6929252818227,Predictive feature
+25,shannon_vuli,Crop Diversity,83,373.47924123331904,Shannon diversity of crop portfolio during Vuli short rains

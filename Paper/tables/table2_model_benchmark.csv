@@ -1,0 +1,5 @@
+Model Architecture,Spatial RMSE,Spatial MAE,Spatial R2,Hyperparameter Configuration,Training Time (s)
+Weighted Ensemble,0.4642053513311634,0.3472025373243035,0.5919549603134866,0.50 LGB + 0.40 XGB + 0.10 RF (Soft Voting),9.19
+LightGBM,0.4654506397647722,0.3459059117124652,0.5897627609655713,"num_leaves=35, lr=0.03, colsample=0.7",6.03
+XGBoost,0.4664480031864473,0.34844236443498794,0.5880027720477075,"max_depth=5, lr=0.03, colsample=0.7",2.57
+Random Forest,0.47684050771270475,0.36821766835215175,0.5694395831246234,"max_depth=16, max_features=sqrt",0.51
