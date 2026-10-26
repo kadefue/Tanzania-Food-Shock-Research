@@ -1,0 +1,2338 @@
+FILE AND HEADER INVENTORY
+================================================================================
+Data root: /Users/kadefue/Research/Food Shock Research/data
+Files found: 74
+
+================================================================================
+File: AASS 2022_2023/AASS2023.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 46
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. holding_head_sex
+  6. holding_head_age
+  7. s2q10__1
+  8. s2q10__2
+  9. s2q10__3
+  10. s2q10__4
+  11. s2q10__5
+  12. s2q10__6
+  13. s2q10__7
+  14. s3q06
+  15. s19q04a
+  16. s19q04b__0
+  17. s19q04b__1
+  18. s19q04b__2
+  19. s19q05
+  20. s19q06a
+  21. s19q06b__0
+  22. s19q06b__1
+  23. s19q06b__2
+  24. s19q06c_cash
+  25. s19q06c_kind
+  26. loan
+  27. s19q06d
+  28. s19q06e
+  29. s19q07__1
+  30. s19q07__2
+  31. s19q07__3
+  32. s19q07__4
+  33. s19q07__5
+  34. s19q07__6
+  35. s19q07__7
+  36. s19q07__8
+  37. s19q07__9
+  38. s19q07__10
+  39. s19q07__99
+  40. s19q08
+  41. s19q09a
+  42. s19q09b_cash
+  43. s19q09b_kind
+  44. payback
+  45. s20q01
+  46. s20q02a
+
+================================================================================
+File: AASS 2022_2023/aquaculture.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 13
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. s17_aquaculture__id
+  6. s17q01b
+  7. s17q02
+  8. s17q03_kg
+  9. s17q04
+  10. s17q05_kg
+  11. s17q06a
+  12. s17q06b
+  13. s17q06c
+
+================================================================================
+File: AASS 2022_2023/crop_use.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 23
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. crop_id
+  6. s9q01
+  7. s9q02__1
+  8. s9q02__2
+  9. s9q02__3
+  10. s9q02__4
+  11. s9q02__5
+  12. s9q02__6
+  13. s9q02__7
+  14. s9q02__99
+  15. s9q03
+  16. s9q04
+  17. s9q05
+  18. s9q06
+  19. s9q07
+  20. s9q08
+  21. s9q09
+  22. s9q10
+  23. s9q11
+
+================================================================================
+File: AASS 2022_2023/external_labor_activities.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 14
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. External_labor__id
+  6. External_labor_activities__id
+  7. s18q06b
+  8. s18q07
+  9. s18q08
+  10. s18q09
+  11. s18q10
+  12. s18q11
+  13. s18q12
+  14. s18q13
+
+================================================================================
+File: AASS 2022_2023/field.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 7
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. FIELD__id
+  6. s3q03
+  7. s3q04a_acres
+
+================================================================================
+File: AASS 2022_2023/household.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 25
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. member_id
+  6. s2q02
+  7. s2q03
+  8. s2q04
+  9. s2q05
+  10. s2q06
+  11. s2q07
+  12. s2q08
+  13. s2q09
+  14. s18q04__1
+  15. s18q04__2
+  16. s18q04__3
+  17. s18q05a
+  18. s18q05b
+  19. s18q05c
+  20. s18q05d
+  21. s18q05e
+  22. s18q05f
+  23. s18q05g
+  24. s18q05h
+  25. s18q05i
+
+================================================================================
+File: AASS 2022_2023/inputs.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 23
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. InputRoster__id
+  6. s11q01
+  7. s11q01_unit
+  8. s11q02__1
+  9. s11q02__2
+  10. s11q02__3
+  11. s11q02__4
+  12. s11q02__5
+  13. s11q02__6
+  14. s11q02__7
+  15. s11q02__99
+  16. s11q03
+  17. s11q04a
+  18. s11q04a_unit
+  19. s11q04b
+  20. s11q06a
+  21. s11q06b
+  22. s11q07a
+  23. s11q07b
+
+================================================================================
+File: AASS 2022_2023/items_services.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 9
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. items_service__id
+  6. s19q01b
+  7. s19q02
+  8. s19q03
+  9. s19q03_unit
+
+================================================================================
+File: AASS 2022_2023/masika_use.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 7
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. FIELD__id
+  6. masika_use_roster__id
+  7. s3q05b_1
+
+================================================================================
+File: AASS 2022_2023/masikacrop.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 33
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. FIELD__id
+  6. MASIKAPLOT__id
+  7. TEMP_PERM
+  8. crop_id
+  9. areaPlanted
+  10. s7q02a
+  11. s7q03
+  12. s7q04__1
+  13. s7q04__2
+  14. s7q04__3
+  15. s7q05
+  16. s7q06
+  17. s7q07
+  18. areaHarvested
+  19. s7q10__1
+  20. s7q10__2
+  21. s7q10__3
+  22. s7q10__4
+  23. s7q10__5
+  24. s7q10__6
+  25. s7q10__7
+  26. s7q10__8
+  27. s7q10__9
+  28. s7q10__99
+  29. s7q11
+  30. s7q12
+  31. s7q13
+  32. s7q14
+  33. production_kg
+
+================================================================================
+File: AASS 2022_2023/masikaplot.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 36
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. FIELD__id
+  6. MASIKAPLOT__id
+  7. s6q02
+  8. s6q03_acres
+  9. s6q04
+  10. s6q05a
+  11. s6q05b
+  12. s6q06
+  13. s6q07
+  14. s6q08__1
+  15. s6q08__2
+  16. s6q08__3
+  17. s6q08__4
+  18. s6q08__5
+  19. s6q08__6
+  20. s6q08__7
+  21. s6q09
+  22. s6q10__8
+  23. s6q10__9
+  24. s6q10__10
+  25. s6q10__11
+  26. s6q10__12
+  27. s6q10__13
+  28. s6q10__14
+  29. s6q10__15
+  30. s6q11
+  31. s6q12__16
+  32. s6q12__17
+  33. s6q12__18
+  34. s6q12__19
+  35. s6q12__20
+  36. s6q12__21
+
+================================================================================
+File: AASS 2022_2023/otherproducts.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 15
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. sec16_otherproducts__id
+  6. s16q02a
+  7. s16q02b
+  8. s16q03
+  9. s16q03_unit
+  10. s16q04
+  11. s16q05
+  12. s16q06a
+  13. s16q06b
+  14. s16q06c
+  15. s16q06d
+
+================================================================================
+File: AASS 2022_2023/permanent_crop.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 20
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. FIELD__id
+  6. crop_id
+  7. s8q01
+  8. s8q02
+  9. s8q03__1
+  10. s8q03__2
+  11. s8q03__3
+  12. s8q03__4
+  13. s8q03__5
+  14. s8q03__6
+  15. s8q03__7
+  16. s8q03__8
+  17. s8q03__9
+  18. s8q03__10
+  19. s8q03__11
+  20. s8q03__12
+
+================================================================================
+File: AASS 2022_2023/seeds.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 25
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. crop_id
+  6. TEMP_PERM
+  7. s10q01
+  8. s10q01_unit
+  9. s10q02
+  10. s10q02_unit
+  11. s10q03__1
+  12. s10q03__2
+  13. s10q03__3
+  14. s10q03__4
+  15. s10q03__5
+  16. s10q03__6
+  17. s10q03__7
+  18. s10q03__99
+  19. s10q04
+  20. s10q05a
+  21. s10q05a_unit
+  22. s10q05b
+  23. s10q05b_unit
+  24. s10q06a
+  25. s10q06b
+
+================================================================================
+File: AASS 2022_2023/vuli_use.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 7
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. FIELD__id
+  6. vuli_use_roster__id
+  7. s3q05a_1
+
+================================================================================
+File: AASS 2022_2023/vulicrop.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 32
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. FIELD__id
+  6. VULIPLOT__id
+  7. TEMP_PERM
+  8. crop_id
+  9. areaPlanted
+  10. s5q03
+  11. s5q04__1
+  12. s5q04__2
+  13. s5q04__3
+  14. s5q05
+  15. s5q06
+  16. s5q07
+  17. areaHarvested
+  18. s5q10__1
+  19. s5q10__2
+  20. s5q10__3
+  21. s5q10__4
+  22. s5q10__5
+  23. s5q10__6
+  24. s5q10__7
+  25. s5q10__8
+  26. s5q10__9
+  27. s5q10__99
+  28. s5q11
+  29. s5q12
+  30. s5q13
+  31. s5q14
+  32. production_kg
+
+================================================================================
+File: AASS 2022_2023/vuliplot.dta
+Source: AASS 2022_2023
+Type: .dta
+Status: OK
+Number of columns: 36
+  1. holding_id
+  2. Weight
+  3. holding_type
+  4. region
+  5. FIELD__id
+  6. VULIPLOT__id
+  7. s4q02
+  8. s4q03_acres
+  9. s4q04
+  10. s4q05a
+  11. s4q05b
+  12. s4q06
+  13. s4q07
+  14. s4q08__1
+  15. s4q08__2
+  16. s4q08__3
+  17. s4q08__4
+  18. s4q08__5
+  19. s4q08__6
+  20. s4q08__7
+  21. s4q09
+  22. s4q10__8
+  23. s4q10__9
+  24. s4q10__10
+  25. s4q10__11
+  26. s4q10__12
+  27. s4q10__13
+  28. s4q10__14
+  29. s4q10__15
+  30. s4q11
+  31. s4q12__16
+  32. s4q12__17
+  33. s4q12__18
+  34. s4q12__19
+  35. s4q12__20
+  36. s4q12__21
+
+================================================================================
+File: AASS 2023_2024/AASS2024f.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 16
+  1. holding_id
+  2. holding_type
+  3. mainland_zanzibar
+  4. region
+  5. stratum_id
+  6. ea_id
+  7. weight
+  8. s2q10__1
+  9. s2q10__2
+  10. s2q10__3
+  11. s2q10__4
+  12. s2q10__5
+  13. s2q10__6
+  14. s2q10__7
+  15. s20q08
+  16. s20q09
+
+================================================================================
+File: AASS 2023_2024/CROP_USE.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 22
+  1. holding_id
+  2. crop_id
+  3. s9q01
+  4. s9q02__1
+  5. s9q02__2
+  6. s9q02__3
+  7. s9q02__4
+  8. s9q02__5
+  9. s9q02__6
+  10. s9q02__7
+  11. s9q02__8
+  12. s9q02__99
+  13. s9q03
+  14. s9q04
+  15. s9q05
+  16. s9q06
+  17. s9q07
+  18. s9q08
+  19. s9q09
+  20. s9q10
+  21. s9q10a
+  22. s9q11
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/AASS2024f.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 16
+  1. holding_id
+  2. holding_type
+  3. mainland_zanzibar
+  4. region
+  5. stratum_id
+  6. ea_id
+  7. weight
+  8. s2q10__1
+  9. s2q10__2
+  10. s2q10__3
+  11. s2q10__4
+  12. s2q10__5
+  13. s2q10__6
+  14. s2q10__7
+  15. s20q08
+  16. s20q09
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/CROP_USE.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 22
+  1. holding_id
+  2. crop_id
+  3. s9q01
+  4. s9q02__1
+  5. s9q02__2
+  6. s9q02__3
+  7. s9q02__4
+  8. s9q02__5
+  9. s9q02__6
+  10. s9q02__7
+  11. s9q02__8
+  12. s9q02__99
+  13. s9q03
+  14. s9q04
+  15. s9q05
+  16. s9q06
+  17. s9q07
+  18. s9q08
+  19. s9q09
+  20. s9q10
+  21. s9q10a
+  22. s9q11
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/FIELD.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. FIELD__id
+  3. s3q03
+  4. s3q04a_hectares
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/HOUSEHOLD.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 17
+  1. holding_id
+  2. member_id
+  3. s2q02
+  4. s2q03
+  5. s2q04
+  6. s2q06
+  7. s2q07
+  8. s2q08
+  9. s2q09
+  10. s2q09a__1
+  11. s2q09a__2
+  12. s2q09a__3
+  13. s2q09a__4
+  14. s2q09a__5
+  15. s2q09a__6
+  16. s2q09a__7
+  17. s2q09a__99
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/InputRoster_masika.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. InputRoster_masika__id
+  3. s11q01b
+  4. s11q01b_unit
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/InputRoster_vuli.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. InputRoster_vuli__id
+  3. s11q01a
+  4. s11q01a_unit
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/MASIKACROP.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 46
+  1. holding_id
+  2. FIELD__id
+  3. MASIKAPLOT__id
+  4. crop_id
+  5. TEMP_PERM
+  6. areaPlanted
+  7. s7q02a
+  8. s7q03
+  9. s7q04__1
+  10. s7q04__2
+  11. s7q04__3
+  12. s7q04a
+  13. s7q04a_Unit
+  14. s7q05
+  15. s7q06__1
+  16. s7q06__2
+  17. s7q06__3
+  18. s7q06__4
+  19. s7q06__5
+  20. s7q06__6
+  21. s7q06__7
+  22. s7q06__8
+  23. s7q06__9
+  24. s7q06__10
+  25. s7q06__11
+  26. s7q06__99
+  27. s7q07
+  28. areaHarvested
+  29. s7q10__1
+  30. s7q10__2
+  31. s7q10__3
+  32. s7q10__4
+  33. s7q10__5
+  34. s7q10__6
+  35. s7q10__7
+  36. s7q10__8
+  37. s7q10__9
+  38. s7q10__10
+  39. s7q10__99
+  40. s7q11
+  41. s7q12
+  42. s7q13
+  43. s7q14
+  44. s7q14a
+  45. s7q14b_unit
+  46. harvest_ton
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/MASIKAPLOT.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 42
+  1. holding_id
+  2. FIELD__id
+  3. MASIKAPLOT__id
+  4. s6q02
+  5. s6q03_hectares
+  6. s6q04
+  7. s6q05a
+  8. s6q05b
+  9. s6q06
+  10. s6q07
+  11. s6q08__1
+  12. s6q08__2
+  13. s6q08__3
+  14. s6q08__4
+  15. s6q08__5
+  16. s6q08__6
+  17. s6q08__7
+  18. s6q08__99
+  19. s6q09
+  20. s6q10__8
+  21. s6q10__9
+  22. s6q10__10
+  23. s6q10__11
+  24. s6q10__12
+  25. s6q10__13
+  26. s6q10__14
+  27. s6q10__115
+  28. s6q10__116
+  29. s6q10__117
+  30. s6q10__118
+  31. s6q10__119
+  32. s6q10__120
+  33. s6q10__121
+  34. s6q10__99
+  35. s6q10a
+  36. s6q11
+  37. s6q12__16
+  38. s6q12__17
+  39. s6q12__18
+  40. s6q12__19
+  41. s6q12__20
+  42. s6q12__21
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/VULICROP.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 42
+  1. holding_id
+  2. FIELD__id
+  3. VULIPLOT__id
+  4. crop_id
+  5. TEMP_PERM
+  6. areaPlanted
+  7. s5q03
+  8. s5q04__1
+  9. s5q04__2
+  10. s5q04__3
+  11. s5q04a
+  12. s5q04a_Unit
+  13. s5q05
+  14. s5q06__1
+  15. s5q06__2
+  16. s5q06__3
+  17. s5q06__4
+  18. s5q06__5
+  19. s5q06__6
+  20. s5q06__7
+  21. s5q06__8
+  22. s5q06__9
+  23. s5q06__99
+  24. s5q07
+  25. areaHarvested
+  26. s5q10__1
+  27. s5q10__2
+  28. s5q10__3
+  29. s5q10__4
+  30. s5q10__5
+  31. s5q10__6
+  32. s5q10__7
+  33. s5q10__8
+  34. s5q10__9
+  35. s5q10__99
+  36. s5q11
+  37. s5q12
+  38. s5q13
+  39. s5q14
+  40. s5q14a
+  41. s5q14b_unit
+  42. harvest_ton
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/VULIPLOT.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 42
+  1. holding_id
+  2. FIELD__id
+  3. VULIPLOT__id
+  4. s4q02
+  5. s4q03_hectares
+  6. s4q04
+  7. s4q05a
+  8. s4q05b
+  9. s4q06
+  10. s4q07
+  11. s4q08__1
+  12. s4q08__2
+  13. s4q08__3
+  14. s4q08__4
+  15. s4q08__5
+  16. s4q08__6
+  17. s4q08__7
+  18. s4q08__99
+  19. s4q09
+  20. s4q10__8
+  21. s4q10__9
+  22. s4q10__10
+  23. s4q10__11
+  24. s4q10__12
+  25. s4q10__13
+  26. s4q10__14
+  27. s4q10__115
+  28. s4q10__116
+  29. s4q10__117
+  30. s4q10__118
+  31. s4q10__119
+  32. s4q10__120
+  33. s4q10__121
+  34. s4q10__99
+  35. s4q10a
+  36. s4q11
+  37. s4q12__16
+  38. s4q12__17
+  39. s4q12__18
+  40. s4q12__19
+  41. s4q12__20
+  42. s4q12__99
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/buildings_roster.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 64
+  1. holding_id
+  2. buildings_roster__id
+  3. s20q01
+  4. s20q01a__1
+  5. s20q01a__2
+  6. s20q01a__3
+  7. s20q01a__4
+  8. s20q01a__5
+  9. s20q01a__6
+  10. s20q01a__7
+  11. s20q01a__8
+  12. s20q01a__9
+  13. s20q01a__11
+  14. s20q01a__12
+  15. s20q01a__13
+  16. s20q01a__14
+  17. s20q01a__15
+  18. s20q01a__16
+  19. s20q01a__17
+  20. s20q01a__18
+  21. s20q01a__19
+  22. s20q01a__20
+  23. s20q01a__21
+  24. s20q01a__22
+  25. s20q01a__23
+  26. s20q01a__24
+  27. s20q01a__25
+  28. s20q01a__26
+  29. s20q01a__27
+  30. s20q01a__28
+  31. s20q01a__29
+  32. s20q01a__30
+  33. s20q01a__31
+  34. s20q03__1
+  35. s20q03__4
+  36. s20q03__5
+  37. s20q03__6
+  38. s20q03__7
+  39. s20q03__8
+  40. s20q03__9
+  41. s20q03__10
+  42. s20q03__11
+  43. s20q03__12
+  44. s20q03__13
+  45. s20q03__14
+  46. s20q03__15
+  47. s20q03__16
+  48. s20q03__17
+  49. s20q03__18
+  50. s20q03__19
+  51. s20q03__20
+  52. s20q03__21
+  53. s20q04__1
+  54. s20q04__2
+  55. s20q04__3
+  56. s20q04__4
+  57. s20q04__5
+  58. s20q04__6
+  59. s20q04__99
+  60. s20q05
+  61. s20q07a
+  62. s20q07b_unit
+  63. s20q08
+  64. s20q09
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/collection_roster.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. s17_aquaculture__id
+  3. collection_roster__id
+  4. s17q02
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/input_Use_roster.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 11
+  1. holding_id
+  2. input_Use_roster__id
+  3. s21q02
+  4. s21q03
+  5. s21q04
+  6. s21q05
+  7. s21q06
+  8. s21q07
+  9. s21q08
+  10. s21q09
+  11. s21q10
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/permanent_crop.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 34
+  1. holding_id
+  2. FIELD__id
+  3. crop_id
+  4. areaPlanted
+  5. s8q01
+  6. s8q02__1
+  7. s8q02__2
+  8. s8q02__3
+  9. s8q02__4
+  10. s8q02__5
+  11. s8q02__6
+  12. s8q02__7
+  13. s8q02__8
+  14. s8q02__9
+  15. s8q02__10
+  16. s8q02__11
+  17. s8q02__99
+  18. s8q03__13
+  19. s8q03__14
+  20. s8q03__15
+  21. s8q03__1
+  22. s8q03__2
+  23. s8q03__3
+  24. s8q03__4
+  25. s8q03__5
+  26. s8q03__6
+  27. s8q03__7
+  28. s8q03__8
+  29. s8q03__9
+  30. s8q03__10
+  31. s8q03__11
+  32. s8q03__12
+  33. s8q03__16
+  34. harvest_ton
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/s17_aquaculture.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 6
+  1. holding_id
+  2. s17_aquaculture__id
+  3. s17q03
+  4. s17q04
+  5. s17q05
+  6. s17q06c
+
+================================================================================
+File: AASS 2023_2024/CSV AASS2024 Datasets/sec16_otherproducts.csv
+Source: AASS 2023_2024
+Type: .csv
+Status: OK
+Number of columns: 10
+  1. holding_id
+  2. sec16_otherproducts__id
+  3. s16q02a
+  4. s16q02b
+  5. s16q03
+  6. s16q03_unit
+  7. s16q04
+  8. s16q05
+  9. s16q06d
+  10. s16q06e
+
+================================================================================
+File: AASS 2023_2024/FIELD.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. FIELD__id
+  3. s3q03
+  4. s3q04a_hectares
+
+================================================================================
+File: AASS 2023_2024/HOUSEHOLD.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 17
+  1. holding_id
+  2. member_id
+  3. s2q02
+  4. s2q03
+  5. s2q04
+  6. s2q06
+  7. s2q07
+  8. s2q08
+  9. s2q09
+  10. s2q09a__1
+  11. s2q09a__2
+  12. s2q09a__3
+  13. s2q09a__4
+  14. s2q09a__5
+  15. s2q09a__6
+  16. s2q09a__7
+  17. s2q09a__99
+
+================================================================================
+File: AASS 2023_2024/InputRoster_masika.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. InputRoster_masika__id
+  3. s11q01b
+  4. s11q01b_unit
+
+================================================================================
+File: AASS 2023_2024/InputRoster_vuli.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. InputRoster_vuli__id
+  3. s11q01a
+  4. s11q01a_unit
+
+================================================================================
+File: AASS 2023_2024/MASIKACROP.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 46
+  1. holding_id
+  2. FIELD__id
+  3. MASIKAPLOT__id
+  4. crop_id
+  5. TEMP_PERM
+  6. areaPlanted
+  7. s7q02a
+  8. s7q03
+  9. s7q04__1
+  10. s7q04__2
+  11. s7q04__3
+  12. s7q04a
+  13. s7q04a_Unit
+  14. s7q05
+  15. s7q06__1
+  16. s7q06__2
+  17. s7q06__3
+  18. s7q06__4
+  19. s7q06__5
+  20. s7q06__6
+  21. s7q06__7
+  22. s7q06__8
+  23. s7q06__9
+  24. s7q06__10
+  25. s7q06__11
+  26. s7q06__99
+  27. s7q07
+  28. areaHarvested
+  29. s7q10__1
+  30. s7q10__2
+  31. s7q10__3
+  32. s7q10__4
+  33. s7q10__5
+  34. s7q10__6
+  35. s7q10__7
+  36. s7q10__8
+  37. s7q10__9
+  38. s7q10__10
+  39. s7q10__99
+  40. s7q11
+  41. s7q12
+  42. s7q13
+  43. s7q14
+  44. s7q14a
+  45. s7q14b_unit
+  46. harvest_ton
+
+================================================================================
+File: AASS 2023_2024/MASIKAPLOT.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 42
+  1. holding_id
+  2. FIELD__id
+  3. MASIKAPLOT__id
+  4. s6q02
+  5. s6q03_hectares
+  6. s6q04
+  7. s6q05a
+  8. s6q05b
+  9. s6q06
+  10. s6q07
+  11. s6q08__1
+  12. s6q08__2
+  13. s6q08__3
+  14. s6q08__4
+  15. s6q08__5
+  16. s6q08__6
+  17. s6q08__7
+  18. s6q08__99
+  19. s6q09
+  20. s6q10__8
+  21. s6q10__9
+  22. s6q10__10
+  23. s6q10__11
+  24. s6q10__12
+  25. s6q10__13
+  26. s6q10__14
+  27. s6q10__115
+  28. s6q10__116
+  29. s6q10__117
+  30. s6q10__118
+  31. s6q10__119
+  32. s6q10__120
+  33. s6q10__121
+  34. s6q10__99
+  35. s6q10a
+  36. s6q11
+  37. s6q12__16
+  38. s6q12__17
+  39. s6q12__18
+  40. s6q12__19
+  41. s6q12__20
+  42. s6q12__21
+
+================================================================================
+File: AASS 2023_2024/VULICROP.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 42
+  1. holding_id
+  2. FIELD__id
+  3. VULIPLOT__id
+  4. crop_id
+  5. TEMP_PERM
+  6. areaPlanted
+  7. s5q03
+  8. s5q04__1
+  9. s5q04__2
+  10. s5q04__3
+  11. s5q04a
+  12. s5q04a_Unit
+  13. s5q05
+  14. s5q06__1
+  15. s5q06__2
+  16. s5q06__3
+  17. s5q06__4
+  18. s5q06__5
+  19. s5q06__6
+  20. s5q06__7
+  21. s5q06__8
+  22. s5q06__9
+  23. s5q06__99
+  24. s5q07
+  25. areaHarvested
+  26. s5q10__1
+  27. s5q10__2
+  28. s5q10__3
+  29. s5q10__4
+  30. s5q10__5
+  31. s5q10__6
+  32. s5q10__7
+  33. s5q10__8
+  34. s5q10__9
+  35. s5q10__99
+  36. s5q11
+  37. s5q12
+  38. s5q13
+  39. s5q14
+  40. s5q14a
+  41. s5q14b_unit
+  42. harvest_ton
+
+================================================================================
+File: AASS 2023_2024/VULIPLOT.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 42
+  1. holding_id
+  2. FIELD__id
+  3. VULIPLOT__id
+  4. s4q02
+  5. s4q03_hectares
+  6. s4q04
+  7. s4q05a
+  8. s4q05b
+  9. s4q06
+  10. s4q07
+  11. s4q08__1
+  12. s4q08__2
+  13. s4q08__3
+  14. s4q08__4
+  15. s4q08__5
+  16. s4q08__6
+  17. s4q08__7
+  18. s4q08__99
+  19. s4q09
+  20. s4q10__8
+  21. s4q10__9
+  22. s4q10__10
+  23. s4q10__11
+  24. s4q10__12
+  25. s4q10__13
+  26. s4q10__14
+  27. s4q10__115
+  28. s4q10__116
+  29. s4q10__117
+  30. s4q10__118
+  31. s4q10__119
+  32. s4q10__120
+  33. s4q10__121
+  34. s4q10__99
+  35. s4q10a
+  36. s4q11
+  37. s4q12__16
+  38. s4q12__17
+  39. s4q12__18
+  40. s4q12__19
+  41. s4q12__20
+  42. s4q12__99
+
+================================================================================
+File: AASS 2023_2024/buildings_roster.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 64
+  1. holding_id
+  2. buildings_roster__id
+  3. s20q01
+  4. s20q01a__1
+  5. s20q01a__2
+  6. s20q01a__3
+  7. s20q01a__4
+  8. s20q01a__5
+  9. s20q01a__6
+  10. s20q01a__7
+  11. s20q01a__8
+  12. s20q01a__9
+  13. s20q01a__11
+  14. s20q01a__12
+  15. s20q01a__13
+  16. s20q01a__14
+  17. s20q01a__15
+  18. s20q01a__16
+  19. s20q01a__17
+  20. s20q01a__18
+  21. s20q01a__19
+  22. s20q01a__20
+  23. s20q01a__21
+  24. s20q01a__22
+  25. s20q01a__23
+  26. s20q01a__24
+  27. s20q01a__25
+  28. s20q01a__26
+  29. s20q01a__27
+  30. s20q01a__28
+  31. s20q01a__29
+  32. s20q01a__30
+  33. s20q01a__31
+  34. s20q03__1
+  35. s20q03__4
+  36. s20q03__5
+  37. s20q03__6
+  38. s20q03__7
+  39. s20q03__8
+  40. s20q03__9
+  41. s20q03__10
+  42. s20q03__11
+  43. s20q03__12
+  44. s20q03__13
+  45. s20q03__14
+  46. s20q03__15
+  47. s20q03__16
+  48. s20q03__17
+  49. s20q03__18
+  50. s20q03__19
+  51. s20q03__20
+  52. s20q03__21
+  53. s20q04__1
+  54. s20q04__2
+  55. s20q04__3
+  56. s20q04__4
+  57. s20q04__5
+  58. s20q04__6
+  59. s20q04__99
+  60. s20q05
+  61. s20q07a
+  62. s20q07b_unit
+  63. s20q08
+  64. s20q09
+
+================================================================================
+File: AASS 2023_2024/collection_roster (1).dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. s17_aquaculture__id
+  3. collection_roster__id
+  4. s17q02
+
+================================================================================
+File: AASS 2023_2024/collection_roster.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 4
+  1. holding_id
+  2. s17_aquaculture__id
+  3. collection_roster__id
+  4. s17q02
+
+================================================================================
+File: AASS 2023_2024/permanent_crop.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 34
+  1. holding_id
+  2. FIELD__id
+  3. crop_id
+  4. areaPlanted
+  5. s8q01
+  6. s8q02__1
+  7. s8q02__2
+  8. s8q02__3
+  9. s8q02__4
+  10. s8q02__5
+  11. s8q02__6
+  12. s8q02__7
+  13. s8q02__8
+  14. s8q02__9
+  15. s8q02__10
+  16. s8q02__11
+  17. s8q02__99
+  18. s8q03__13
+  19. s8q03__14
+  20. s8q03__15
+  21. s8q03__1
+  22. s8q03__2
+  23. s8q03__3
+  24. s8q03__4
+  25. s8q03__5
+  26. s8q03__6
+  27. s8q03__7
+  28. s8q03__8
+  29. s8q03__9
+  30. s8q03__10
+  31. s8q03__11
+  32. s8q03__12
+  33. s8q03__16
+  34. harvest_ton
+
+================================================================================
+File: AASS 2023_2024/s17_aquaculture.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 6
+  1. holding_id
+  2. s17_aquaculture__id
+  3. s17q03
+  4. s17q04
+  5. s17q05
+  6. s17q06c
+
+================================================================================
+File: AASS 2023_2024/sec16_otherproducts.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 10
+  1. holding_id
+  2. sec16_otherproducts__id
+  3. s16q02a
+  4. s16q02b
+  5. s16q03
+  6. s16q03_unit
+  7. s16q04
+  8. s16q05
+  9. s16q06d
+  10. s16q06e
+
+================================================================================
+File: AASS 2023_2024/wen_TZA.dta
+Source: AASS 2023_2024
+Type: .dta
+Status: OK
+Number of columns: 153
+  1. elig
+  2. select_survey
+  3. tz_zan
+  4. region
+  5. region_id
+  6. district
+  7. district_id
+  8. council
+  9. council_id
+  10. ward
+  11. ward_id
+  12. ward_type
+  13. enumeration_area
+  14. ea_id
+  15. village
+  16. village_id
+  17. HHFARMID
+  18. HOUSEHOLD_ID
+  19. household__id
+  20. IND_ID
+  21. femhead
+  22. children_yes_no
+  23. n_children
+  24. hhsize
+  25. sex
+  26. relation_with_HoH
+  27. age
+  28. d01a
+  29. d02a
+  30. d01b
+  31. d02b
+  32. d01c
+  33. d02c
+  34. d01d
+  35. d02d
+  36. d01e
+  37. d02e
+  38. d01f
+  39. d02f
+  40. tot_d_mins
+  41. e01a
+  42. e02a
+  43. e01b
+  44. e02b
+  45. e01c
+  46. e02c
+  47. e01d
+  48. e02d
+  49. e01e
+  50. e02e
+  51. e03a
+  52. e03b
+  53. e03c
+  54. e03d
+  55. e03e
+  56. e04a
+  57. e04b
+  58. e04c
+  59. e04d
+  60. e04e
+  61. tot_e_mins
+  62. f01a
+  63. f01b
+  64. f01c
+  65. f01d
+  66. f01e
+  67. f01f
+  68. f01g
+  69. f01h
+  70. f01i
+  71. tot_f_mins
+  72. g01a
+  73. g01b
+  74. g01c
+  75. g01d
+  76. g02a
+  77. g02b
+  78. g02c
+  79. g02d
+  80. g02e
+  81. tot_g_mins
+  82. h01
+  83. h02
+  84. h03
+  85. h04
+  86. h05
+  87. h06a
+  88. h06b
+  89. h07
+  90. h08
+  91. h09
+  92. h10
+  93. h11
+  94. h12a
+  95. h12b
+  96. tot_h_mins
+  97. i01
+  98. i02a
+  99. i02b
+  100. tot_i_mins
+  101. j01a
+  102. j01b
+  103. tot_j_mins
+  104. l01
+  105. l02
+  106. l03
+  107. l04
+  108. l05
+  109. tot_l_mins
+  110. m01a_pregnancy
+  111. m01b_breastfeeding
+  112. m01a
+  113. m01c
+  114. m01n
+  115. m01d
+  116. m01e
+  117. m01f
+  118. m01g
+  119. m01h
+  120. m01i
+  121. m01j
+  122. m01k
+  123. m01l
+  124. m01m
+  125. m01m1
+  126. m010
+  127. m01n2
+  128. m01p
+  129. m01q1
+  130. m01q2
+  131. m01r
+  132. m01s
+  133. m01t
+  134. m01u
+  135. m01v
+  136. m01x
+  137. m01y
+  138. m01yy
+  139. m01yy1
+  140. m01yy2
+  141. tot_m_mins
+  142. n03
+  143. n04
+  144. n05
+  145. o01
+  146. o02__1
+  147. o02__2
+  148. o02__3
+  149. o03
+  150. o04
+  151. o04_other
+  152. N01
+  153. N02
+
+================================================================================
+File: AASS 2024_2025/AASS2025.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 35
+  1. Holding_ID
+  2. mainland_zanzibar
+  3. region_id
+  4. Holding_type
+  5. stratum_id
+  6. ea_id
+  7. Adjusted_HH_weight
+  8. s1q06
+  9. s1q07
+  10. s1q08
+  11. s1q09
+  12. s2q10__1
+  13. s2q10__2
+  14. s2q10__3
+  15. s2q10__4
+  16. s2q10__5
+  17. s2q10__6
+  18. s2q10__7
+  19. pme1q01
+  20. pme1q03
+  21. pme1q05
+  22. pme1q07
+  23. pme1q08
+  24. pme2q02
+  25. pme2q04
+  26. pme2q07
+  27. pme2q08
+  28. pme2q09
+  29. pme3q07
+  30. pme3q08
+  31. pme4q05
+  32. pme4q08
+  33. s15q00
+  34. pme6q13
+  35. pme6q14
+
+================================================================================
+File: AASS 2024_2025/CROP_USE.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 22
+  1. HHFARMID
+  2. CROP_USE__id
+  3. s9q01
+  4. s9q02__1
+  5. s9q02__2
+  6. s9q02__3
+  7. s9q02__4
+  8. s9q02__5
+  9. s9q02__6
+  10. s9q02__7
+  11. s9q02__8
+  12. s9q02__99
+  13. s9q03
+  14. s9q04
+  15. s9q05
+  16. s9q06
+  17. s9q07
+  18. s9q08
+  19. s9q09
+  20. s9q10
+  21. s9q10a
+  22. s9q11
+
+================================================================================
+File: AASS 2024_2025/FIELD.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 8
+  1. HHFARMID
+  2. FIELD__id
+  3. s3q03
+  4. s3q04a_Hectares
+  5. s3q06
+  6. s3q13
+  7. s3q14
+  8. s3q15
+
+================================================================================
+File: AASS 2024_2025/HOUSEHOLD.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 9
+  1. HHFARMID
+  2. HOUSEHOLD__id
+  3. s2q02
+  4. s2q03
+  5. s2q04
+  6. s2q06
+  7. s2q07
+  8. s2q08
+  9. s2q09
+
+================================================================================
+File: AASS 2024_2025/MASIKACROP.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 54
+  1. HHFARMID
+  2. MASIKAPLOT__id
+  3. MASIKACROP__id
+  4. croptype
+  5. sample_type
+  6. s7q02
+  7. s7q02a
+  8. s7q03
+  9. s7q04__1
+  10. s7q04__2
+  11. s7q04__3
+  12. s7q04a
+  13. s7q04a_Unit
+  14. s7q04b
+  15. s7q05
+  16. s7q06__1
+  17. s7q06__2
+  18. s7q06__3
+  19. s7q06__4
+  20. s7q06__5
+  21. s7q06__6
+  22. s7q06__7
+  23. s7q06__8
+  24. s7q06__9
+  25. s7q06__10
+  26. s7q06__11
+  27. s7q06__99
+  28. s7q07
+  29. s7q09
+  30. s7q10__1
+  31. s7q10__2
+  32. s7q10__3
+  33. s7q10__4
+  34. s7q10__5
+  35. s7q10__6
+  36. s7q10__7
+  37. s7q10__8
+  38. s7q10__9
+  39. s7q10__10
+  40. s7q10__99
+  41. s7q08c
+  42. s7q08c_unit
+  43. s7q8c_state
+  44. s7q08d
+  45. s7q08e
+  46. s7q08e_unit
+  47. s7q8e_state
+  48. s7q11
+  49. s7q12
+  50. s7q13
+  51. s7q14
+  52. s7q14a
+  53. s7q14b_unit
+  54. harvest_ton
+
+================================================================================
+File: AASS 2024_2025/MASIKAPLOT.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 59
+  1. HHFARMID
+  2. FIELD__id
+  3. MASIKAPLOT__id
+  4. s6q02
+  5. s6q03
+  6. s6q03_unit
+  7. s6q03_Hectares
+  8. s6q04
+  9. s6q05a
+  10. s6q05b
+  11. s6q06
+  12. s6q07
+  13. s6q08__1
+  14. s6q08__2
+  15. s6q08__3
+  16. s6q08__4
+  17. s6q08__5
+  18. s6q08__6
+  19. s6q08__999
+  20. s6q09
+  21. s6q10__7
+  22. s6q10__8
+  23. s6q10__9
+  24. s6q10__10
+  25. s6q10__11
+  26. s6q10__12
+  27. s6q10__13
+  28. s6q10__14
+  29. s6q10__99
+  30. s6q10__115
+  31. s6q10__116
+  32. s6q10__117
+  33. s6q10__118
+  34. s6q10__119
+  35. s6q10__120
+  36. s6q10__121
+  37. s6q10a
+  38. s6q11
+  39. s6q12__17
+  40. s6q12__18
+  41. s6q12__20
+  42. s6q12__21
+  43. s6q12__31
+  44. s6q12__32
+  45. s6q12__33
+  46. s6q12__34
+  47. s7q01__0
+  48. s7q01__1
+  49. s7q01__2
+  50. s7q01__3
+  51. s7q01__4
+  52. s7q01__5
+  53. s7q01__6
+  54. s7q01__7
+  55. s7q01__8
+  56. s7q01__9
+  57. s7q01__10
+  58. s7q01__11
+  59. s7q01__12
+
+================================================================================
+File: AASS 2024_2025/VULICROP.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 26
+  1. HHFARMID
+  2. FIELD__id
+  3. VULIPLOT__id
+  4. VULICROP__id
+  5. s5q02
+  6. s5q02_imp
+  7. s5q03
+  8. s5q04__1
+  9. s5q04__2
+  10. s5q04__3
+  11. s5q04a
+  12. s5q04a_Unit
+  13. s5q04b
+  14. s5q04b_imp
+  15. s5q05
+  16. s5q06__1
+  17. s5q06__2
+  18. s5q06__3
+  19. s5q06__4
+  20. s5q06__5
+  21. s5q06__6
+  22. s5q06__7
+  23. s5q06__8
+  24. s5q06__9
+  25. s5q06__99
+  26. harvest_ton
+
+================================================================================
+File: AASS 2024_2025/VULIPLOT.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 60
+  1. HHFARMID
+  2. FIELD__id
+  3. VULIPLOT__id
+  4. s4q02
+  5. s4q03
+  6. s4q03_unit
+  7. s4q03_Hectares
+  8. s4q04
+  9. s4q05a
+  10. s4q05b
+  11. s4q06
+  12. s4q07
+  13. s4q08__1
+  14. s4q08__2
+  15. s4q08__3
+  16. s4q08__4
+  17. s4q08__5
+  18. s4q08__6
+  19. s4q08__999
+  20. s4q09
+  21. s4q10__7
+  22. s4q10__8
+  23. s4q10__9
+  24. s4q10__10
+  25. s4q10__11
+  26. s4q10__12
+  27. s4q10__13
+  28. s4q10__14
+  29. s4q10__115
+  30. s4q10__116
+  31. s4q10__117
+  32. s4q10__118
+  33. s4q10__119
+  34. s4q10__120
+  35. s4q10__121
+  36. s4q10__99
+  37. s4q10a
+  38. s4q11
+  39. s4q12__31
+  40. s4q12__32
+  41. s4q12__17
+  42. s4q12__18
+  43. s4q12__33
+  44. s4q12__34
+  45. s4q12__20
+  46. s4q12__99
+  47. s5q01__0
+  48. s5q01__1
+  49. s5q01__2
+  50. s5q01__3
+  51. s5q01__4
+  52. s5q01__5
+  53. s5q01__6
+  54. s5q01__7
+  55. s5q01__8
+  56. s5q01__9
+  57. s5q01__10
+  58. s5q01__11
+  59. s5q01__12
+  60. s5q01__13
+
+================================================================================
+File: AASS 2024_2025/collection_roster.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 4
+  1. HHFARMID
+  2. s17_aquaculture__id
+  3. collection_roster__id
+  4. s17q02
+
+================================================================================
+File: AASS 2024_2025/inputRoster_masika.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 4
+  1. HHFARMID
+  2. InputRoster_masika__id
+  3. s11q01b
+  4. s11q01b_unit
+
+================================================================================
+File: AASS 2024_2025/inputRoster_vuli.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 4
+  1. HHFARMID
+  2. InputRoster_vuli__id
+  3. s11q01a
+  4. s11q01a_unit
+
+================================================================================
+File: AASS 2024_2025/livestock_type.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 74
+  1. HHFARMID
+  2. livestock_type__id
+  3. s12q01b
+  4. s12q03
+  5. s12q04
+  6. s12q05
+  7. s12q05_imp
+  8. s12q06
+  9. s12q07
+  10. s12q08c
+  11. s12q08c_imp
+  12. s12q09
+  13. s12q10
+  14. s12q11
+  15. s12q12
+  16. s12q12_unit
+  17. s12q12_kg
+  18. s12q13a
+  19. s12q13b
+  20. s12q14
+  21. s12q15a
+  22. prop_sum
+  23. s12q15b
+  24. s12q16
+  25. pme3q01
+  26. pme3q02__1
+  27. pme3q02__2
+  28. pme3q02__3
+  29. pme3q02__4
+  30. pme3q02__5
+  31. pme3q02__6
+  32. pme3q02__99
+  33. pme3q03__1
+  34. pme3q03__2
+  35. pme3q03__3
+  36. pme3q03__4
+  37. pme3q03__5
+  38. pme3q03__6
+  39. pme3q03__7
+  40. pme3q03__8
+  41. pme3q03__9
+  42. pme3q03__10
+  43. pme3q03__99
+  44. pme3q04
+  45. pme3q05__1
+  46. pme3q05__2
+  47. pme3q05__3
+  48. pme3q05__4
+  49. pme3q05__5
+  50. pme3q06__1
+  51. pme3q06__2
+  52. pme3q06__3
+  53. pme3q06__4
+  54. pme4q01
+  55. pme4q02
+  56. pme4q03
+  57. pme4q04
+  58. s15q01a
+  59. s15q01b
+  60. s15q02
+  61. s15q03
+  62. s15q04
+  63. s15q04a
+  64. s15q05
+  65. s15q06
+  66. s15q07
+  67. s15q09
+  68. s15q10
+  69. s15q11
+  70. s15q12
+  71. s15q13
+  72. s15q14
+  73. s15q15
+  74. s15q16
+
+================================================================================
+File: AASS 2024_2025/permanent_crop.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 24
+  1. HHFARMID
+  2. FIELD__id
+  3. permanent_crop__id
+  4. s8q01
+  5. s8q02__1
+  6. s8q02__2
+  7. s8q02__3
+  8. s8q02__4
+  9. s8q02__5
+  10. s8q02__6
+  11. s8q02__7
+  12. s8q02__8
+  13. s8q02__10
+  14. s8q02__9
+  15. s8q02__11
+  16. s8q02__99
+  17. s8q04c
+  18. s8q04c_unit
+  19. s8q4c_state
+  20. s8q04d
+  21. s8q04e
+  22. s8q04e_unit
+  23. s8q4e_state
+  24. harvest_ton
+
+================================================================================
+File: AASS 2024_2025/pme_6_Roster.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 55
+  1. HHFARMID
+  2. pme_6_Roster__id
+  3. pme6q01__1
+  4. pme6q01__2
+  5. pme6q01__3
+  6. pme6q01__4
+  7. pme6q01__5
+  8. pme6q01__6
+  9. pme6q03__10
+  10. pme6q03__11
+  11. pme6q03__12
+  12. pme6q03__13
+  13. pme6q03__20
+  14. pme6q03__21
+  15. pme6q03__22
+  16. pme6q03__23
+  17. pme6q03__24
+  18. pme6q03__25
+  19. pme6q03__26
+  20. pme6q03__27
+  21. pme6q03__28
+  22. pme6q03__29
+  23. pme6q03__30
+  24. pme6q03__31
+  25. pme6q03__32
+  26. pme6q03__33
+  27. pme6q03__34
+  28. pme6q03__35
+  29. pme6q03__40
+  30. pme6q03__41
+  31. pme6q03__42
+  32. pme6q03__43
+  33. pme6q03__50
+  34. pme6q03__51
+  35. pme6q03__52
+  36. pme6q03__53
+  37. pme6q03__54
+  38. pme6q03__55
+  39. pme6q03__56
+  40. pme6q03__60
+  41. pme6q03__61
+  42. pme6q03__62
+  43. pme6q03__63
+  44. pme6q03__64
+  45. pme6q09__1
+  46. pme6q09__2
+  47. pme6q09__3
+  48. pme6q09__4
+  49. pme6q09__5
+  50. pme6q09__6
+  51. pme6q10
+  52. pme6q11
+  53. pme6q12
+  54. pme6q13
+  55. pme6q14
+
+================================================================================
+File: AASS 2024_2025/s14_milk.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 17
+  1. HHFARMID
+  2. s14_milk__id
+  3. livestock_type__id
+  4. s14q01
+  5. s14q02
+  6. s14q02a
+  7. s14q03
+  8. s14q04a
+  9. s14q04b
+  10. s14q05a
+  11. s14q05b
+  12. s14q06a
+  13. s14q06b
+  14. s14q07
+  15. s14q08
+  16. s14q09a
+  17. s14q09d
+
+================================================================================
+File: AASS 2024_2025/s17_aquaculture.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 6
+  1. holding_id
+  2. s17_aquaculture__id
+  3. s17q03
+  4. s17q04
+  5. s17q05
+  6. s17q06c
+
+================================================================================
+File: AASS 2024_2025/s17a1_aquastructure.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 19
+  1. HHFARMID
+  2. s17a1_aquastructure__id
+  3. s17q01a_2
+  4. s17q01a_3
+  5. s17q01a_3_unit
+  6. s17q01a_4__1
+  7. s17q01a_4__2
+  8. s17q01a_4__3
+  9. s17q01a_4__4
+  10. s17q01a_4__5
+  11. s17q01a_4__6
+  12. s17q01a_4__7
+  13. s17q01a_4__8
+  14. s17q01a_4__9
+  15. s17q01a_4__10
+  16. s17q01a_4__11
+  17. s17q01a_4__99
+  18. s17q01a_4_seaweed__1
+  19. s17q01a_4_seaweed__2
+
+================================================================================
+File: AASS 2024_2025/sec16_otherproducts.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 10
+  1. HHFARMID
+  2. sec16_otherproducts__id
+  3. s16q02a
+  4. s16q02b
+  5. s16q03
+  6. s16q03_unit
+  7. s16q04
+  8. s16q05
+  9. s16q06d
+  10. s16q06e
+
+================================================================================
+File: AASS 2024_2025/shocks_roster.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 19
+  1. HHFARMID
+  2. HHID
+  3. shocks_roster__id
+  4. pme5q02__1
+  5. pme5q02__2
+  6. pme5q02__3
+  7. pme5q02__4
+  8. pme5q02__5
+  9. pme5q02__6
+  10. pme5q02__7
+  11. pme5q02__8
+  12. pme5q02__0
+  13. pme5q02__99
+  14. pme5q02_other
+  15. pme5q03
+  16. pme5q04__1
+  17. pme5q04__2
+  18. pme5q04__3
+  19. pme5q04__0
+
+================================================================================
+File: AASS 2024_2025/stock_livestock.dta
+Source: AASS 2024_2025
+Type: .dta
+Status: OK
+Number of columns: 6
+  1. HHFARMID
+  2. livestock_type__id
+  3. stock_livestock__id
+  4. s12q01b
+  5. s12q01c
+  6. LivestockCode
+
+================================================================================
+File: FAOSTAT/tanzania_crop_production_yield_area.csv
+Source: FAOSTAT
+Type: .csv
+Status: OK
+Number of columns: 14
+  1. Area Code
+  2. Area Code (M49)
+  3. Area
+  4. Item Code
+  5. Item Code (CPC)
+  6. Item
+  7. Element Code
+  8. Element
+  9. Year Code
+  10. Year
+  11. Unit
+  12. Value
+  13. Flag
+  14. Note
+
+================================================================================
+File: FAOSTAT/tanzania_crop_year_wide.csv
+Source: FAOSTAT
+Type: .csv
+Status: OK
+Number of columns: 5
+  1. Year
+  2. Item
+  3. Area harvested
+  4. Production
+  5. Yield
+
+================================================================================
+File: FAOSTAT/tanzania_faostat_all.csv
+Source: FAOSTAT
+Type: .csv
+Status: OK
+Number of columns: 14
+  1. Area Code
+  2. Area Code (M49)
+  3. Area
+  4. Item Code
+  5. Item Code (CPC)
+  6. Item
+  7. Element Code
+  8. Element
+  9. Year Code
+  10. Year
+  11. Unit
+  12. Value
+  13. Flag
+  14. Note
+
+================================================================================
+File: FAOSTAT/tanzania_priority_crops.csv
+Source: FAOSTAT
+Type: .csv
+Status: OK
+Number of columns: 14
+  1. Area Code
+  2. Area Code (M49)
+  3. Area
+  4. Item Code
+  5. Item Code (CPC)
+  6. Item
+  7. Element Code
+  8. Element
+  9. Year Code
+  10. Year
+  11. Unit
+  12. Value
+  13. Flag
+  14. Note
+
