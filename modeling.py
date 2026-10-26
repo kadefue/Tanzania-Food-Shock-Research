@@ -572,9 +572,41 @@ class FeatureEngineer:
         m_imp_seed = (mc["s7q04__1"] == 1).groupby(mc["HHFARMID"]).max().rename("m_improved_seed")
         v_imp_seed = (vc["s5q04__1"] == 1).groupby(vc["HHFARMID"]).max().rename("v_improved_seed")
 
+        # Granular harvest outcome shares & planting timing
+        m_harvest_pct_mean = mc.groupby("HHFARMID")["s7q09"].mean().rename("m_harvest_pct_mean")
+        m_harvest_pct_min = mc.groupby("HHFARMID")["s7q09"].min().rename("m_harvest_pct_min")
+        m_no_harvest_share = (mc["s7q05"] == 2).groupby(mc["HHFARMID"]).mean().rename("m_no_harvest_share")
+        v_no_harvest_share = (vc["s5q05"] == 2).groupby(vc["HHFARMID"]).mean().rename("v_no_harvest_share")
+        delta_no_harvest_share = (m_no_harvest_share - v_no_harvest_share).rename("delta_no_harvest_share")
+
+        m_plant_month = mc.groupby("HHFARMID")["s7q03"].mean().rename("m_plant_month_mean")
+        v_plant_month = vc.groupby("HHFARMID")["s5q03"].mean().rename("v_plant_month_mean")
+        plant_month_delta = (m_plant_month - v_plant_month).rename("plant_month_delta")
+
+        # Specific area loss drivers (s7q10: drought, flood, rain timing, frost, pest, fire, theft, labor, birds)
+        arealoss_cols = {}
+        for i in [1, 2, 3, 4, 5, 6, 7, 8, 10]:
+            col_name = f"s7q10__{i}"
+            if col_name in mc.columns:
+                arealoss_cols[f"m_arealoss_reason_{i}"] = mc.groupby("HHFARMID")[col_name].max()
+        df_arealoss = pd.DataFrame(arealoss_cols, index=holdings.index)
+
+        # Plot-level advanced fertilizer & crop protection adoption
+        plot_tech_cols = {}
+        for col in ["s6q08__1", "s6q08__3", "s6q08__4", "s6q10__8", "s6q10__9", "s6q10__10", "s6q10__12", "s6q10a", "s6q12__18", "s6q12__31", "s6q12__32"]:
+            if col in mp.columns:
+                plot_tech_cols[f"mp_{col}"] = mp.groupby("HHFARMID")[col].mean()
+        for col in ["s4q08__1", "s4q08__3", "s4q08__4", "s4q10a", "s4q12__18", "s4q12__31", "s4q12__32"]:
+            if col in vp.columns:
+                plot_tech_cols[f"vp_{col}"] = vp.groupby("HHFARMID")[col].mean()
+        df_plot_tech = pd.DataFrame(plot_tech_cols, index=holdings.index)
+
         crop_tech_features = pd.concat([
             m_drought_fail, v_drought_fail, m_pest_fail, v_pest_fail, m_flood_fail, v_flood_fail,
-            m_imp_seed, v_imp_seed
+            m_imp_seed, v_imp_seed, m_harvest_pct_mean, m_harvest_pct_min,
+            m_no_harvest_share, v_no_harvest_share, delta_no_harvest_share,
+            m_plant_month, v_plant_month, plant_month_delta,
+            df_arealoss, df_plot_tech
         ], axis=1)
 
         # ----------------------------------------------------------------------
@@ -591,8 +623,14 @@ class FeatureEngineer:
         prog_pssn = master["s2q10__6"].rename("prog_pssn")
         prog_aisp = master["s2q10__1"].rename("prog_aisp")
         prog_irrig = master["s2q10__5"].rename("prog_irrig")
+        prog_afdp = master["s2q10__2"].rename("prog_afdp") if "s2q10__2" in master.columns else pd.Series(0, index=holdings.index, name="prog_afdp")
+        prog_aflatoxin = master["s2q10__3"].rename("prog_aflatoxin") if "s2q10__3" in master.columns else pd.Series(0, index=holdings.index, name="prog_aflatoxin")
+        prog_acaricide = master["s2q10__4"].rename("prog_acaricide") if "s2q10__4" in master.columns else pd.Series(0, index=holdings.index, name="prog_acaricide")
+
+        slash_burn = master["pme1q01"].rename("slash_and_burn_clearing") if "pme1q01" in master.columns else pd.Series(0, index=holdings.index, name="slash_and_burn_clearing")
         water_scarcity = master["pme1q08"].rename("water_scarcity")
         ext_visits = master["pme6q13"].rename("extension_visits")
+        ext_hh_visits = master["pme6q14"].rename("extension_hh_visits") if "pme6q14" in master.columns else pd.Series(0, index=holdings.index, name="extension_hh_visits")
 
         df_pme6 = tables.get("pme6", pd.DataFrame())
         if not df_pme6.empty and "pme6q01__1" in df_pme6.columns:
@@ -641,8 +679,13 @@ class FeatureEngineer:
             prog_pssn,
             prog_aisp,
             prog_irrig,
+            prog_afdp,
+            prog_aflatoxin,
+            prog_acaricide,
+            slash_burn,
             water_scarcity,
             ext_visits,
+            ext_hh_visits,
             advisory_features,
             master_geo
         ], how="left").fillna(0.0)
