@@ -8,14 +8,16 @@ Supervised Machine Learning pipeline predicting smallholder yield volatility
 across agricultural seasons (Masika vs. Vuli) using Tanzania National Bureau of
 Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata.
 
-Pipeline Architecture:
-1. DataPreprocessor: Ingestion, unit harmonization, and seasonal baseline yield calculation.
+Kaggle Grandmaster Architecture:
+1. DataPreprocessor: Ingestion of 11 multi-relational survey tables (including food shocks,
+   livestock rosters, early-warning advisories), unit harmonization, and seasonal baseline yields.
 2. FeatureEngineer: Target formulation (Yield Volatility Index) + 12 Grandmaster Feature
-   Engineering techniques (Spatial groupbys, HHI, Berger-Parker, Pielou evenness, Jaccard turnover,
-   input intensities, capital-labor ratios, log1p compression, plot heterogeneity, frequency encoding,
-   KMeans archetypes, and PCA orthogonal decomposition).
+   Engineering techniques (Spatial peer groupbys, HHI concentration, Berger-Parker dominance,
+   Pielou evenness, Jaccard turnover, input intensities, capital-labor ratios, log1p compression,
+   plot heterogeneity, frequency encoding, KMeans archetypes, PCA orthogonal decomposition,
+   Tropical Livestock Units, and seasonal failure shocks).
 3. VolatilityPredictor: Spatial Cross-Validation (GroupKFold on EA geography) and multi-model
-   benchmarking across LightGBM, XGBoost, and Random Forest.
+   benchmarking across LightGBM, XGBoost, Random Forest, and a Grandmaster Weighted Ensemble.
 4. ModelInterpreter: SHAP-based global feature attribution and local household explanations.
 5. PipelineOrchestrator: End-to-end execution, multi-model comparison, and artifact generation.
 """
@@ -41,7 +43,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import GroupKFold, RandomizedSearchCV
+from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import OneHotEncoder, RobustScaler
 
 # Model imports with fallback support
@@ -74,7 +76,8 @@ class DataPreprocessor:
 
     Handles loading of seasonal crop tables (MASIKACROP, VULICROP), plot records
     (MASIKAPLOT, VULIPLOT), input applications (inputRoster_masika, inputRoster_vuli),
-    household demographic rosters, and master geographic holding metadata.
+    food shocks (shocks_roster), livestock dynamics (stock_livestock), early warning
+    weather information (pme_6_Roster), and master geographic holding metadata.
     """
 
     # Empirical unit-to-kg conversion factors for East African traditional containers
@@ -135,14 +138,17 @@ class DataPreprocessor:
         df, _ = pyreadstat.read_dta(str(target_path))
 
         # Standardize holding identifier to HHFARMID
+        rename_dict = {}
         for candidate in ["holding_id", "Holding_ID", "HHFARMID", "hhid"]:
             if candidate in df.columns and candidate != "HHFARMID":
-                df = df.rename(columns={candidate: "HHFARMID"})
+                rename_dict[candidate] = "HHFARMID"
+        if rename_dict:
+            df = df.rename(columns=rename_dict)
         return df
 
     def load_raw_data(self) -> Dict[str, pd.DataFrame]:
         """
-        Loads all required tables for smallholder yield and input modeling.
+        Loads all required tables across agronomic, shock, livestock, and demographic domains.
 
         Returns:
             Dictionary mapping table keys to loaded DataFrames.
@@ -156,15 +162,15 @@ class DataPreprocessor:
             "inputs_masika": self._read_table("inputRoster_masika.dta"),
             "inputs_vuli": self._read_table("inputRoster_vuli.dta"),
             "master": self._read_table("AASS2025.dta"),
+            "shocks": self._read_table("shocks_roster.dta"),
+            "livestock": self._read_table("stock_livestock.dta"),
+            "pme6": self._read_table("pme_6_Roster.dta"),
         }
         return tables
 
     def harmonize_units(self, crop_df: pd.DataFrame, season: str) -> pd.DataFrame:
         """
         Harmonizes heterogeneous harvest measurement units into standardized kilograms (kg).
-
-        Utilizes NBS imputed metric ton harvest values (`harvest_ton * 1000`) where
-        calibrated, and applies conversion multipliers to raw non-standard containers.
 
         Args:
             crop_df: Seasonal crop DataFrame.
@@ -241,14 +247,14 @@ class DataPreprocessor:
 
 
 # ==============================================================================
-# 2. FEATURE ENGINEER (WITH 10+ GRANDMASTER TECHNIQUES)
+# 2. FEATURE ENGINEER (WITH 12 GRANDMASTER TECHNIQUES)
 # ==============================================================================
 
 class FeatureEngineer:
     """
     Constructs the Yield Volatility Index and domain-specific predictive smallholder features.
 
-    Implements at least 10 Grandmaster-level Feature Engineering Techniques:
+    Implements 12 Kaggle Grandmaster-level Feature Engineering Techniques:
     1.  Spatial Groupby Aggregations (Deviations and Ratios to Regional Peer Means)
     2.  Herfindahl-Hirschman Index (HHI) for Crop Portfolio Concentration
     3.  Berger-Parker Dominance Index (Single-Crop Vulnerability)
@@ -260,11 +266,21 @@ class FeatureEngineer:
     9.  Farm Parcel Fragmentation & Within-Holding Plot Dispersion
     10. Frequency / Prevalence Encoding of Categorical Strata
     11. Unsupervised Agronomic Archetype Clustering (KMeans Distance Embeddings)
-    12. Latent Orthogonal Feature Decomposition (PCA Dimensions)
+    12. Latent Orthogonal PCA Feature Decomposition
+    13. Food Shock Exposure & Loss Dimensions (Drought, Pests, Floods, Input Prices)
+    14. Tropical Livestock Units (TLU Asset Buffer) & Extension Advisories
     """
 
     FERTILIZER_INPUT_IDS = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 23, 24, 25, 26, 27, 28, 29, 30, 31}
     PESTICIDE_INPUT_IDS = {15, 16, 17, 18, 19, 20, 21, 22}
+
+    TLU_WEIGHTS = {
+        3: 0.7, 4: 0.7, 5: 0.7, 6: 0.7, 8: 0.7, 9: 0.7, 10: 0.7, 11: 0.7,  # Cattle
+        12: 0.1, 13: 0.1, 14: 0.1, 15: 0.1, 16: 0.1, 17: 0.1, 18: 0.1, 19: 0.1, 20: 0.1,  # Goats/Sheep
+        21: 0.2, 22: 0.2, 23: 0.2, 24: 0.2,  # Pigs
+        29: 0.5,  # Donkeys
+        1: 0.01, 2: 0.01, 7: 0.01, 25: 0.01, 26: 0.01, 27: 0.01, 28: 0.01, 32: 0.01, 33: 0.01, 34: 0.01  # Poultry
+    }
 
     def __init__(self, epsilon: float = 1e-6) -> None:
         """
@@ -321,9 +337,6 @@ class FeatureEngineer:
         logger.info("Formulated target variable Y_vol for %d eligible holdings.", len(sub_df))
         return sub_df, y_vol
 
-    # --------------------------------------------------------------------------
-    # Grandmaster Portfolio Metrics: Shannon, HHI, Berger-Parker, Pielou
-    # --------------------------------------------------------------------------
     @staticmethod
     def _compute_portfolio_metrics(group: pd.DataFrame, crop_col: str, weight_col: str) -> Dict[str, float]:
         """Computes Shannon Diversity, HHI Concentration, Berger-Parker, and Pielou Evenness."""
@@ -354,19 +367,12 @@ class FeatureEngineer:
         tables: Dict[str, pd.DataFrame]
     ) -> pd.DataFrame:
         """
-        Extracts and joins domain features across inputs, crop diversity, labor, and plots.
+        Extracts and joins domain features across inputs, crop diversity, labor, shocks, livestock, and plots.
 
-        Applies 10+ Grandmaster Feature Engineering techniques:
-        - Input Intensities per Hectare & Input Deltas
-        - Shannon, HHI, Berger-Parker, Pielou Evenness
-        - Jaccard Similarity and Seasonal Crop Turnover
-        - Regional Groupby Aggregations (Deviations and Ratios to Peer Means)
-        - Plot Size Variance & Fragmentation
-        - Land-to-Labor and Capital-to-Labor Ratios
-        - Log1p Skewness Compression & Asymmetry Indicators
-        - Frequency Encoding
+        Returns:
+            Comprehensive engineered feature matrix indexed by HHFARMID.
         """
-        logger.info("Engineering Grandmaster-level agricultural features...")
+        logger.info("Engineering Grandmaster-level agricultural features across all domain rosters...")
         if "HHFARMID" in base_df.columns:
             base_indexed = base_df.set_index("HHFARMID")
         else:
@@ -379,7 +385,6 @@ class FeatureEngineer:
         im = tables["inputs_masika"].copy()
         iv = tables["inputs_vuli"].copy()
 
-        # Harmonize input units (Unit 1 = Gram -> / 1000 to get kg; Unit 2 = kg)
         im["qty_kg"] = pd.Series(
             np.where(im["s11q01b_unit"] == 1, im["s11q01b"] / 1000.0, im["s11q01b"]),
             index=im.index
@@ -389,7 +394,6 @@ class FeatureEngineer:
             index=iv.index
         ).fillna(0.0)
 
-        # Fertilizer kg
         fert_m = (
             im[im["InputRoster_masika__id"].isin(self.FERTILIZER_INPUT_IDS)]
             .groupby("HHFARMID")["qty_kg"]
@@ -403,7 +407,6 @@ class FeatureEngineer:
             .rename("fert_vuli_kg")
         )
 
-        # Pesticide qty
         pest_m = (
             im[im["InputRoster_masika__id"].isin(self.PESTICIDE_INPUT_IDS)]
             .groupby("HHFARMID")["qty_kg"]
@@ -425,7 +428,6 @@ class FeatureEngineer:
             input_df["fert_masika_kg"] + input_df["fert_vuli_kg"] + self.epsilon
         )
 
-        # Input Intensities per Hectare
         m_area_s = base_indexed["area_ha_masika"]
         v_area_s = base_indexed["area_ha_vuli"]
 
@@ -435,7 +437,6 @@ class FeatureEngineer:
         input_df["pest_per_ha_masika"] = input_df["pest_masika_qty"] / (m_area_s + self.epsilon)
         input_df["pest_per_ha_vuli"] = input_df["pest_vuli_qty"] / (v_area_s + self.epsilon)
 
-        # Log1p non-linear transforms
         input_df["log_fert_masika"] = np.log1p(np.maximum(0, input_df["fert_masika_kg"]))
         input_df["log_fert_vuli"] = np.log1p(np.maximum(0, input_df["fert_vuli_kg"]))
 
@@ -448,7 +449,6 @@ class FeatureEngineer:
         m_crop_col = "MASIKACROP__id" if "MASIKACROP__id" in mc.columns else "crop_id"
         v_crop_col = "VULICROP__id" if "VULICROP__id" in vc.columns else "crop_id"
 
-        # Apply portfolio metrics calculation
         m_port_metrics = mc.groupby("HHFARMID").apply(
             lambda g: pd.Series(self._compute_portfolio_metrics(g, m_crop_col, "production_kg")),
             include_groups=False
@@ -507,40 +507,100 @@ class FeatureEngineer:
         vp = tables["vuliplot"].copy()
         m_area_col = "s6q03_Hectares" if "s6q03_Hectares" in mp.columns else "s6q03_hec"
 
-        # Fallow land indicator (s6q02 == 3 is fallow)
         fallow_m = (mp["s6q02"] == 3).groupby(mp["HHFARMID"]).mean().rename("fallow_share_masika")
         fallow_v = (vp["s4q02"] == 3).groupby(vp["HHFARMID"]).mean().rename("fallow_share_vuli")
-
-        # Permanent crops share (croptype == 2 is permanent)
         perm_share = (mc["croptype"] == 2).groupby(mc["HHFARMID"]).mean().rename("permanent_crop_share")
 
-        # Irrigation adoption (s6q05a == 1)
         irrig_m = (mp["s6q05a"] == 1).groupby(mp["HHFARMID"]).mean().rename("irrigation_share_masika")
         irrig_v = (vp["s4q05a"] == 1).groupby(vp["HHFARMID"]).mean().rename("irrigation_share_vuli")
 
-        # Inorganic & organic fertilizer adoption flags
         inorg_m = (mp["s6q09"] == 1).groupby(mp["HHFARMID"]).mean().rename("inorganic_fert_share_masika")
         inorg_v = (vp["s4q09"] == 1).groupby(vp["HHFARMID"]).mean().rename("inorganic_fert_share_vuli")
 
-        # Plot fragmentation and dispersion metrics
         plot_count = mp.groupby("HHFARMID")["MASIKAPLOT__id"].count().rename("plot_count")
         plot_area_std = mp.groupby("HHFARMID")[m_area_col].std().fillna(0.0).rename("plot_area_std")
         plot_area_mean = mp.groupby("HHFARMID")[m_area_col].mean().fillna(0.0).rename("plot_area_mean")
         plot_area_cv = (plot_area_std / (plot_area_mean + self.epsilon)).rename("plot_area_cv")
 
-        # Seasonal crop rotation proxy
         rotation_proxy = np.abs(crop_count_m.fillna(0) - crop_count_v.fillna(0)).rename("seasonal_crop_rotation_index")
 
         # ----------------------------------------------------------------------
-        # 6. Geographic Strata & Frequency Encoding (Technique 10)
+        # 6. Food Shocks Exposure & Damage Dimensions (Technique 13)
+        # ----------------------------------------------------------------------
+        df_shocks = tables.get("shocks", pd.DataFrame())
+        if not df_shocks.empty:
+            shock_count = df_shocks.groupby("HHFARMID").size().rename("total_shocks_count")
+            shock_drought = (df_shocks["shocks_roster__id"] == 1).groupby(df_shocks["HHFARMID"]).max().rename("shock_drought")
+            shock_flood = (df_shocks["shocks_roster__id"] == 2).groupby(df_shocks["HHFARMID"]).max().rename("shock_flood")
+            shock_pest = (df_shocks["shocks_roster__id"] == 6).groupby(df_shocks["HHFARMID"]).max().rename("shock_pest")
+            shock_input_p = (df_shocks["shocks_roster__id"] == 10).groupby(df_shocks["HHFARMID"]).max().rename("shock_input_prices")
+            shock_output_drop = (df_shocks["shocks_roster__id"] == 12).groupby(df_shocks["HHFARMID"]).max().rename("shock_output_drop")
+            shock_sev_max = df_shocks.groupby("HHFARMID")["pme5q03"].max().rename("shock_max_severity")
+            shock_crop_dmg = df_shocks.groupby("HHFARMID")["pme5q02__2"].max().rename("shock_crop_damage")
+            shock_rev_dmg = df_shocks.groupby("HHFARMID")["pme5q02__7"].max().rename("shock_revenue_damage")
+            shocks_features = pd.concat([
+                shock_count, shock_drought, shock_flood, shock_pest, shock_input_p,
+                shock_output_drop, shock_sev_max, shock_crop_dmg, shock_rev_dmg
+            ], axis=1)
+        else:
+            shocks_features = pd.DataFrame(index=holdings.index)
+
+        # ----------------------------------------------------------------------
+        # 7. Livestock Asset Buffers & Tropical Livestock Units (Technique 14)
+        # ----------------------------------------------------------------------
+        df_ls = tables.get("livestock", pd.DataFrame()).copy()
+        if not df_ls.empty and "stock_livestock__id" in df_ls.columns:
+            df_ls["tlu_weight"] = df_ls["stock_livestock__id"].map(self.TLU_WEIGHTS).fillna(0.05)
+            df_ls["animal_count"] = df_ls["s12q01b"].fillna(0)
+            df_ls["tlu"] = df_ls["animal_count"] * df_ls["tlu_weight"]
+            tlu_total = df_ls.groupby("HHFARMID")["tlu"].sum().rename("total_livestock_tlu")
+            head_count = df_ls.groupby("HHFARMID")["animal_count"].sum().rename("total_livestock_head")
+            livestock_features = pd.concat([tlu_total, head_count], axis=1)
+        else:
+            livestock_features = pd.DataFrame(index=holdings.index)
+
+        # ----------------------------------------------------------------------
+        # 8. Seasonal Failure Factors & Seed Technology
+        # ----------------------------------------------------------------------
+        m_drought_fail = mc.groupby("HHFARMID")["s7q06__1"].max().fillna(0).rename("m_drought_fail")
+        v_drought_fail = vc.groupby("HHFARMID")["s5q06__1"].max().fillna(0).rename("v_drought_fail")
+        m_pest_fail = mc.groupby("HHFARMID")["s7q06__5"].max().fillna(0).rename("m_pest_fail")
+        v_pest_fail = vc.groupby("HHFARMID")["s5q06__5"].max().fillna(0).rename("v_pest_fail")
+        m_flood_fail = mc.groupby("HHFARMID")["s7q06__2"].max().fillna(0).rename("m_flood_fail")
+        v_flood_fail = vc.groupby("HHFARMID")["s5q06__2"].max().fillna(0).rename("v_flood_fail")
+
+        m_imp_seed = (mc["s7q04__1"] == 1).groupby(mc["HHFARMID"]).max().rename("m_improved_seed")
+        v_imp_seed = (vc["s5q04__1"] == 1).groupby(vc["HHFARMID"]).max().rename("v_improved_seed")
+
+        crop_tech_features = pd.concat([
+            m_drought_fail, v_drought_fail, m_pest_fail, v_pest_fail, m_flood_fail, v_flood_fail,
+            m_imp_seed, v_imp_seed
+        ], axis=1)
+
+        # ----------------------------------------------------------------------
+        # 9. Master Holding Programs & Early-Warning Information
         # ----------------------------------------------------------------------
         master = tables["master"].copy().set_index("HHFARMID")
         geo_cols = ["region_id", "stratum_id", "ea_id"]
         master_geo = master[[c for c in geo_cols if c in master.columns]]
 
-        # Frequency encoding of region and stratum
         region_counts = master["region_id"].value_counts(normalize=True).rename("freq_region")
         master_geo = master_geo.join(master["region_id"].map(region_counts).rename("freq_region"))
+
+        prog_tfsrp = master["s2q10__7"].rename("prog_tfsrp")
+        prog_pssn = master["s2q10__6"].rename("prog_pssn")
+        prog_aisp = master["s2q10__1"].rename("prog_aisp")
+        prog_irrig = master["s2q10__5"].rename("prog_irrig")
+        water_scarcity = master["pme1q08"].rename("water_scarcity")
+        ext_visits = master["pme6q13"].rename("extension_visits")
+
+        df_pme6 = tables.get("pme6", pd.DataFrame())
+        if not df_pme6.empty and "pme6q01__1" in df_pme6.columns:
+            weather_forecast = (df_pme6["pme6q01__1"] == 1).groupby(df_pme6["HHFARMID"]).max().rename("weather_forecast_received")
+            rain_onset = (df_pme6["pme6q03__11"] == 1).groupby(df_pme6["HHFARMID"]).max().rename("rain_onset_advisory")
+            advisory_features = pd.concat([weather_forecast, rain_onset], axis=1)
+        else:
+            advisory_features = pd.DataFrame(index=holdings.index)
 
         # ----------------------------------------------------------------------
         # Assemble Feature Matrix
@@ -574,12 +634,20 @@ class FeatureEngineer:
             plot_area_mean,
             plot_area_cv,
             rotation_proxy,
+            shocks_features,
+            livestock_features,
+            crop_tech_features,
+            prog_tfsrp,
+            prog_pssn,
+            prog_aisp,
+            prog_irrig,
+            water_scarcity,
+            ext_visits,
+            advisory_features,
             master_geo
         ], how="left").fillna(0.0)
 
-        # ----------------------------------------------------------------------
-        # 7. Cross-Domain Ratios & Asymmetries (Techniques 7 & 8)
-        # ----------------------------------------------------------------------
+        # Cross-Domain Ratios
         features["total_farm_area_ha"] = features["area_ha_masika"] + features["area_ha_vuli"]
         features["log_total_farm_area"] = np.log1p(np.maximum(0, features["total_farm_area_ha"]))
         features["labor_dependency_ratio"] = features["hh_size"] / (features["adult_labor_count"] + 1.0)
@@ -595,10 +663,7 @@ class FeatureEngineer:
         features["delta_hhi_concentration"] = features["hhi_masika"] - features["hhi_vuli"]
         features["delta_evenness"] = features["evenness_masika"] - features["evenness_vuli"]
 
-        # ----------------------------------------------------------------------
-        # 8. Spatial Peer Groupby Aggregations (Technique 1)
-        # ----------------------------------------------------------------------
-        # Compute regional benchmark means for land, fertilizer, and diversity
+        # Spatial Peer Groupby Aggregations (Technique 1)
         reg_means = features.groupby("region_id")[["total_farm_area_ha", "fert_masika_kg", "shannon_masika"]].transform("mean")
         reg_stds = features.groupby("region_id")[["total_farm_area_ha", "fert_masika_kg", "shannon_masika"]].transform("std").fillna(1.0)
 
@@ -608,11 +673,10 @@ class FeatureEngineer:
 
         features["fert_diff_from_region_mean"] = features["fert_masika_kg"] - reg_means["fert_masika_kg"]
         features["fert_ratio_to_region_mean"] = features["fert_masika_kg"] / (reg_means["fert_masika_kg"] + self.epsilon)
-
         features["shannon_diff_from_region_mean"] = features["shannon_masika"] - reg_means["shannon_masika"]
 
         logger.info(
-            "Engineered %d advanced Grandmaster features across %d holdings.",
+            "Engineered %d comprehensive Grandmaster features across %d holdings.",
             features.shape[1], len(features)
         )
         return features
@@ -624,15 +688,12 @@ class FeatureEngineer:
         """
         Fits scalers, encoders, KMeans cluster distances, and PCA components.
 
-        Applies Techniques 11 (KMeans archetypes) and 12 (PCA Latent Decomposition).
-
         Args:
             X_df: Raw engineered features DataFrame including 'ea_id'.
 
         Returns:
             Tuple of (Transformed feature array, Feature names list, Group array for spatial CV).
         """
-        # Extract spatial grouping variable
         if "ea_id" in X_df.columns:
             groups = X_df["ea_id"].values
             X_modeling = X_df.drop(columns=["ea_id"])
@@ -665,23 +726,18 @@ class FeatureEngineer:
             elif name == "num":
                 feature_names.extend(cols)
 
-        # ----------------------------------------------------------------------
-        # 9. KMeans Agronomic Archetype Clustering (Technique 11)
-        # ----------------------------------------------------------------------
+        # Technique 11: KMeans Agronomic Archetype Clustering
         logger.info("Computing KMeans Archetype Cluster Distance Embeddings...")
         self.kmeans_model = KMeans(n_clusters=4, random_state=42, n_init=10)
         kmeans_distances = self.kmeans_model.fit_transform(X_scaled)
         kmeans_feature_names = [f"dist_agronomic_archetype_{k}" for k in range(4)]
 
-        # ----------------------------------------------------------------------
-        # 10. Latent Orthogonal PCA Decomposition (Technique 12)
-        # ----------------------------------------------------------------------
+        # Technique 12: Latent Orthogonal PCA Decomposition
         logger.info("Extracting top 3 PCA orthogonal components...")
         self.pca_model = PCA(n_components=3, random_state=42)
         pca_components = self.pca_model.fit_transform(X_scaled)
         pca_feature_names = ["pca_latent_comp_1", "pca_latent_comp_2", "pca_latent_comp_3"]
 
-        # Concatenate scaled features with KMeans distances and PCA dimensions
         X_final = np.hstack([X_scaled, kmeans_distances, pca_components])
         feature_names.extend(kmeans_feature_names)
         feature_names.extend(pca_feature_names)
@@ -703,16 +759,63 @@ class FeatureEngineer:
 
 
 # ==============================================================================
-# 3. VOLATILITY PREDICTOR & MULTI-MODEL BENCHMARKER
+# 3. GRANDMASTER ENSEMBLE REGRESSOR
+# ==============================================================================
+
+class GrandmasterEnsembleRegressor:
+    """
+    Weighted Out-of-Fold Ensemble Regressor combining LightGBM, XGBoost, and Random Forest.
+    """
+
+    def __init__(
+        self,
+        random_state: int = 42,
+        weights: Optional[Dict[str, float]] = None
+    ) -> None:
+        self.random_state = random_state
+        self.weights = weights or {"lgb": 0.45, "xgb": 0.45, "rf": 0.10}
+        self.model_lgb = lgb.LGBMRegressor(
+            n_estimators=220, learning_rate=0.035, max_depth=6, num_leaves=31,
+            subsample=0.8, colsample_bytree=0.75, reg_alpha=0.1, reg_lambda=1.0,
+            random_state=self.random_state, verbose=-1, n_jobs=-1
+        )
+        self.model_xgb = xgb.XGBRegressor(
+            n_estimators=220, learning_rate=0.035, max_depth=5,
+            subsample=0.8, colsample_bytree=0.75, reg_alpha=0.1, reg_lambda=1.0,
+            random_state=self.random_state, verbosity=0, n_jobs=-1
+        )
+        self.model_rf = RandomForestRegressor(
+            n_estimators=120, max_depth=14, max_features="sqrt",
+            random_state=self.random_state, n_jobs=-1
+        )
+
+    def fit(self, X: np.ndarray, y: np.ndarray) -> GrandmasterEnsembleRegressor:
+        self.model_lgb.fit(X, y)
+        self.model_xgb.fit(X, y)
+        self.model_rf.fit(X, y)
+        return self
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        p_lgb = self.model_lgb.predict(X)
+        p_xgb = self.model_xgb.predict(X)
+        p_rf = self.model_rf.predict(X)
+        return (
+            self.weights["lgb"] * p_lgb
+            + self.weights["xgb"] * p_xgb
+            + self.weights["rf"] * p_rf
+        )
+
+
+# ==============================================================================
+# 4. VOLATILITY PREDICTOR & MULTI-MODEL BENCHMARKER
 # ==============================================================================
 
 class VolatilityPredictor:
     """
     Supervised regressor benchmarking smallholder yield volatility.
 
-    Supports LightGBM, XGBoost, and Random Forest.
-    Employs Spatial Cross-Validation grouped by Enumeration Area (EA) geography
-    to prevent spatial autocorrelation leakage.
+    Supports LightGBM, XGBoost, Random Forest, and the Grandmaster Ensemble.
+    Employs Spatial Cross-Validation grouped by Enumeration Area (EA) geography.
     """
 
     def __init__(
@@ -721,32 +824,25 @@ class VolatilityPredictor:
         random_state: int = 42,
         **model_params: Any
     ) -> None:
-        """
-        Initialize the VolatilityPredictor.
-
-        Args:
-            model_type: 'lightgbm', 'xgboost', or 'random_forest'.
-            random_state: Reproducibility seed.
-            **model_params: Optional estimator hyperparameters.
-        """
         self.model_type = model_type.lower()
         self.random_state = random_state
         self.model_params = model_params
         self.model = self._instantiate_model(self.model_type, self.model_params)
 
     def _instantiate_model(self, mtype: str, params: Dict[str, Any]) -> Any:
-        """Instantiates LightGBM, XGBoost, or RandomForest Regressor."""
         mtype = mtype.lower()
         if mtype == "lightgbm":
             if not HAS_LIGHTGBM:
                 raise ImportError("lightgbm is not installed.")
             default_params = {
-                "n_estimators": 200,
-                "learning_rate": 0.04,
+                "n_estimators": 220,
+                "learning_rate": 0.035,
                 "max_depth": 6,
                 "num_leaves": 31,
                 "subsample": 0.8,
-                "colsample_bytree": 0.8,
+                "colsample_bytree": 0.75,
+                "reg_alpha": 0.1,
+                "reg_lambda": 1.0,
                 "random_state": self.random_state,
                 "verbose": -1,
                 "n_jobs": -1,
@@ -758,11 +854,13 @@ class VolatilityPredictor:
             if not HAS_XGBOOST:
                 raise ImportError("xgboost is not installed.")
             default_params = {
-                "n_estimators": 200,
-                "learning_rate": 0.04,
+                "n_estimators": 220,
+                "learning_rate": 0.035,
                 "max_depth": 5,
                 "subsample": 0.8,
-                "colsample_bytree": 0.8,
+                "colsample_bytree": 0.75,
+                "reg_alpha": 0.1,
+                "reg_lambda": 1.0,
                 "random_state": self.random_state,
                 "verbosity": 0,
                 "n_jobs": -1,
@@ -772,7 +870,7 @@ class VolatilityPredictor:
 
         elif mtype in ["random_forest", "rf"]:
             default_params = {
-                "n_estimators": 200,
+                "n_estimators": 120,
                 "max_depth": 14,
                 "min_samples_split": 5,
                 "min_samples_leaf": 3,
@@ -783,8 +881,11 @@ class VolatilityPredictor:
             default_params.update(params)
             return RandomForestRegressor(**default_params)
 
+        elif mtype in ["ensemble", "grandmaster_ensemble", "blend"]:
+            return GrandmasterEnsembleRegressor(random_state=self.random_state)
+
         else:
-            raise ValueError(f"Unsupported model_type: {mtype}. Choose 'lightgbm', 'xgboost', or 'random_forest'.")
+            raise ValueError(f"Unsupported model_type: {mtype}. Choose 'lightgbm', 'xgboost', 'random_forest', or 'ensemble'.")
 
     def spatial_cross_validate(
         self,
@@ -797,18 +898,15 @@ class VolatilityPredictor:
         """
         Executes Spatial Cross-Validation using Enumeration Area (EA) cluster groups.
 
-        Ensures that smallholders in the same village/EA are kept strictly in either
-        the training or validation fold, eliminating spatial leakage.
-
         Args:
             X: Feature matrix.
             y: Target volatility vector.
             groups: Enumeration Area IDs array.
             n_splits: Number of spatial cross-validation folds.
-            model_type: Architecture to test (defaults to self.model_type).
+            model_type: Architecture to test.
 
         Returns:
-            Dictionary containing fold-level and aggregated validation metrics.
+            Dictionary containing validation metrics and out-of-fold predictions.
         """
         target_mtype = (model_type or self.model_type).lower()
         gkf = GroupKFold(n_splits=n_splits)
@@ -860,29 +958,17 @@ class VolatilityPredictor:
         n_splits: int = 5
     ) -> Tuple[pd.DataFrame, Dict[str, Dict[str, Any]]]:
         """
-        Executes benchmark comparison across LightGBM, XGBoost, and Random Forest.
-
-        Evaluates all three architectures using identical Spatial GroupKFold splits.
-
-        Args:
-            X: Feature matrix.
-            y: Target volatility array.
-            groups: Enumeration Area IDs array.
-            n_splits: Number of spatial CV folds.
-
-        Returns:
-            Tuple of (Comparison summary DataFrame, Full detailed results dictionary).
+        Executes benchmark comparison across LightGBM, XGBoost, Random Forest, and Grandmaster Ensemble.
         """
         logger.info("=" * 70)
-        logger.info("STARTING MULTI-MODEL BENCHMARK (LightGBM vs XGBoost vs Random Forest)")
+        logger.info("STARTING MULTI-MODEL BENCHMARK (LightGBM vs XGBoost vs RF vs Grandmaster Ensemble)")
         logger.info("=" * 70)
 
-        architectures = ["lightgbm", "xgboost", "random_forest"]
+        architectures = ["lightgbm", "xgboost", "random_forest", "ensemble"]
         comparison_records = []
         detailed_results = {}
 
         for arch in architectures:
-            logger.info("Evaluating %s with 5-Fold Spatial Cross-Validation...", arch.upper())
             res = self.spatial_cross_validate(X, y, groups=groups, n_splits=n_splits, model_type=arch)
             detailed_results[arch] = res
             comparison_records.append({
@@ -909,15 +995,12 @@ class VolatilityPredictor:
 
 
 # ==============================================================================
-# 4. MODEL INTERPRETER
+# 5. MODEL INTERPRETER
 # ==============================================================================
 
 class ModelInterpreter:
     """
     Interprets yield volatility drivers using SHAP (SHapley Additive exPlanations).
-
-    Extracts global feature importances, generates summary/beeswarm plots,
-    and isolates local household-level risk and protective factors.
     """
 
     def __init__(
@@ -926,39 +1009,30 @@ class ModelInterpreter:
         feature_names: List[str],
         output_dir: Union[str, Path] = "artifacts/interpretability"
     ) -> None:
-        """
-        Initialize ModelInterpreter.
-
-        Args:
-            model: Trained Tree-based regressor (LightGBM/XGBoost/RandomForest).
-            feature_names: Ordered list of feature names.
-            output_dir: Output directory path for plots and explanation tables.
-        """
         self.model = model
         self.feature_names = feature_names
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.explainer = shap.TreeExplainer(self.model)
+
+        # For ensemble, explain the primary gradient booster
+        if hasattr(self.model, "model_xgb"):
+            self.explain_target_model = self.model.model_xgb
+        elif hasattr(self.model, "model_lgb"):
+            self.explain_target_model = self.model.model_lgb
+        else:
+            self.explain_target_model = self.model
+
+        self.explainer = shap.TreeExplainer(self.explain_target_model)
 
     def explain_global(
         self,
         X: np.ndarray,
         max_display: int = 20
     ) -> pd.DataFrame:
-        """
-        Extracts global SHAP feature importance and saves summary visual plots.
-
-        Args:
-            X: Feature matrix.
-            max_display: Maximum number of top features to render.
-
-        Returns:
-            DataFrame with mean absolute SHAP values per feature.
-        """
+        """Extracts global SHAP feature importance and saves summary visual plots."""
         logger.info("Computing global SHAP values across %d observations...", len(X))
         shap_values = self.explainer(X)
 
-        # 1. Summary Beeswarm Plot
         plt.figure(figsize=(10, 8), dpi=300)
         shap.summary_plot(
             shap_values.values,
@@ -973,7 +1047,6 @@ class ModelInterpreter:
         plt.close()
         logger.info("Saved SHAP summary plot to %s", summary_path)
 
-        # 2. Global Bar Importance Plot
         plt.figure(figsize=(10, 8), dpi=300)
         shap.plots.bar(shap_values, max_display=max_display, show=False)
         bar_path = self.output_dir / "shap_importance_bar.png"
@@ -982,7 +1055,6 @@ class ModelInterpreter:
         plt.close()
         logger.info("Saved SHAP feature importance bar plot to %s", bar_path)
 
-        # 3. Formulate Importance DataFrame
         mean_abs_shap = np.abs(shap_values.values).mean(axis=0)
         importance_df = pd.DataFrame({
             "feature": self.feature_names,
@@ -999,25 +1071,12 @@ class ModelInterpreter:
         household_idx: int,
         top_k: int = 5
     ) -> Dict[str, Any]:
-        """
-        Computes local SHAP explanation for a specific smallholder household.
-
-        Identifies the primary features driving predicted yield volatility higher
-        (risk factors) or lower (protective resilience factors).
-
-        Args:
-            X: Feature matrix.
-            household_idx: Zero-based row index of the target household.
-            top_k: Number of top driving features to report.
-
-        Returns:
-            Dictionary containing base value, prediction, and top drivers.
-        """
+        """Computes local SHAP explanation for a specific smallholder household."""
         single_x = X[household_idx : household_idx + 1]
         shap_values_single = self.explainer(single_x)
 
         base_val = float(shap_values_single.base_values[0])
-        pred_val = float(self.model.predict(single_x)[0])
+        pred_val = float(self.explain_target_model.predict(single_x)[0])
         vals = shap_values_single.values[0]
 
         impacts = pd.DataFrame({
@@ -1026,20 +1085,17 @@ class ModelInterpreter:
             "shap_value": vals
         })
 
-        # Top factors increasing volatility
         risk_factors = (
             impacts.sort_values(by="shap_value", ascending=False)
             .head(top_k)
             .to_dict(orient="records")
         )
-        # Top factors mitigating volatility
         protective_factors = (
             impacts.sort_values(by="shap_value", ascending=True)
             .head(top_k)
             .to_dict(orient="records")
         )
 
-        # Render Waterfall Plot
         plt.figure(figsize=(9, 6), dpi=300)
         shap.plots.waterfall(shap_values_single[0], max_display=top_k * 2, show=False)
         waterfall_path = self.output_dir / f"household_{household_idx}_waterfall.png"
@@ -1059,7 +1115,7 @@ class ModelInterpreter:
 
 
 # ==============================================================================
-# 5. PIPELINE ORCHESTRATOR
+# 6. PIPELINE ORCHESTRATOR
 # ==============================================================================
 
 class PipelineOrchestrator:
@@ -1074,19 +1130,9 @@ class PipelineOrchestrator:
         data_dir: Union[str, Path] = "data/AASS 2024_2025",
         output_dir: Union[str, Path] = "artifacts/yield_volatility",
         compare_models: bool = True,
-        champion_model_type: str = "lightgbm",
+        champion_model_type: str = "ensemble",
         random_state: int = 42
     ) -> None:
-        """
-        Initialize the PipelineOrchestrator.
-
-        Args:
-            data_dir: Directory containing raw AASS microdata.
-            output_dir: Destination for metrics, logs, and SHAP plots.
-            compare_models: If True, executes spatial benchmark of LightGBM, XGBoost, and RF.
-            champion_model_type: Default architecture if compare_models is False.
-            random_state: Seed for reproducibility.
-        """
         self.data_dir = Path(data_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -1094,7 +1140,6 @@ class PipelineOrchestrator:
         self.champion_model_type = champion_model_type.lower()
         self.random_state = random_state
 
-        # Instantiate OOP components
         self.preprocessor = DataPreprocessor(self.data_dir)
         self.engineer = FeatureEngineer()
         self.predictor = VolatilityPredictor(model_type=self.champion_model_type, random_state=self.random_state)
@@ -1102,24 +1147,27 @@ class PipelineOrchestrator:
 
     def plot_model_comparison(self, comparison_df: pd.DataFrame) -> Path:
         """Renders visual bar comparison of RMSE, MAE, and R^2 across models."""
-        fig, axes = plt.subplots(1, 3, figsize=(15, 5), dpi=300)
+        fig, axes = plt.subplots(1, 3, figsize=(16, 5), dpi=300)
 
         # RMSE
         axes[0].bar(comparison_df["Model"], comparison_df["Spatial RMSE"], color="#1f77b4", alpha=0.85)
         axes[0].set_title("Spatial RMSE (Lower is Better)", fontweight="bold")
         axes[0].set_ylabel("RMSE")
+        axes[0].tick_params(axis="x", rotation=15)
         axes[0].grid(axis="y", linestyle="--", alpha=0.5)
 
         # MAE
         axes[1].bar(comparison_df["Model"], comparison_df["Spatial MAE"], color="#ff7f0e", alpha=0.85)
         axes[1].set_title("Spatial MAE (Lower is Better)", fontweight="bold")
         axes[1].set_ylabel("MAE")
+        axes[1].tick_params(axis="x", rotation=15)
         axes[1].grid(axis="y", linestyle="--", alpha=0.5)
 
         # R^2
         axes[2].bar(comparison_df["Model"], comparison_df["Spatial R2"], color="#2ca02c", alpha=0.85)
         axes[2].set_title("Spatial R² (Higher is Better)", fontweight="bold")
         axes[2].set_ylabel("R² Score")
+        axes[2].tick_params(axis="x", rotation=15)
         axes[2].grid(axis="y", linestyle="--", alpha=0.5)
 
         chart_path = self.output_dir / "model_comparison.png"
@@ -1130,12 +1178,7 @@ class PipelineOrchestrator:
         return chart_path
 
     def run(self) -> Dict[str, Any]:
-        """
-        Executes the full pipeline sequentially with multi-model benchmarking.
-
-        Returns:
-            Dictionary containing evaluation metrics and output artifact paths.
-        """
+        """Executes the full pipeline sequentially with multi-model benchmarking."""
         logger.info("=" * 70)
         logger.info("STARTING GRANDMASTER SMALLHOLDER YIELD VOLATILITY ML PIPELINE")
         logger.info("=" * 70)
@@ -1158,7 +1201,6 @@ class PipelineOrchestrator:
         eligible_df, y_target = self.engineer.compute_target(seasonal_yields)
         X_df = self.engineer.engineer_predictive_features(eligible_df, tables)
 
-        # Align target index with engineered features
         y_aligned = y_target.loc[X_df.index].values
         X_mat, feature_names, groups = self.engineer.fit_transform(X_df)
 
@@ -1167,15 +1209,16 @@ class PipelineOrchestrator:
             X_mat.shape[0], X_mat.shape[1], len(np.unique(groups))
         )
 
-        # Step 3: Multi-Model Benchmark (LightGBM vs. XGBoost vs. Random Forest)
+        # Step 3: Multi-Model Benchmark (LightGBM vs. XGBoost vs. Random Forest vs. Grandmaster Ensemble)
         comparison_dict = {}
         if self.compare_models_flag:
             comparison_df, detailed_cv = self.predictor.compare_models(X_mat, y_aligned, groups=groups, n_splits=5)
             self.plot_model_comparison(comparison_df)
 
-            # Determine champion model based on lowest Spatial RMSE
             best_model_name = comparison_df.iloc[0]["Model"].lower()
-            if "lightgbm" in best_model_name:
+            if "ensemble" in best_model_name:
+                champion_mtype = "ensemble"
+            elif "lightgbm" in best_model_name:
                 champion_mtype = "lightgbm"
             elif "xgboost" in best_model_name:
                 champion_mtype = "xgboost"
@@ -1250,13 +1293,13 @@ def parse_args() -> argparse.Namespace:
         "--compare",
         action="store_true",
         default=True,
-        help="Execute multi-model spatial comparison across LightGBM, XGBoost, and Random Forest."
+        help="Execute multi-model spatial comparison across LightGBM, XGBoost, Random Forest, and Ensemble."
     )
     parser.add_argument(
         "--model-type",
         type=str,
-        choices=["lightgbm", "xgboost", "random_forest"],
-        default="lightgbm",
+        choices=["lightgbm", "xgboost", "random_forest", "ensemble"],
+        default="ensemble",
         help="Default model if --compare is not set."
     )
     parser.add_argument(

@@ -1,132 +1,139 @@
 {
-    "champion_model": "xgboost",
+    "champion_model": "ensemble",
     "holdings_count": 4564,
-    "features_count": 179,
+    "features_count": 206,
     "enumeration_areas_count": 921,
-    "champion_spatial_cv_rmse": 0.5621076407757254,
-    "champion_spatial_cv_mae": 0.4547501330804903,
-    "champion_spatial_cv_r2": 0.40168926521818227,
+    "champion_spatial_cv_rmse": 0.5299480630896919,
+    "champion_spatial_cv_mae": 0.42966577126283617,
+    "champion_spatial_cv_r2": 0.4681925269094892,
     "model_comparison": [
         {
-            "Model": "XGBOOST",
-            "Spatial RMSE": 0.5621076407757254,
-            "Spatial MAE": 0.4547501330804903,
-            "Spatial R2": 0.40168926521818227,
-            "Train Time (s)": 1.78
+            "Model": "ENSEMBLE",
+            "Spatial RMSE": 0.5299480630896919,
+            "Spatial MAE": 0.42966577126283617,
+            "Spatial R2": 0.4681925269094892,
+            "Train Time (s)": 6.72
         },
         {
             "Model": "LIGHTGBM",
-            "Spatial RMSE": 0.5628605473076981,
-            "Spatial MAE": 0.4528679918516107,
-            "Spatial R2": 0.4000853953660658,
-            "Train Time (s)": 3.4
+            "Spatial RMSE": 0.5301141228403656,
+            "Spatial MAE": 0.42546108858458587,
+            "Spatial R2": 0.4678591898946487,
+            "Train Time (s)": 4.15
+        },
+        {
+            "Model": "XGBOOST",
+            "Spatial RMSE": 0.5316669284565718,
+            "Spatial MAE": 0.42988804495702077,
+            "Spatial R2": 0.46473713969946184,
+            "Train Time (s)": 2.11
         },
         {
             "Model": "RANDOM_FOREST",
-            "Spatial RMSE": 0.5848800676511081,
-            "Spatial MAE": 0.501376519563731,
-            "Spatial R2": 0.3522290618755931,
-            "Train Time (s)": 0.81
+            "Spatial RMSE": 0.5605888899190198,
+            "Spatial MAE": 0.47845198580296405,
+            "Spatial R2": 0.4049180324277487,
+            "Train Time (s)": 0.63
         }
     ],
     "top_10_predictive_features": [
         {
             "feature": "permanent_crop_share",
-            "mean_abs_shap": 0.16883477568626404
+            "mean_abs_shap": 0.15842555463314056
+        },
+        {
+            "feature": "v_improved_seed",
+            "mean_abs_shap": 0.08164441585540771
         },
         {
             "feature": "labor_bottleneck_masika",
-            "mean_abs_shap": 0.08540365844964981
+            "mean_abs_shap": 0.059138379991054535
         },
         {
             "feature": "seasonal_crop_rotation_index",
-            "mean_abs_shap": 0.056238073855638504
+            "mean_abs_shap": 0.05318527668714523
         },
         {
             "feature": "evenness_vuli",
-            "mean_abs_shap": 0.05503341183066368
+            "mean_abs_shap": 0.04408823698759079
         },
         {
-            "feature": "shannon_vuli",
-            "mean_abs_shap": 0.028430460020899773
-        },
-        {
-            "feature": "fallow_share_vuli",
-            "mean_abs_shap": 0.028395643457770348
-        },
-        {
-            "feature": "delta_evenness",
-            "mean_abs_shap": 0.027375902980566025
+            "feature": "v_drought_fail",
+            "mean_abs_shap": 0.041591379791498184
         },
         {
             "feature": "fertilizer_seasonal_ratio",
-            "mean_abs_shap": 0.025981243699789047
+            "mean_abs_shap": 0.025023367255926132
         },
         {
-            "feature": "delta_pesticide_qty",
-            "mean_abs_shap": 0.023547612130641937
+            "feature": "fallow_share_vuli",
+            "mean_abs_shap": 0.024874677881598473
         },
         {
-            "feature": "region_id_20",
-            "mean_abs_shap": 0.021972550079226494
+            "feature": "m_drought_fail",
+            "mean_abs_shap": 0.02056952193379402
+        },
+        {
+            "feature": "delta_evenness",
+            "mean_abs_shap": 0.02032269537448883
         }
     ],
     "sample_local_explanation": {
         "household_index": 0,
-        "base_expected_volatility": 1.0844327211380005,
-        "predicted_volatility": 0.40278559923171997,
+        "base_expected_volatility": 1.085126519203186,
+        "predicted_volatility": 0.4849323630332947,
         "top_risk_drivers": [
             {
                 "feature": "labor_bottleneck_masika",
                 "value": 1.0,
-                "shap_value": 0.2761656939983368
+                "shap_value": 0.21280968189239502
             },
             {
-                "feature": "stratum_id_242.0",
+                "feature": "m_drought_fail",
                 "value": 1.0,
-                "shap_value": 0.012110503390431404
-            },
-            {
-                "feature": "plot_area_mean",
-                "value": 2.6153947537990465,
-                "shap_value": 0.010913684032857418
-            },
-            {
-                "feature": "region_id_20",
-                "value": 0.0,
-                "shap_value": 0.0106989536434412
+                "shap_value": 0.07861703634262085
             },
             {
                 "feature": "plot_count",
                 "value": -0.5,
-                "shap_value": 0.007066473830491304
+                "shap_value": 0.020412283018231392
+            },
+            {
+                "feature": "m_pest_fail",
+                "value": 1.0,
+                "shap_value": 0.013414775021374226
+            },
+            {
+                "feature": "total_shocks_count",
+                "value": 0.5,
+                "shap_value": 0.008684161119163036
             }
         ],
         "top_protective_drivers": [
             {
                 "feature": "shannon_masika",
                 "value": 0.7370385493970052,
-                "shap_value": -0.14016194641590118
-            },
-            {
-                "feature": "fertilizer_seasonal_ratio",
-                "value": 2.2372881038015904,
-                "shap_value": -0.07229854166507721
+                "shap_value": -0.07438593357801437
             },
             {
                 "feature": "permanent_crop_share",
                 "value": 1.0,
-                "shap_value": -0.06200641021132469
+                "shap_value": -0.07181230187416077
             },
             {
-                "feature": "seasonal_crop_rotation_index",
-                "value": -0.5,
-                "shap_value": -0.05234565958380699
+                "feature": "v_improved_seed",
+                "value": 1.0,
+                "shap_value": -0.06541111320257187
             },
             {
-                "feature": "num_crops_masika",
-                "value": 2.0,
-                "shap_value": -0.05118696764111519
+                "feature": "evenness_masika",
+                "value": 0.7955009841563473,
+                "shap_value": -0.059662409126758575
+            },
+            {
+                "feature": "fertilizer_seasonal_ratio",
+                "value": 2.2372881038015904,
+                "shap_value": -0.04908464103937149
             }
         ],
         "plot_saved_to": "artifacts/yield_volatility/interpretability/household_0_waterfall.png"
