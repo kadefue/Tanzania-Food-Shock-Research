@@ -1,44 +1,50 @@
 {
     "champion_model": "ensemble",
     "holdings_count": 4564,
-    "features_count": 246,
+    "candidate_features_count": 246,
+    "selected_features_count": 100,
     "enumeration_areas_count": 921,
-    "champion_spatial_cv_rmse": 0.4653522642449143,
-    "champion_spatial_cv_mae": 0.3492129252817285,
-    "champion_spatial_cv_r2": 0.589936154375485,
+    "champion_spatial_cv_rmse": 0.4642053513311635,
+    "champion_spatial_cv_mae": 0.34720253732430356,
+    "champion_spatial_cv_r2": 0.5919549603134866,
+    "leakage_audit": {
+        "status": "CERTIFIED_LEAKAGE_FREE",
+        "all_checks_passed": true,
+        "pillars_passed": "5/5"
+    },
     "model_comparison": [
         {
             "Model": "WEIGHTED_ENSEMBLE",
-            "Spatial RMSE": 0.4653522642449143,
-            "Spatial MAE": 0.3492129252817285,
-            "Spatial R2": 0.589936154375485,
-            "Train Time (s)": 10.87
+            "Spatial RMSE": 0.4642053513311634,
+            "Spatial MAE": 0.3472025373243035,
+            "Spatial R2": 0.5919549603134866,
+            "Train Time (s)": 9.19
         },
         {
             "Model": "LIGHTGBM",
-            "Spatial RMSE": 0.4664599024067719,
-            "Spatial MAE": 0.34747676809763683,
-            "Spatial R2": 0.5879817514482563,
-            "Train Time (s)": 6.65
+            "Spatial RMSE": 0.4654506397647722,
+            "Spatial MAE": 0.3459059117124652,
+            "Spatial R2": 0.5897627609655713,
+            "Train Time (s)": 6.03
         },
         {
             "Model": "XGBOOST",
-            "Spatial RMSE": 0.46750388653646985,
-            "Spatial MAE": 0.34848639182161567,
-            "Spatial R2": 0.5861354111336646,
-            "Train Time (s)": 3.3
+            "Spatial RMSE": 0.4664480031864473,
+            "Spatial MAE": 0.34844236443498794,
+            "Spatial R2": 0.5880027720477075,
+            "Train Time (s)": 2.57
         },
         {
             "Model": "RANDOM_FOREST",
-            "Spatial RMSE": 0.4874095569745112,
-            "Spatial MAE": 0.3858717604233138,
-            "Spatial R2": 0.5501415336141707,
-            "Train Time (s)": 0.61
+            "Spatial RMSE": 0.47684050771270475,
+            "Spatial MAE": 0.36821766835215175,
+            "Spatial R2": 0.5694395831246234,
+            "Train Time (s)": 0.51
         }
     ],
     "overall_regional_models": {
         "overall_regional_models_rmse": 0.5868984743365809,
-        "overall_regional_models_mae": 0.4672310884107859,
+        "overall_regional_models_mae": 0.46723108841078603,
         "overall_regional_models_r2": 0.3477504643658923
     },
     "regional_performance": [
@@ -49,9 +55,9 @@
             "Regional Model RMSE": 0.6229226998033839,
             "Regional Model MAE": 0.5192860634082265,
             "Regional Model R2": 0.20224648816315904,
-            "National Model RMSE": 0.47099191201761204,
-            "National Model MAE": 0.37633106323204785,
-            "National Model R2": 0.5439344068780703
+            "National Model RMSE": 0.46736528739702776,
+            "National Model MAE": 0.37041281849315005,
+            "National Model R2": 0.5509307517050387
         },
         {
             "Region ID": 20,
@@ -60,9 +66,9 @@
             "Regional Model RMSE": 0.5339680112810663,
             "Regional Model MAE": 0.40468673585538495,
             "Regional Model R2": 0.4620106952041746,
-            "National Model RMSE": 0.4305375130918256,
-            "National Model MAE": 0.32452792699407873,
-            "National Model R2": 0.6502440131193911
+            "National Model RMSE": 0.4313898500609715,
+            "National Model MAE": 0.32425036256221235,
+            "National Model R2": 0.6488578154780321
         },
         {
             "Region ID": 3,
@@ -71,9 +77,9 @@
             "Regional Model RMSE": 0.6074393110335351,
             "Regional Model MAE": 0.48311147087965983,
             "Regional Model R2": 0.3454843635702074,
-            "National Model RMSE": 0.46274255514475643,
-            "National Model MAE": 0.3422343210069078,
-            "National Model R2": 0.6201666285366365
+            "National Model RMSE": 0.46041479683945513,
+            "National Model MAE": 0.3394952785445943,
+            "National Model R2": 0.6239784087853681
         },
         {
             "Region ID": 18,
@@ -82,31 +88,31 @@
             "Regional Model RMSE": 0.40396764638398364,
             "Regional Model MAE": 0.28002663927839055,
             "Regional Model R2": 0.6876450838534192,
-            "National Model RMSE": 0.3608255531064213,
-            "National Model MAE": 0.24572308603407925,
-            "National Model R2": 0.7507990178195793
+            "National Model RMSE": 0.36287607741392536,
+            "National Model MAE": 0.24395726072431007,
+            "National Model R2": 0.7479586168602863
         },
         {
             "Region ID": 5,
             "Region Name": "Morogoro",
             "Holdings (N)": 257,
             "Regional Model RMSE": 0.670579161821082,
-            "Regional Model MAE": 0.5506709750639833,
-            "Regional Model R2": 0.0620917725309732,
-            "National Model RMSE": 0.519696717250596,
-            "National Model MAE": 0.42358520844404174,
-            "National Model R2": 0.4366734953753254
+            "Regional Model MAE": 0.5506709750639834,
+            "Regional Model R2": 0.06209177253097331,
+            "National Model RMSE": 0.5174721101582321,
+            "National Model MAE": 0.420033336997388,
+            "National Model R2": 0.4414859097031296
         },
         {
             "Region ID": 6,
             "Region Name": "Pwani",
             "Holdings (N)": 252,
             "Regional Model RMSE": 0.619748525352366,
-            "Regional Model MAE": 0.49877945743601015,
+            "Regional Model MAE": 0.4987794574360102,
             "Regional Model R2": 0.27055931220621454,
-            "National Model RMSE": 0.4422655782885171,
-            "National Model MAE": 0.317764638992971,
-            "National Model R2": 0.628528705728594
+            "National Model RMSE": 0.44192528604956544,
+            "National Model MAE": 0.3172196944708847,
+            "National Model R2": 0.6291001278482424
         },
         {
             "Region ID": 12,
@@ -115,20 +121,20 @@
             "Regional Model RMSE": 0.6014258502542197,
             "Regional Model MAE": 0.48891056879328204,
             "Regional Model R2": 0.27249487207019896,
-            "National Model RMSE": 0.507102293363479,
-            "National Model MAE": 0.37790698774896386,
-            "National Model R2": 0.4827946287290046
+            "National Model RMSE": 0.5050833415888988,
+            "National Model MAE": 0.3745521710761058,
+            "National Model R2": 0.4869047817596932
         },
         {
             "Region ID": 19,
             "Region Name": "Mwanza",
             "Holdings (N)": 215,
-            "Regional Model RMSE": 0.5886113576941437,
+            "Regional Model RMSE": 0.5886113576941439,
             "Regional Model MAE": 0.4675817089779169,
-            "Regional Model R2": 0.27946296498684153,
-            "National Model RMSE": 0.5045799972146083,
-            "National Model MAE": 0.38520418893070646,
-            "National Model R2": 0.4705083784593074
+            "Regional Model R2": 0.2794629649868414,
+            "National Model RMSE": 0.5049129330990216,
+            "National Model MAE": 0.38364758350991646,
+            "National Model R2": 0.4698094014022336
         },
         {
             "Region ID": 2,
@@ -137,9 +143,9 @@
             "Regional Model RMSE": 0.5906376961472002,
             "Regional Model MAE": 0.472442326472551,
             "Regional Model R2": 0.2972527000573253,
-            "National Model RMSE": 0.46159880590567864,
-            "National Model MAE": 0.34255912436272856,
-            "National Model R2": 0.5707738071524144
+            "National Model RMSE": 0.4586144093791487,
+            "National Model MAE": 0.34021082978819644,
+            "National Model R2": 0.5763060578807442
         },
         {
             "Region ID": 21,
@@ -148,9 +154,9 @@
             "Regional Model RMSE": 0.5920454142435584,
             "Regional Model MAE": 0.4962171187941172,
             "Regional Model R2": 0.2777225993830398,
-            "National Model RMSE": 0.49844184626962124,
-            "National Model MAE": 0.3949795120818851,
-            "National Model R2": 0.4880553895722016
+            "National Model RMSE": 0.4964822012511591,
+            "National Model MAE": 0.3922981047414972,
+            "National Model R2": 0.49207293983697287
         },
         {
             "Region ID": 24,
@@ -159,9 +165,9 @@
             "Regional Model RMSE": 0.46662834974258094,
             "Regional Model MAE": 0.36425728138977187,
             "Regional Model R2": 0.4367261216668574,
-            "National Model RMSE": 0.4571945002210078,
-            "National Model MAE": 0.35413884974648613,
-            "National Model R2": 0.4592713695544135
+            "National Model RMSE": 0.45785947177377345,
+            "National Model MAE": 0.35537123891715444,
+            "National Model R2": 0.4576972882980145
         },
         {
             "Region ID": 30,
@@ -170,20 +176,20 @@
             "Regional Model RMSE": 0.5601572556082861,
             "Regional Model MAE": 0.40766769086196236,
             "Regional Model R2": 0.35304566079249866,
-            "National Model RMSE": 0.36961860703798133,
-            "National Model MAE": 0.22495643536009902,
-            "National Model R2": 0.7183165373667728
+            "National Model RMSE": 0.37095684216032104,
+            "National Model MAE": 0.2217525754453395,
+            "National Model R2": 0.7162731277485085
         },
         {
             "Region ID": 0,
             "Region Name": "Region_0",
             "Holdings (N)": 166,
-            "Regional Model RMSE": 0.685122265965909,
+            "Regional Model RMSE": 0.6851222659659089,
             "Regional Model MAE": 0.5749052109122645,
-            "Regional Model R2": 0.1470208945293522,
-            "National Model RMSE": 0.5711988883241234,
-            "National Model MAE": 0.4521041939977721,
-            "National Model R2": 0.40710616306508907
+            "Regional Model R2": 0.1470208945293524,
+            "National Model RMSE": 0.5770029137048507,
+            "National Model MAE": 0.4610161119767473,
+            "National Model R2": 0.3949960065563224
         },
         {
             "Region ID": 27,
@@ -192,9 +198,9 @@
             "Regional Model RMSE": 0.5976555943316954,
             "Regional Model MAE": 0.47672714130208255,
             "Regional Model R2": 0.3103292666638642,
-            "National Model RMSE": 0.4744156792128009,
-            "National Model MAE": 0.3320409878216811,
-            "National Model R2": 0.5654318568975183
+            "National Model RMSE": 0.4727073992237515,
+            "National Model MAE": 0.3306354368041271,
+            "National Model R2": 0.5685558156527302
         },
         {
             "Region ID": 25,
@@ -203,9 +209,9 @@
             "Regional Model RMSE": 0.6127273733691067,
             "Regional Model MAE": 0.5150434453014477,
             "Regional Model R2": 0.049697567699493295,
-            "National Model RMSE": 0.500904795140047,
-            "National Model MAE": 0.4023554545899038,
-            "National Model R2": 0.3649065205856078
+            "National Model RMSE": 0.50062988167284,
+            "National Model MAE": 0.40307872505825865,
+            "National Model R2": 0.365603450781118
         },
         {
             "Region ID": 31,
@@ -214,9 +220,9 @@
             "Regional Model RMSE": 0.5790132403620952,
             "Regional Model MAE": 0.4373756697831563,
             "Regional Model R2": 0.31447234559826365,
-            "National Model RMSE": 0.36408894248282253,
-            "National Model MAE": 0.21356680064496852,
-            "National Model R2": 0.728941539024551
+            "National Model RMSE": 0.36651631828178355,
+            "National Model MAE": 0.21417728099913527,
+            "National Model R2": 0.725315205023595
         },
         {
             "Region ID": 28,
@@ -225,9 +231,9 @@
             "Regional Model RMSE": 0.5726600110018801,
             "Regional Model MAE": 0.45986860990667294,
             "Regional Model R2": 0.42225569034196864,
-            "National Model RMSE": 0.4739302082053827,
-            "National Model MAE": 0.3567225057118582,
-            "National Model R2": 0.6042957224672938
+            "National Model RMSE": 0.4657309569394149,
+            "National Model MAE": 0.352649743773122,
+            "National Model R2": 0.617869084602986
         },
         {
             "Region ID": 29,
@@ -236,20 +242,20 @@
             "Regional Model RMSE": 0.5305104116813382,
             "Regional Model MAE": 0.4262831521059146,
             "Regional Model R2": 0.5942109445138077,
-            "National Model RMSE": 0.4196966482257091,
-            "National Model MAE": 0.29904993189137097,
-            "National Model R2": 0.7460293632137295
+            "National Model RMSE": 0.41341861092075555,
+            "National Model MAE": 0.29633145178279463,
+            "National Model R2": 0.7535705810690239
         },
         {
             "Region ID": 7,
             "Region Name": "Dar es Salaam",
             "Holdings (N)": 66,
             "Regional Model RMSE": 0.7239758210649491,
-            "Regional Model MAE": 0.601269707180671,
+            "Regional Model MAE": 0.6012697071806709,
             "Regional Model R2": -0.05389921105464612,
-            "National Model RMSE": 0.5863159646073113,
-            "National Model MAE": 0.46037007902241145,
-            "National Model R2": 0.308783026083569
+            "National Model RMSE": 0.5830496881885497,
+            "National Model MAE": 0.4560318319778655,
+            "National Model R2": 0.3164629023678823
         },
         {
             "Region ID": 16,
@@ -258,9 +264,9 @@
             "Regional Model RMSE": 0.6466921369965652,
             "Regional Model MAE": 0.5699174959981964,
             "Regional Model R2": -0.041638617559492275,
-            "National Model RMSE": 0.49463288494327806,
-            "National Model MAE": 0.4172342534049266,
-            "National Model R2": 0.3906204379161219
+            "National Model RMSE": 0.4911257169139958,
+            "National Model MAE": 0.41030206566869654,
+            "National Model R2": 0.3992313481238069
         },
         {
             "Region ID": 17,
@@ -269,9 +275,9 @@
             "Regional Model RMSE": 0.5449647849874795,
             "Regional Model MAE": 0.45987659709341044,
             "Regional Model R2": 0.2024335512322335,
-            "National Model RMSE": 0.5071437220978182,
-            "National Model MAE": 0.4192228939307143,
-            "National Model R2": 0.30929578768426946
+            "National Model RMSE": 0.4990949659178703,
+            "National Model MAE": 0.4167038695201397,
+            "National Model R2": 0.3310458136510728
         },
         {
             "Region ID": 1,
@@ -280,9 +286,9 @@
             "Regional Model RMSE": 0.605859528944301,
             "Regional Model MAE": 0.5160065660352755,
             "Regional Model R2": 0.11317594972526002,
-            "National Model RMSE": 0.37814733891252283,
-            "National Model MAE": 0.2546919221884975,
-            "National Model R2": 0.6545257570270402
+            "National Model RMSE": 0.37834073006464286,
+            "National Model MAE": 0.24417177205474994,
+            "National Model R2": 0.6541723035483311
         },
         {
             "Region ID": 23,
@@ -291,20 +297,20 @@
             "Regional Model RMSE": 0.6030382801882727,
             "Regional Model MAE": 0.5513274005404696,
             "Regional Model R2": 0.4268312635875088,
-            "National Model RMSE": 0.4779836412327413,
-            "National Model MAE": 0.3270411643792406,
-            "National Model R2": 0.6399035853257062
+            "National Model RMSE": 0.47108908772200714,
+            "National Model MAE": 0.33656379538991077,
+            "National Model R2": 0.6502169024397193
         },
         {
             "Region ID": 11,
             "Region Name": "Iringa",
             "Holdings (N)": 14,
             "Regional Model RMSE": 0.5636119843894465,
-            "Regional Model MAE": 0.4638216272706985,
-            "Regional Model R2": 0.0510855884522623,
-            "National Model RMSE": 0.33413340049079576,
-            "National Model MAE": 0.26008156406510213,
-            "National Model R2": 0.66649190073456
+            "Regional Model MAE": 0.46382162727069864,
+            "Regional Model R2": 0.05108558845226219,
+            "National Model RMSE": 0.3280661971727805,
+            "National Model MAE": 0.2532385244555247,
+            "National Model R2": 0.6784936366261697
         },
         {
             "Region ID": 13,
@@ -313,9 +319,9 @@
             "Regional Model RMSE": 0.5317606164073952,
             "Regional Model MAE": 0.4544252018053138,
             "Regional Model R2": -0.1971032588258952,
-            "National Model RMSE": 0.5574595672939237,
-            "National Model MAE": 0.4443948775133782,
-            "National Model R2": -0.3156065329112987
+            "National Model RMSE": 0.5693901149853574,
+            "National Model MAE": 0.44868118100891474,
+            "National Model R2": -0.3725213890435124
         },
         {
             "Region ID": 14,
@@ -324,9 +330,9 @@
             "Regional Model RMSE": 0.6286984209867483,
             "Regional Model MAE": 0.47287297551416785,
             "Regional Model R2": -0.5476527188715048,
-            "National Model RMSE": 0.43702914219174316,
-            "National Model MAE": 0.33406119953648494,
-            "National Model R2": 0.2521584835510212
+            "National Model RMSE": 0.46101763682143404,
+            "National Model MAE": 0.3448582693336225,
+            "National Model R2": 0.16780738742655343
         },
         {
             "Region ID": 22,
@@ -335,9 +341,9 @@
             "Regional Model RMSE": 0.4199386141238846,
             "Regional Model MAE": 0.38535323001853283,
             "Regional Model R2": -1.2554498362320485,
-            "National Model RMSE": 0.4115016314148764,
-            "National Model MAE": 0.32678570196859164,
-            "National Model R2": -1.1657318013327198
+            "National Model RMSE": 0.3869057514747735,
+            "National Model MAE": 0.2809847771031794,
+            "National Model R2": -0.9145729664409452
         },
         {
             "Region ID": 26,
@@ -346,109 +352,109 @@
             "Regional Model RMSE": 0.37214444470118974,
             "Regional Model MAE": 0.34326262584108447,
             "Regional Model R2": -1.1324400951987301,
-            "National Model RMSE": 0.2193465206679824,
-            "National Model MAE": 0.17481308202082257,
-            "National Model R2": 0.25917563245539244
+            "National Model RMSE": 0.2513901472108498,
+            "National Model MAE": 0.2105995323280074,
+            "National Model R2": 0.02691615237718148
         }
     ],
     "top_10_predictive_features": [
         {
             "feature": "plant_month_delta",
-            "mean_abs_shap": 0.22256693243980408
+            "mean_abs_shap": 0.20160220563411713
         },
         {
             "feature": "m_harvest_pct_mean",
-            "mean_abs_shap": 0.10034506022930145
+            "mean_abs_shap": 0.09751085191965103
         },
         {
             "feature": "v_plant_month_mean",
-            "mean_abs_shap": 0.05741729214787483
+            "mean_abs_shap": 0.06748566031455994
         },
         {
             "feature": "v_drought_fail",
-            "mean_abs_shap": 0.047704752534627914
+            "mean_abs_shap": 0.04711677506566048
         },
         {
             "feature": "m_no_harvest_share",
-            "mean_abs_shap": 0.040584124624729156
+            "mean_abs_shap": 0.04644567891955376
         },
         {
             "feature": "delta_evenness",
-            "mean_abs_shap": 0.027091134339571
+            "mean_abs_shap": 0.0296030230820179
         },
         {
-            "feature": "m_harvest_pct_min",
-            "mean_abs_shap": 0.019283056259155273
+            "feature": "delta_no_harvest_share",
+            "mean_abs_shap": 0.019702322781085968
+        },
+        {
+            "feature": "delta_pesticide_qty",
+            "mean_abs_shap": 0.018897108733654022
         },
         {
             "feature": "seasonal_crop_rotation_index",
-            "mean_abs_shap": 0.0179760679602623
-        },
-        {
-            "feature": "fallow_share_masika",
-            "mean_abs_shap": 0.017953405156731606
+            "mean_abs_shap": 0.018205488100647926
         },
         {
             "feature": "fallow_share_vuli",
-            "mean_abs_shap": 0.017646316438913345
+            "mean_abs_shap": 0.0178215354681015
         }
     ],
     "sample_local_explanation": {
         "household_index": 0,
-        "base_expected_volatility": 1.0849875211715698,
-        "predicted_volatility": 0.45534712076187134,
+        "base_expected_volatility": 1.0854586362838745,
+        "predicted_volatility": 0.5219990611076355,
         "top_risk_drivers": [
             {
                 "feature": "delta_evenness",
                 "value": -1.340944685455614,
-                "shap_value": 0.02287815883755684
+                "shap_value": 0.03784710913896561
             },
             {
                 "feature": "delta_hhi_concentration",
                 "value": 2.5163805123972116,
-                "shap_value": 0.015119161456823349
+                "shap_value": 0.011640925891697407
+            },
+            {
+                "feature": "delta_no_harvest_share",
+                "value": -1.1111111111111114,
+                "shap_value": 0.008958758786320686
+            },
+            {
+                "feature": "land_per_adult_labor",
+                "value": 0.4642237477200368,
+                "shap_value": 0.007812734693288803
             },
             {
                 "feature": "labor_bottleneck_masika",
                 "value": 1.0,
-                "shap_value": 0.01240282878279686
-            },
-            {
-                "feature": "mp_s6q10__12",
-                "value": 1.0,
-                "shap_value": 0.008059742860496044
-            },
-            {
-                "feature": "region_id_20",
-                "value": 0.0,
-                "shap_value": 0.007335431408137083
+                "shap_value": 0.007665593642741442
             }
         ],
         "top_protective_drivers": [
             {
                 "feature": "plant_month_delta",
                 "value": 0.19047619047619044,
-                "shap_value": -0.17252947390079498
+                "shap_value": -0.15533201396465302
             },
             {
                 "feature": "m_harvest_pct_mean",
                 "value": -0.10975609756097561,
-                "shap_value": -0.07972797006368637
+                "shap_value": -0.07318194955587387
             },
             {
                 "feature": "v_plant_month_mean",
                 "value": 0.0,
-                "shap_value": -0.03609805181622505
+                "shap_value": -0.04111488163471222
             },
             {
                 "feature": "fertilizer_seasonal_ratio",
                 "value": 2.2372881038015904,
-                "shap_value": -0.02820577658712864
+                "shap_value": -0.0320962518453598
             },
             {
-                "feature": "evenness_vuli",
-                "value": 1.1103256805002226,
-                "shap_value": -0.024899570271372795
+                "feature": "seasonal_crop_rotation_index",
+                "value": -0.5,
+                "shap_value": -0.024514146149158478
             }
         ],
         "plot_saved_to": "artifacts/yield_volatility/interpretability/household_0_waterfall.png"
