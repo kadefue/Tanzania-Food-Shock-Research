@@ -3,37 +3,352 @@
     "holdings_count": 4564,
     "features_count": 246,
     "enumeration_areas_count": 921,
-    "champion_spatial_cv_rmse": 0.4656733098377885,
-    "champion_spatial_cv_mae": 0.3493776500873077,
-    "champion_spatial_cv_r2": 0.5893701547540817,
+    "champion_spatial_cv_rmse": 0.4653522642449143,
+    "champion_spatial_cv_mae": 0.3492129252817285,
+    "champion_spatial_cv_r2": 0.589936154375485,
     "model_comparison": [
         {
-            "Model": "ENSEMBLE",
-            "Spatial RMSE": 0.4656733098377885,
-            "Spatial MAE": 0.3493776500873077,
-            "Spatial R2": 0.5893701547540817,
-            "Train Time (s)": 11.48
+            "Model": "WEIGHTED_ENSEMBLE",
+            "Spatial RMSE": 0.4653522642449143,
+            "Spatial MAE": 0.3492129252817285,
+            "Spatial R2": 0.589936154375485,
+            "Train Time (s)": 10.87
         },
         {
             "Model": "LIGHTGBM",
-            "Spatial RMSE": 0.46707794626915283,
-            "Spatial MAE": 0.3477951402152516,
-            "Spatial R2": 0.5868892071729489,
-            "Train Time (s)": 6.76
+            "Spatial RMSE": 0.4664599024067719,
+            "Spatial MAE": 0.34747676809763683,
+            "Spatial R2": 0.5879817514482563,
+            "Train Time (s)": 6.65
         },
         {
             "Model": "XGBOOST",
             "Spatial RMSE": 0.46750388653646985,
             "Spatial MAE": 0.34848639182161567,
             "Spatial R2": 0.5861354111336646,
-            "Train Time (s)": 3.44
+            "Train Time (s)": 3.3
         },
         {
             "Model": "RANDOM_FOREST",
-            "Spatial RMSE": 0.48740955697451127,
-            "Spatial MAE": 0.3858717604233137,
-            "Spatial R2": 0.5501415336141706,
-            "Train Time (s)": 0.58
+            "Spatial RMSE": 0.4874095569745112,
+            "Spatial MAE": 0.3858717604233138,
+            "Spatial R2": 0.5501415336141707,
+            "Train Time (s)": 0.61
+        }
+    ],
+    "overall_regional_models": {
+        "overall_regional_models_rmse": 0.5868984743365809,
+        "overall_regional_models_mae": 0.4672310884107859,
+        "overall_regional_models_r2": 0.3477504643658923
+    },
+    "regional_performance": [
+        {
+            "Region ID": 4,
+            "Region Name": "Tanga",
+            "Holdings (N)": 650,
+            "Regional Model RMSE": 0.6229226998033839,
+            "Regional Model MAE": 0.5192860634082265,
+            "Regional Model R2": 0.20224648816315904,
+            "National Model RMSE": 0.47099191201761204,
+            "National Model MAE": 0.37633106323204785,
+            "National Model R2": 0.5439344068780703
+        },
+        {
+            "Region ID": 20,
+            "Region Name": "Mara",
+            "Holdings (N)": 476,
+            "Regional Model RMSE": 0.5339680112810663,
+            "Regional Model MAE": 0.40468673585538495,
+            "Regional Model R2": 0.4620106952041746,
+            "National Model RMSE": 0.4305375130918256,
+            "National Model MAE": 0.32452792699407873,
+            "National Model R2": 0.6502440131193911
+        },
+        {
+            "Region ID": 3,
+            "Region Name": "Kilimanjaro",
+            "Holdings (N)": 375,
+            "Regional Model RMSE": 0.6074393110335351,
+            "Regional Model MAE": 0.48311147087965983,
+            "Regional Model R2": 0.3454843635702074,
+            "National Model RMSE": 0.46274255514475643,
+            "National Model MAE": 0.3422343210069078,
+            "National Model R2": 0.6201666285366365
+        },
+        {
+            "Region ID": 18,
+            "Region Name": "Kagera",
+            "Holdings (N)": 296,
+            "Regional Model RMSE": 0.40396764638398364,
+            "Regional Model MAE": 0.28002663927839055,
+            "Regional Model R2": 0.6876450838534192,
+            "National Model RMSE": 0.3608255531064213,
+            "National Model MAE": 0.24572308603407925,
+            "National Model R2": 0.7507990178195793
+        },
+        {
+            "Region ID": 5,
+            "Region Name": "Morogoro",
+            "Holdings (N)": 257,
+            "Regional Model RMSE": 0.670579161821082,
+            "Regional Model MAE": 0.5506709750639833,
+            "Regional Model R2": 0.0620917725309732,
+            "National Model RMSE": 0.519696717250596,
+            "National Model MAE": 0.42358520844404174,
+            "National Model R2": 0.4366734953753254
+        },
+        {
+            "Region ID": 6,
+            "Region Name": "Pwani",
+            "Holdings (N)": 252,
+            "Regional Model RMSE": 0.619748525352366,
+            "Regional Model MAE": 0.49877945743601015,
+            "Regional Model R2": 0.27055931220621454,
+            "National Model RMSE": 0.4422655782885171,
+            "National Model MAE": 0.317764638992971,
+            "National Model R2": 0.628528705728594
+        },
+        {
+            "Region ID": 12,
+            "Region Name": "Mbeya",
+            "Holdings (N)": 227,
+            "Regional Model RMSE": 0.6014258502542197,
+            "Regional Model MAE": 0.48891056879328204,
+            "Regional Model R2": 0.27249487207019896,
+            "National Model RMSE": 0.507102293363479,
+            "National Model MAE": 0.37790698774896386,
+            "National Model R2": 0.4827946287290046
+        },
+        {
+            "Region ID": 19,
+            "Region Name": "Mwanza",
+            "Holdings (N)": 215,
+            "Regional Model RMSE": 0.5886113576941437,
+            "Regional Model MAE": 0.4675817089779169,
+            "Regional Model R2": 0.27946296498684153,
+            "National Model RMSE": 0.5045799972146083,
+            "National Model MAE": 0.38520418893070646,
+            "National Model R2": 0.4705083784593074
+        },
+        {
+            "Region ID": 2,
+            "Region Name": "Arusha",
+            "Holdings (N)": 215,
+            "Regional Model RMSE": 0.5906376961472002,
+            "Regional Model MAE": 0.472442326472551,
+            "Regional Model R2": 0.2972527000573253,
+            "National Model RMSE": 0.46159880590567864,
+            "National Model MAE": 0.34255912436272856,
+            "National Model R2": 0.5707738071524144
+        },
+        {
+            "Region ID": 21,
+            "Region Name": "Manyara",
+            "Holdings (N)": 209,
+            "Regional Model RMSE": 0.5920454142435584,
+            "Regional Model MAE": 0.4962171187941172,
+            "Regional Model R2": 0.2777225993830398,
+            "National Model RMSE": 0.49844184626962124,
+            "National Model MAE": 0.3949795120818851,
+            "National Model R2": 0.4880553895722016
+        },
+        {
+            "Region ID": 24,
+            "Region Name": "Simiyu",
+            "Holdings (N)": 202,
+            "Regional Model RMSE": 0.46662834974258094,
+            "Regional Model MAE": 0.36425728138977187,
+            "Regional Model R2": 0.4367261216668574,
+            "National Model RMSE": 0.4571945002210078,
+            "National Model MAE": 0.35413884974648613,
+            "National Model R2": 0.4592713695544135
+        },
+        {
+            "Region ID": 30,
+            "Region Name": "Kaskazini Pemba",
+            "Holdings (N)": 195,
+            "Regional Model RMSE": 0.5601572556082861,
+            "Regional Model MAE": 0.40766769086196236,
+            "Regional Model R2": 0.35304566079249866,
+            "National Model RMSE": 0.36961860703798133,
+            "National Model MAE": 0.22495643536009902,
+            "National Model R2": 0.7183165373667728
+        },
+        {
+            "Region ID": 0,
+            "Region Name": "Region_0",
+            "Holdings (N)": 166,
+            "Regional Model RMSE": 0.685122265965909,
+            "Regional Model MAE": 0.5749052109122645,
+            "Regional Model R2": 0.1470208945293522,
+            "National Model RMSE": 0.5711988883241234,
+            "National Model MAE": 0.4521041939977721,
+            "National Model R2": 0.40710616306508907
+        },
+        {
+            "Region ID": 27,
+            "Region Name": "Kaskazini Unguja",
+            "Holdings (N)": 151,
+            "Regional Model RMSE": 0.5976555943316954,
+            "Regional Model MAE": 0.47672714130208255,
+            "Regional Model R2": 0.3103292666638642,
+            "National Model RMSE": 0.4744156792128009,
+            "National Model MAE": 0.3320409878216811,
+            "National Model R2": 0.5654318568975183
+        },
+        {
+            "Region ID": 25,
+            "Region Name": "Geita",
+            "Holdings (N)": 147,
+            "Regional Model RMSE": 0.6127273733691067,
+            "Regional Model MAE": 0.5150434453014477,
+            "Regional Model R2": 0.049697567699493295,
+            "National Model RMSE": 0.500904795140047,
+            "National Model MAE": 0.4023554545899038,
+            "National Model R2": 0.3649065205856078
+        },
+        {
+            "Region ID": 31,
+            "Region Name": "Kusini Pemba",
+            "Holdings (N)": 93,
+            "Regional Model RMSE": 0.5790132403620952,
+            "Regional Model MAE": 0.4373756697831563,
+            "Regional Model R2": 0.31447234559826365,
+            "National Model RMSE": 0.36408894248282253,
+            "National Model MAE": 0.21356680064496852,
+            "National Model R2": 0.728941539024551
+        },
+        {
+            "Region ID": 28,
+            "Region Name": "Kusini Unguja",
+            "Holdings (N)": 89,
+            "Regional Model RMSE": 0.5726600110018801,
+            "Regional Model MAE": 0.45986860990667294,
+            "Regional Model R2": 0.42225569034196864,
+            "National Model RMSE": 0.4739302082053827,
+            "National Model MAE": 0.3567225057118582,
+            "National Model R2": 0.6042957224672938
+        },
+        {
+            "Region ID": 29,
+            "Region Name": "Mjini Magharibi",
+            "Holdings (N)": 80,
+            "Regional Model RMSE": 0.5305104116813382,
+            "Regional Model MAE": 0.4262831521059146,
+            "Regional Model R2": 0.5942109445138077,
+            "National Model RMSE": 0.4196966482257091,
+            "National Model MAE": 0.29904993189137097,
+            "National Model R2": 0.7460293632137295
+        },
+        {
+            "Region ID": 7,
+            "Region Name": "Dar es Salaam",
+            "Holdings (N)": 66,
+            "Regional Model RMSE": 0.7239758210649491,
+            "Regional Model MAE": 0.601269707180671,
+            "Regional Model R2": -0.05389921105464612,
+            "National Model RMSE": 0.5863159646073113,
+            "National Model MAE": 0.46037007902241145,
+            "National Model R2": 0.308783026083569
+        },
+        {
+            "Region ID": 16,
+            "Region Name": "Kigoma",
+            "Holdings (N)": 55,
+            "Regional Model RMSE": 0.6466921369965652,
+            "Regional Model MAE": 0.5699174959981964,
+            "Regional Model R2": -0.041638617559492275,
+            "National Model RMSE": 0.49463288494327806,
+            "National Model MAE": 0.4172342534049266,
+            "National Model R2": 0.3906204379161219
+        },
+        {
+            "Region ID": 17,
+            "Region Name": "Shinyanga",
+            "Holdings (N)": 53,
+            "Regional Model RMSE": 0.5449647849874795,
+            "Regional Model MAE": 0.45987659709341044,
+            "Regional Model R2": 0.2024335512322335,
+            "National Model RMSE": 0.5071437220978182,
+            "National Model MAE": 0.4192228939307143,
+            "National Model R2": 0.30929578768426946
+        },
+        {
+            "Region ID": 1,
+            "Region Name": "Dodoma",
+            "Holdings (N)": 27,
+            "Regional Model RMSE": 0.605859528944301,
+            "Regional Model MAE": 0.5160065660352755,
+            "Regional Model R2": 0.11317594972526002,
+            "National Model RMSE": 0.37814733891252283,
+            "National Model MAE": 0.2546919221884975,
+            "National Model R2": 0.6545257570270402
+        },
+        {
+            "Region ID": 23,
+            "Region Name": "Katavi",
+            "Holdings (N)": 25,
+            "Regional Model RMSE": 0.6030382801882727,
+            "Regional Model MAE": 0.5513274005404696,
+            "Regional Model R2": 0.4268312635875088,
+            "National Model RMSE": 0.4779836412327413,
+            "National Model MAE": 0.3270411643792406,
+            "National Model R2": 0.6399035853257062
+        },
+        {
+            "Region ID": 11,
+            "Region Name": "Iringa",
+            "Holdings (N)": 14,
+            "Regional Model RMSE": 0.5636119843894465,
+            "Regional Model MAE": 0.4638216272706985,
+            "Regional Model R2": 0.0510855884522623,
+            "National Model RMSE": 0.33413340049079576,
+            "National Model MAE": 0.26008156406510213,
+            "National Model R2": 0.66649190073456
+        },
+        {
+            "Region ID": 13,
+            "Region Name": "Singida",
+            "Holdings (N)": 11,
+            "Regional Model RMSE": 0.5317606164073952,
+            "Regional Model MAE": 0.4544252018053138,
+            "Regional Model R2": -0.1971032588258952,
+            "National Model RMSE": 0.5574595672939237,
+            "National Model MAE": 0.4443948775133782,
+            "National Model R2": -0.3156065329112987
+        },
+        {
+            "Region ID": 14,
+            "Region Name": "Tabora",
+            "Holdings (N)": 10,
+            "Regional Model RMSE": 0.6286984209867483,
+            "Regional Model MAE": 0.47287297551416785,
+            "Regional Model R2": -0.5476527188715048,
+            "National Model RMSE": 0.43702914219174316,
+            "National Model MAE": 0.33406119953648494,
+            "National Model R2": 0.2521584835510212
+        },
+        {
+            "Region ID": 22,
+            "Region Name": "Njombe",
+            "Holdings (N)": 5,
+            "Regional Model RMSE": 0.4199386141238846,
+            "Regional Model MAE": 0.38535323001853283,
+            "Regional Model R2": -1.2554498362320485,
+            "National Model RMSE": 0.4115016314148764,
+            "National Model MAE": 0.32678570196859164,
+            "National Model R2": -1.1657318013327198
+        },
+        {
+            "Region ID": 26,
+            "Region Name": "Songwe",
+            "Holdings (N)": 3,
+            "Regional Model RMSE": 0.37214444470118974,
+            "Regional Model MAE": 0.34326262584108447,
+            "Regional Model R2": -1.1324400951987301,
+            "National Model RMSE": 0.2193465206679824,
+            "National Model MAE": 0.17481308202082257,
+            "National Model R2": 0.25917563245539244
         }
     ],
     "top_10_predictive_features": [

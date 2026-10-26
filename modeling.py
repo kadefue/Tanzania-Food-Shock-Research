@@ -43,7 +43,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import GroupKFold, KFold
 from sklearn.preprocessing import OneHotEncoder, RobustScaler
 
 # Model imports with fallback support
@@ -802,10 +802,10 @@ class FeatureEngineer:
 
 
 # ==============================================================================
-# 3. GRANDMASTER ENSEMBLE REGRESSOR
+# 3. WEIGHTED ENSEMBLE REGRESSOR
 # ==============================================================================
 
-class GrandmasterEnsembleRegressor:
+class WeightedEnsembleRegressor:
     """
     Weighted Out-of-Fold Ensemble Regressor combining LightGBM, XGBoost, and Random Forest.
     """
@@ -833,7 +833,7 @@ class GrandmasterEnsembleRegressor:
             random_state=self.random_state, n_jobs=-1
         )
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> GrandmasterEnsembleRegressor:
+    def fit(self, X: np.ndarray, y: np.ndarray) -> WeightedEnsembleRegressor:
         self.model_lgb.fit(X, y)
         self.model_xgb.fit(X, y)
         self.model_rf.fit(X, y)
@@ -849,6 +849,10 @@ class GrandmasterEnsembleRegressor:
             + self.weights["rf"] * p_rf
         )
         return np.clip(raw_pred, 0.0, 2.0)
+
+
+# Backward compatibility alias
+GrandmasterEnsembleRegressor = WeightedEnsembleRegressor
 
 
 # ==============================================================================
@@ -1003,10 +1007,10 @@ class VolatilityPredictor:
         n_splits: int = 5
     ) -> Tuple[pd.DataFrame, Dict[str, Dict[str, Any]]]:
         """
-        Executes benchmark comparison across LightGBM, XGBoost, Random Forest, and Grandmaster Ensemble.
+        Executes benchmark comparison across LightGBM, XGBoost, Random Forest, and Weighted Ensemble.
         """
         logger.info("=" * 70)
-        logger.info("STARTING MULTI-MODEL BENCHMARK (LightGBM vs XGBoost vs RF vs Grandmaster Ensemble)")
+        logger.info("STARTING MULTI-MODEL BENCHMARK (LightGBM vs XGBoost vs RF vs Weighted Ensemble)")
         logger.info("=" * 70)
 
         architectures = ["lightgbm", "xgboost", "random_forest", "ensemble"]
@@ -1016,8 +1020,9 @@ class VolatilityPredictor:
         for arch in architectures:
             res = self.spatial_cross_validate(X, y, groups=groups, n_splits=n_splits, model_type=arch)
             detailed_results[arch] = res
+            display_name = "WEIGHTED_ENSEMBLE" if arch == "ensemble" else arch.upper()
             comparison_records.append({
-                "Model": arch.upper(),
+                "Model": display_name,
                 "Spatial RMSE": res["overall_rmse"],
                 "Spatial MAE": res["overall_mae"],
                 "Spatial R2": res["overall_r2"],
@@ -1027,6 +1032,136 @@ class VolatilityPredictor:
         comparison_df = pd.DataFrame(comparison_records).sort_values(by="Spatial RMSE").reset_index(drop=True)
         logger.info("\n" + comparison_df.to_string(index=False))
         return comparison_df, detailed_results
+
+    REGION_NAMES: Dict[int, str] = {
+        1: "Dodoma", 2: "Arusha", 3: "Kilimanjaro", 4: "Tanga", 5: "Morogoro",
+        6: "Pwani", 7: "Dar es Salaam", 8: "Lindi", 9: "Mtwara", 10: "Ruvuma",
+        11: "Iringa", 12: "Mbeya", 13: "Singida", 14: "Tabora", 15: "Rukwa",
+        16: "Kigoma", 17: "Shinyanga", 18: "Kagera", 19: "Mwanza", 20: "Mara",
+        21: "Manyara", 22: "Njombe", 23: "Katavi", 24: "Simiyu", 25: "Geita",
+        26: "Songwe", 27: "Kaskazini Unguja", 28: "Kusini Unguja", 29: "Mjini Magharibi",
+        30: "Kaskazini Pemba", 31: "Kusini Pemba"
+    }
+
+    def evaluate_regional_performance(
+        self,
+        X_df: pd.DataFrame,
+        y_series: pd.Series,
+        master_df: pd.DataFrame,
+        national_oof_predictions: Optional[np.ndarray] = None
+    ) -> Tuple[pd.DataFrame, Dict[str, float]]:
+        """
+        Groups by agricultural region, trains dedicated models for each region,
+        and benchmarks per-region performance as well as overall aggregated performance.
+
+        Args:
+            X_df: Engineered features DataFrame indexed by HHFARMID.
+            y_series: Target yield volatility series indexed by HHFARMID.
+            master_df: Master survey metadata containing region_id and ea_id.
+            national_oof_predictions: Out-of-fold predictions from the national model.
+
+        Returns:
+            Tuple of (Regional Performance DataFrame, Overall Regional Summary Dict).
+        """
+        logger.info("=" * 70)
+        logger.info("STARTING REGION-BY-REGION MODEL TRAINING & SPATIAL PERFORMANCE EVALUATION")
+        logger.info("=" * 70)
+
+        master_indexed = master_df.set_index("HHFARMID") if "HHFARMID" in master_df.columns else master_df
+        region_col = master_indexed.loc[y_series.index, "region_id"].fillna(0).astype(int)
+
+        oof_all_regional = pd.Series(index=y_series.index, dtype=float)
+        regional_records = []
+
+        for reg_id, grp in X_df.groupby(region_col):
+            reg_name = self.REGION_NAMES.get(reg_id, f"Region_{reg_id}")
+            n_samples = len(grp)
+            y_reg = y_series.loc[grp.index].values
+            grp_raw = grp.copy()
+
+            ea_groups = grp_raw["ea_id"].values if "ea_id" in grp_raw.columns else np.arange(n_samples)
+
+            # Drop non-numeric and invariant columns in this region
+            num_cols = [
+                c for c in grp_raw.select_dtypes(include=[np.number]).columns
+                if grp_raw[c].std() > 1e-9 and c not in ["region_id", "stratum_id", "ea_id"]
+            ]
+            if len(num_cols) == 0:
+                num_cols = [c for c in grp_raw.select_dtypes(include=[np.number]).columns if c not in ["ea_id"]]
+            X_reg_arr = grp_raw[num_cols].values
+
+            oof_reg = np.zeros(n_samples)
+
+            # Cross-validation splitting based on regional sample size
+            if n_samples >= 15:
+                n_splits = min(5, n_samples // 4)
+                n_unique_eas = len(np.unique(ea_groups))
+                if n_unique_eas >= n_splits:
+                    cv = GroupKFold(n_splits=n_splits)
+                    splits = list(cv.split(X_reg_arr, y_reg, groups=ea_groups))
+                else:
+                    cv = KFold(n_splits=n_splits, shuffle=True, random_state=self.random_state)
+                    splits = list(cv.split(X_reg_arr, y_reg))
+            else:
+                n_splits = max(2, min(3, n_samples))
+                cv = KFold(n_splits=n_splits, shuffle=True, random_state=self.random_state)
+                splits = list(cv.split(X_reg_arr, y_reg))
+
+            for tr_idx, va_idx in splits:
+                reg_model = WeightedEnsembleRegressor(random_state=self.random_state)
+                reg_model.fit(X_reg_arr[tr_idx], y_reg[tr_idx])
+                oof_reg[va_idx] = reg_model.predict(X_reg_arr[va_idx])
+
+            oof_all_regional.loc[grp.index] = oof_reg
+
+            rmse_reg = float(np.sqrt(mean_squared_error(y_reg, oof_reg)))
+            mae_reg = float(mean_absolute_error(y_reg, oof_reg))
+            r2_reg = float(r2_score(y_reg, oof_reg)) if np.var(y_reg) > 1e-9 else 0.0
+
+            record = {
+                "Region ID": int(reg_id),
+                "Region Name": reg_name,
+                "Holdings (N)": n_samples,
+                "Regional Model RMSE": rmse_reg,
+                "Regional Model MAE": mae_reg,
+                "Regional Model R2": r2_reg,
+            }
+
+            # If national out-of-fold predictions provided, compute national model's regional slice
+            if national_oof_predictions is not None:
+                nat_preds = national_oof_predictions[y_series.index.isin(grp.index)]
+                rmse_nat = float(np.sqrt(mean_squared_error(y_reg, nat_preds)))
+                mae_nat = float(mean_absolute_error(y_reg, nat_preds))
+                r2_nat = float(r2_score(y_reg, nat_preds)) if np.var(y_reg) > 1e-9 else 0.0
+                record["National Model RMSE"] = rmse_nat
+                record["National Model MAE"] = mae_nat
+                record["National Model R2"] = r2_nat
+
+            regional_records.append(record)
+            logger.info(
+                "Region %2d (%-18s) | N = %3d | Regional R²: %7.4f | Regional RMSE: %6.4f | MAE: %6.4f",
+                reg_id, reg_name, n_samples, r2_reg, rmse_reg, mae_reg
+            )
+
+        regional_df = pd.DataFrame(regional_records).sort_values(by="Holdings (N)", ascending=False).reset_index(drop=True)
+
+        overall_regional_rmse = float(np.sqrt(mean_squared_error(y_series, oof_all_regional)))
+        overall_regional_mae = float(mean_absolute_error(y_series, oof_all_regional))
+        overall_regional_r2 = float(r2_score(y_series, oof_all_regional))
+
+        overall_summary = {
+            "overall_regional_models_rmse": overall_regional_rmse,
+            "overall_regional_models_mae": overall_regional_mae,
+            "overall_regional_models_r2": overall_regional_r2,
+        }
+
+        logger.info("=" * 70)
+        logger.info(
+            "OVERALL COMBINED REGIONAL MODELS -> RMSE: %.4f | MAE: %.4f | R^2: %.4f",
+            overall_regional_rmse, overall_regional_mae, overall_regional_r2
+        )
+        logger.info("=" * 70)
+        return regional_df, overall_summary
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> VolatilityPredictor:
         """Fits final regressor on full training dataset."""
@@ -1222,10 +1357,39 @@ class PipelineOrchestrator:
         logger.info("Saved model comparison visual chart to %s", chart_path)
         return chart_path
 
+    def plot_regional_performance(self, regional_df: pd.DataFrame) -> Path:
+        """Renders visual chart of regional model R2 and sample sizes across regions."""
+        viz_df = regional_df[regional_df["Holdings (N)"] >= 10].sort_values(by="Regional Model R2", ascending=True)
+
+        fig, ax = plt.subplots(figsize=(12, 8), dpi=300)
+        bars = ax.barh(viz_df["Region Name"], viz_df["Regional Model R2"], color="#2b5c8f", alpha=0.85, label="Regional Model R²")
+
+        for bar, n_val, r2_val in zip(bars, viz_df["Holdings (N)"], viz_df["Regional Model R2"]):
+            width = bar.get_width()
+            align = "left" if width >= 0 else "right"
+            offset = 0.02 if width >= 0 else -0.02
+            ax.text(
+                width + offset, bar.get_y() + bar.get_height() / 2,
+                f"R²={r2_val:.2f} (N={n_val})",
+                va="center", ha=align, fontsize=8, fontweight="bold", color="#333333"
+            )
+
+        ax.axvline(0, color="black", linewidth=0.8, linestyle="--")
+        ax.set_xlabel("Out-of-Fold R² Score", fontweight="bold")
+        ax.set_title("Regional Model Performance Across Tanzania (Sorted by R²)", fontsize=13, fontweight="bold", pad=12)
+        ax.grid(axis="x", linestyle="--", alpha=0.5)
+
+        chart_path = self.output_dir / "regional_performance.png"
+        plt.tight_layout()
+        plt.savefig(chart_path, bbox_inches="tight")
+        plt.close()
+        logger.info("Saved regional performance chart to %s", chart_path)
+        return chart_path
+
     def run(self) -> Dict[str, Any]:
         """Executes the full pipeline sequentially with multi-model benchmarking."""
         logger.info("=" * 70)
-        logger.info("STARTING GRANDMASTER SMALLHOLDER YIELD VOLATILITY ML PIPELINE")
+        logger.info("STARTING SMALLHOLDER YIELD VOLATILITY ML PIPELINE")
         logger.info("=" * 70)
 
         # Step 1: Ingestion and Preprocessing
@@ -1250,11 +1414,11 @@ class PipelineOrchestrator:
         X_mat, feature_names, groups = self.engineer.fit_transform(X_df)
 
         logger.info(
-            "Prepared Grandmaster Modeling Matrix: %d smallholders, %d features, %d spatial EAs.",
+            "Prepared Modeling Matrix: %d smallholders, %d features, %d spatial EAs.",
             X_mat.shape[0], X_mat.shape[1], len(np.unique(groups))
         )
 
-        # Step 3: Multi-Model Benchmark (LightGBM vs. XGBoost vs. Random Forest vs. Grandmaster Ensemble)
+        # Step 3: Multi-Model Benchmark (LightGBM vs. XGBoost vs. Random Forest vs. Weighted Ensemble)
         comparison_dict = {}
         if self.compare_models_flag:
             comparison_df, detailed_cv = self.predictor.compare_models(X_mat, y_aligned, groups=groups, n_splits=5)
@@ -1280,6 +1444,19 @@ class PipelineOrchestrator:
         champion_cv = self.predictor.spatial_cross_validate(X_mat, y_aligned, groups=groups, n_splits=5)
         self.predictor.fit(X_mat, y_aligned)
 
+        # Step 5: Region-by-Region Model Training & Spatial Evaluation
+        regional_df, overall_regional = self.predictor.evaluate_regional_performance(
+            X_df=X_df,
+            y_series=y_target,
+            master_df=tables["master"],
+            national_oof_predictions=champion_cv["oof_predictions"]
+        )
+        regional_csv = self.output_dir / "regional_performance.csv"
+        regional_df.to_csv(regional_csv, index=False)
+        logger.info("Saved regional performance breakdown to %s", regional_csv)
+        self.plot_regional_performance(regional_df)
+
+        # Step 6: Global & Local SHAP Interpretability
         self.interpreter = ModelInterpreter(
             model=self.predictor.model,
             feature_names=feature_names,
@@ -1288,7 +1465,7 @@ class PipelineOrchestrator:
         importance_df = self.interpreter.explain_global(X_mat, max_display=20)
         sample_local = self.interpreter.explain_local(X_mat, household_idx=0, top_k=5)
 
-        # Step 5: Export Execution Metadata & Metrics
+        # Step 7: Export Execution Metadata & Metrics
         metrics_payload = {
             "champion_model": champion_mtype,
             "holdings_count": int(X_mat.shape[0]),
@@ -1298,6 +1475,8 @@ class PipelineOrchestrator:
             "champion_spatial_cv_mae": champion_cv["overall_mae"],
             "champion_spatial_cv_r2": champion_cv["overall_r2"],
             "model_comparison": comparison_dict,
+            "overall_regional_models": overall_regional,
+            "regional_performance": regional_df.to_dict(orient="records"),
             "top_10_predictive_features": importance_df.head(10).to_dict(orient="records"),
             "sample_local_explanation": sample_local
         }

@@ -146,16 +146,26 @@ Located in [`modeling.py`](file:///Users/kadefue/Research/Food%20Shock%20Researc
 
 | Model Architecture | Spatial RMSE ↓ | Spatial MAE ↓ | Spatial $R^2$ ↑ | Train Time |
 |---|:---:|:---:|:---:|:---:|
-| **Grandmaster Weighted Ensemble** | **0.4657** | **0.3494** | **0.5894** | 11.48s |
-| **LightGBM Regressor** | **0.4671** | **0.3478** | **0.5869** | 6.76s |
-| **XGBoost Regressor** | **0.4675** | **0.3485** | **0.5861** | 3.44s |
-| **Random Forest Regressor** | **0.4874** | **0.3859** | **0.5501** | 0.58s |
+| **Weighted Ensemble** (`0.50 LGB + 0.40 XGB + 0.10 RF`) | **0.4654** | **0.3492** | **0.5899** | 10.87s |
+| **LightGBM Regressor** | **0.4665** | **0.3475** | **0.5880** | 6.65s |
+| **XGBoost Regressor** | **0.4675** | **0.3485** | **0.5861** | 3.30s |
+| **Random Forest Regressor** | **0.4874** | **0.3859** | **0.5501** | 0.61s |
 
 - **Execution Command:** `python modeling.py --data-dir "data/AASS 2024_2025" --output-dir "artifacts/yield_volatility" --compare`
 - **Output Artifacts:**
   - Metrics: [`artifacts/yield_volatility/pipeline_metrics.json`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/pipeline_metrics.json)
   - Visual Model Benchmark: [`artifacts/yield_volatility/model_comparison.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/model_comparison.png)
+  - Regional Performance Table: [`artifacts/yield_volatility/regional_performance.csv`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/regional_performance.csv)
+  - Regional Performance Plot: [`artifacts/yield_volatility/regional_performance.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/regional_performance.png)
   - SHAP Explanations: [`artifacts/yield_volatility/interpretability/`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/interpretability/)
+
+---
+
+## 🗺️ Regional Sub-Model Analysis
+
+The pipeline supports training and spatial evaluation grouped by each of Tanzania's 27 agricultural regions, comparing per-region specialized models against the unified national model:
+- **Top Regional Models:** Kagera ($R^2 = 0.6876$, $\text{RMSE} = 0.4040$), Mjini Magharibi ($R^2 = 0.5942$), Mara ($R^2 = 0.4620$), Simiyu ($R^2 = 0.4367$), Katavi ($R^2 = 0.4268$), Kusini Unguja ($R^2 = 0.4223$).
+- **Overall Pooled Regional Models:** Spatial $R^2 = 0.3478$ ($\text{RMSE} = 0.5869$), demonstrating that the Unified National Weighted Ensemble ($R^2 = 0.5899$) provides crucial cross-regional variance reduction, especially for smaller samples.
 
 ---
 
