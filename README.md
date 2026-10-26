@@ -138,9 +138,31 @@ To merge microdata files within a given survey round:
 
 ---
 
+## 🤖 Smallholder Yield Volatility Machine Learning Pipeline
+
+Located in [`modeling.py`](file:///Users/kadefue/Research/Food%20Shock%20Research/modeling.py), this pipeline predicts smallholder yield volatility between the Masika and Vuli seasons using 11 multi-relational NBS survey tables.
+
+### Spatial Cross-Validation Benchmark (5-Fold GroupKFold on 921 Enumeration Areas)
+
+| Model Architecture | Spatial RMSE ↓ | Spatial MAE ↓ | Spatial $R^2$ ↑ | Train Time |
+|---|:---:|:---:|:---:|:---:|
+| **Grandmaster Weighted Ensemble** | **0.4657** | **0.3494** | **0.5894** | 11.48s |
+| **LightGBM Regressor** | **0.4671** | **0.3478** | **0.5869** | 6.76s |
+| **XGBoost Regressor** | **0.4675** | **0.3485** | **0.5861** | 3.44s |
+| **Random Forest Regressor** | **0.4874** | **0.3859** | **0.5501** | 0.58s |
+
+- **Execution Command:** `python modeling.py --data-dir "data/AASS 2024_2025" --output-dir "artifacts/yield_volatility" --compare`
+- **Output Artifacts:**
+  - Metrics: [`artifacts/yield_volatility/pipeline_metrics.json`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/pipeline_metrics.json)
+  - Visual Model Benchmark: [`artifacts/yield_volatility/model_comparison.png`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/model_comparison.png)
+  - SHAP Explanations: [`artifacts/yield_volatility/interpretability/`](file:///Users/kadefue/Research/Food%20Shock%20Research/artifacts/yield_volatility/interpretability/)
+
+---
+
 ## 📄 Author & Attribution
 
 - **Principal Investigator / Author**: Kadeghe Goodluck Fue ([kadefue@sua.ac.tz](mailto:kadefue@sua.ac.tz)), Sokoine University of Agriculture (SUA).
 - **Survey Microdata**: Collected and provided by the [National Bureau of Statistics (NBS) Tanzania](https://www.nbs.go.tz/) and [OCGS Zanzibar](https://www.ocgs.go.tz/).
 - **International Statistics**: [FAOSTAT, Food and Agriculture Organization of the United Nations](https://www.fao.org/faostat/).
+
 

@@ -1,139 +1,139 @@
 {
     "champion_model": "ensemble",
     "holdings_count": 4564,
-    "features_count": 206,
+    "features_count": 246,
     "enumeration_areas_count": 921,
-    "champion_spatial_cv_rmse": 0.5299480630896919,
-    "champion_spatial_cv_mae": 0.42966577126283617,
-    "champion_spatial_cv_r2": 0.4681925269094892,
+    "champion_spatial_cv_rmse": 0.4656733098377885,
+    "champion_spatial_cv_mae": 0.3493776500873077,
+    "champion_spatial_cv_r2": 0.5893701547540817,
     "model_comparison": [
         {
             "Model": "ENSEMBLE",
-            "Spatial RMSE": 0.5299480630896919,
-            "Spatial MAE": 0.42966577126283617,
-            "Spatial R2": 0.4681925269094892,
-            "Train Time (s)": 6.72
+            "Spatial RMSE": 0.4656733098377885,
+            "Spatial MAE": 0.3493776500873077,
+            "Spatial R2": 0.5893701547540817,
+            "Train Time (s)": 11.48
         },
         {
             "Model": "LIGHTGBM",
-            "Spatial RMSE": 0.5301141228403656,
-            "Spatial MAE": 0.42546108858458587,
-            "Spatial R2": 0.4678591898946487,
-            "Train Time (s)": 4.15
+            "Spatial RMSE": 0.46707794626915283,
+            "Spatial MAE": 0.3477951402152516,
+            "Spatial R2": 0.5868892071729489,
+            "Train Time (s)": 6.76
         },
         {
             "Model": "XGBOOST",
-            "Spatial RMSE": 0.5316669284565718,
-            "Spatial MAE": 0.42988804495702077,
-            "Spatial R2": 0.46473713969946184,
-            "Train Time (s)": 2.11
+            "Spatial RMSE": 0.46750388653646985,
+            "Spatial MAE": 0.34848639182161567,
+            "Spatial R2": 0.5861354111336646,
+            "Train Time (s)": 3.44
         },
         {
             "Model": "RANDOM_FOREST",
-            "Spatial RMSE": 0.5605888899190198,
-            "Spatial MAE": 0.47845198580296405,
-            "Spatial R2": 0.4049180324277487,
-            "Train Time (s)": 0.63
+            "Spatial RMSE": 0.48740955697451127,
+            "Spatial MAE": 0.3858717604233137,
+            "Spatial R2": 0.5501415336141706,
+            "Train Time (s)": 0.58
         }
     ],
     "top_10_predictive_features": [
         {
-            "feature": "permanent_crop_share",
-            "mean_abs_shap": 0.15842555463314056
+            "feature": "plant_month_delta",
+            "mean_abs_shap": 0.22256693243980408
         },
         {
-            "feature": "v_improved_seed",
-            "mean_abs_shap": 0.08164441585540771
+            "feature": "m_harvest_pct_mean",
+            "mean_abs_shap": 0.10034506022930145
         },
         {
-            "feature": "labor_bottleneck_masika",
-            "mean_abs_shap": 0.059138379991054535
-        },
-        {
-            "feature": "seasonal_crop_rotation_index",
-            "mean_abs_shap": 0.05318527668714523
-        },
-        {
-            "feature": "evenness_vuli",
-            "mean_abs_shap": 0.04408823698759079
+            "feature": "v_plant_month_mean",
+            "mean_abs_shap": 0.05741729214787483
         },
         {
             "feature": "v_drought_fail",
-            "mean_abs_shap": 0.041591379791498184
+            "mean_abs_shap": 0.047704752534627914
         },
         {
-            "feature": "fertilizer_seasonal_ratio",
-            "mean_abs_shap": 0.025023367255926132
-        },
-        {
-            "feature": "fallow_share_vuli",
-            "mean_abs_shap": 0.024874677881598473
-        },
-        {
-            "feature": "m_drought_fail",
-            "mean_abs_shap": 0.02056952193379402
+            "feature": "m_no_harvest_share",
+            "mean_abs_shap": 0.040584124624729156
         },
         {
             "feature": "delta_evenness",
-            "mean_abs_shap": 0.02032269537448883
+            "mean_abs_shap": 0.027091134339571
+        },
+        {
+            "feature": "m_harvest_pct_min",
+            "mean_abs_shap": 0.019283056259155273
+        },
+        {
+            "feature": "seasonal_crop_rotation_index",
+            "mean_abs_shap": 0.0179760679602623
+        },
+        {
+            "feature": "fallow_share_masika",
+            "mean_abs_shap": 0.017953405156731606
+        },
+        {
+            "feature": "fallow_share_vuli",
+            "mean_abs_shap": 0.017646316438913345
         }
     ],
     "sample_local_explanation": {
         "household_index": 0,
-        "base_expected_volatility": 1.085126519203186,
-        "predicted_volatility": 0.4849323630332947,
+        "base_expected_volatility": 1.0849875211715698,
+        "predicted_volatility": 0.45534712076187134,
         "top_risk_drivers": [
+            {
+                "feature": "delta_evenness",
+                "value": -1.340944685455614,
+                "shap_value": 0.02287815883755684
+            },
+            {
+                "feature": "delta_hhi_concentration",
+                "value": 2.5163805123972116,
+                "shap_value": 0.015119161456823349
+            },
             {
                 "feature": "labor_bottleneck_masika",
                 "value": 1.0,
-                "shap_value": 0.21280968189239502
+                "shap_value": 0.01240282878279686
             },
             {
-                "feature": "m_drought_fail",
+                "feature": "mp_s6q10__12",
                 "value": 1.0,
-                "shap_value": 0.07861703634262085
+                "shap_value": 0.008059742860496044
             },
             {
-                "feature": "plot_count",
-                "value": -0.5,
-                "shap_value": 0.020412283018231392
-            },
-            {
-                "feature": "m_pest_fail",
-                "value": 1.0,
-                "shap_value": 0.013414775021374226
-            },
-            {
-                "feature": "total_shocks_count",
-                "value": 0.5,
-                "shap_value": 0.008684161119163036
+                "feature": "region_id_20",
+                "value": 0.0,
+                "shap_value": 0.007335431408137083
             }
         ],
         "top_protective_drivers": [
             {
-                "feature": "shannon_masika",
-                "value": 0.7370385493970052,
-                "shap_value": -0.07438593357801437
+                "feature": "plant_month_delta",
+                "value": 0.19047619047619044,
+                "shap_value": -0.17252947390079498
             },
             {
-                "feature": "permanent_crop_share",
-                "value": 1.0,
-                "shap_value": -0.07181230187416077
+                "feature": "m_harvest_pct_mean",
+                "value": -0.10975609756097561,
+                "shap_value": -0.07972797006368637
             },
             {
-                "feature": "v_improved_seed",
-                "value": 1.0,
-                "shap_value": -0.06541111320257187
-            },
-            {
-                "feature": "evenness_masika",
-                "value": 0.7955009841563473,
-                "shap_value": -0.059662409126758575
+                "feature": "v_plant_month_mean",
+                "value": 0.0,
+                "shap_value": -0.03609805181622505
             },
             {
                 "feature": "fertilizer_seasonal_ratio",
                 "value": 2.2372881038015904,
-                "shap_value": -0.04908464103937149
+                "shap_value": -0.02820577658712864
+            },
+            {
+                "feature": "evenness_vuli",
+                "value": 1.1103256805002226,
+                "shap_value": -0.024899570271372795
             }
         ],
         "plot_saved_to": "artifacts/yield_volatility/interpretability/household_0_waterfall.png"
