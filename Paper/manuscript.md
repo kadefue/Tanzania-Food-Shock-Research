@@ -239,7 +239,7 @@ Table 5 and Figure 7 present the quantitative verification of the 5-pillar spati
 
 ![Figure 7](figures/fig7_leakage_audit_and_household_counterfactuals.png)
 
-*Figure 7: Redesigned 5-Pillar Leakage Audit quantitative isolation scorecard, local SHAP waterfall explanation, and archetype counterfactual profiles. (A) Quantitative radar scorecard validating complete independence across spatial partitioning, preprocessing, target encoding, feature selection, and adversarial checks. (B) Local SHAP waterfall explanation for vulnerable smallholder household #0. (C) Comparative capacity radar profiles across three smallholder archetypes.*
+*Figure 7: Redesigned 5-Pillar Leakage Audit quantitative isolation scorecard, archetype counterfactual profiles, and local SHAP waterfall explanation. (A) Quantitative isolation scorecard validating complete independence across spatial partitioning, preprocessing, target encoding, feature selection, and adversarial checks. (B) Comparative capacity profiles across three smallholder archetypes. (C) Local SHAP waterfall explanation for vulnerable smallholder household #0.*
 
 #### Table 5: 5-Pillar Spatial Leakage Audit certification matrix and isolation verification metrics.
 

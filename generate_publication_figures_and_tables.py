@@ -582,11 +582,31 @@ class PublicationGenerator:
         oof_p = ctx["oof_preds"]
         X_df = ctx["X_df"]
 
-        fig = plt.figure(figsize=(13, 5.2))
-        gs = gridspec.GridSpec(1, 3, width_ratios=[0.9, 1.2, 0.9], wspace=0.35)
+        # Human-readable agronomic feature names for local SHAP waterfall
+        clean_names = {
+            "plant_month_delta": "Planting Month Shift (Masika-Vuli)",
+            "m_harvest_pct_mean": "Masika Harvest Realization Share",
+            "v_plant_month_mean": "Vuli Planting Month Mean",
+            "seasonal_crop_rotation_index": "Seasonal Crop Rotation Index",
+            "delta_evenness": "Seasonal Crop Evenness Delta",
+            "evenness_vuli": "Vuli Crop Evenness",
+            "fertilizer_seasonal_ratio": "Seasonal Fertilizer Ratio",
+            "berger_parker_vuli": "Vuli Dominance (Berger-Parker)",
+            "v_drought_fail": "Vuli Drought Failure Shock",
+            "shannon_masika": "Masika Shannon Crop Diversity"
+        }
+        readable_feat_names = [clean_names.get(f, f.replace("_", " ").title()) for f in feat_names]
+        df_single = pd.DataFrame(X_sel[0:1], columns=readable_feat_names)
+
+        explainer = shap.TreeExplainer(model)
+        shap_single = explainer(df_single)
+
+        fig = plt.figure(figsize=(13, 9.8))
+        gs = gridspec.GridSpec(2, 2, height_ratios=[0.95, 1.3], hspace=0.62, wspace=0.34,
+                               top=0.95, bottom=0.07, left=0.08, right=0.96)
 
         # Panel A: Quantitative Leakage Isolation Scorecard (Horizontal Bars)
-        ax0 = fig.add_subplot(gs[0])
+        ax0 = fig.add_subplot(gs[0, 0])
         pillars = [
             "P1: Spatial EA Disjointness",
             "P2: Target Independence",
@@ -599,27 +619,17 @@ class PublicationGenerator:
         bars = ax0.barh(y_p, scores, color="#2ca02c", alpha=0.85, height=0.55)
 
         for bar, text in zip(bars, ["0 Leaks (5 Folds)", "r_max = 0.4365", "Fold-strict Fits", "Train-only Components", "Zero Lookahead"]):
-            ax0.text(50, bar.get_y() + bar.get_height()/2, text, va="center", ha="center", color="white", fontsize=8, fontweight="bold")
+            ax0.text(50, bar.get_y() + bar.get_height()/2, text, va="center", ha="center", color="white", fontsize=8.5, fontweight="bold")
 
         ax0.set_yticks(y_p)
-        ax0.set_yticklabels(pillars, fontsize=8)
+        ax0.set_yticklabels(pillars, fontsize=8.5)
         ax0.set_xlim(0, 115)
-        ax0.set_xlabel("Isolation Audit Compliance (%)")
-        ax0.set_title("A. 5-Pillar Leakage Isolation Audit", fontweight="bold")
-        ax0.grid(True, axis="x")
+        ax0.set_xlabel("Isolation Audit Compliance (%)", fontsize=9.5)
+        ax0.set_title("A. 5-Pillar Leakage Isolation Audit", fontweight="bold", fontsize=11, pad=8)
+        ax0.grid(True, axis="x", linestyle="--", alpha=0.6)
 
-        # Panel B: Local SHAP Waterfall Attribution (Household #0)
-        ax1 = fig.add_subplot(gs[1])
-        plt.sca(ax1)
-        explainer = shap.TreeExplainer(model)
-        shap_single = explainer(X_sel[0:1])
-        shap.plots.waterfall(shap_single[0], max_display=9, show=False)
-        ax1.set_title("B. Micro-Level SHAP Waterfall Attribution (HH #0)", fontweight="bold")
-
-        # Panel C: Archetype Comparison Profile
-        ax2 = fig.add_subplot(gs[2])
-        # Compare 3 Archetypes across 5 normalized dimensions:
-        # [Diversity, Livestock TLU, Harvest %, Low Timing Delta, Low Fragmentation]
+        # Panel B: Archetype Comparison Profile
+        ax1 = fig.add_subplot(gs[0, 1])
         archetype_metrics = ["Crop Diversity", "Livestock Buffer", "Harvest Success", "Timing Stability", "Low Plot CV"]
         res_profile = [0.85, 0.78, 0.92, 0.88, 0.80]
         shock_profile = [0.15, 0.12, 0.25, 0.20, 0.35]
@@ -627,17 +637,23 @@ class PublicationGenerator:
 
         x_m = np.arange(len(archetype_metrics))
         w = 0.26
-        ax2.barh(x_m - w, res_profile, height=w, color="#5cb85c", alpha=0.85, label="Resilient (Y_vol=0.18)")
-        ax2.barh(x_m, mod_profile, height=w, color="#4f81bd", alpha=0.85, label="Moderate (Y_vol=0.72)")
-        ax2.barh(x_m + w, shock_profile, height=w, color="#d9534f", alpha=0.85, label="Hyper-Volatile (Y_vol=1.95)")
+        ax1.barh(x_m - w, res_profile, height=w, color="#5cb85c", alpha=0.85, label="Resilient (Y_vol=0.18)")
+        ax1.barh(x_m, mod_profile, height=w, color="#4f81bd", alpha=0.85, label="Moderate (Y_vol=0.72)")
+        ax1.barh(x_m + w, shock_profile, height=w, color="#d9534f", alpha=0.85, label="Hyper-Volatile (Y_vol=1.95)")
 
-        ax2.set_yticks(x_m)
-        ax2.set_yticklabels(archetype_metrics, fontsize=8)
-        ax2.set_xlim(0, 1.05)
-        ax2.set_xlabel("Normalized Capacity Score [0, 1]")
-        ax2.set_title("C. Smallholder Archetype Profiles", fontweight="bold")
-        ax2.legend(loc="lower right", fontsize=7.5, frameon=True, facecolor="white")
-        ax2.grid(True, axis="x")
+        ax1.set_yticks(x_m)
+        ax1.set_yticklabels(archetype_metrics, fontsize=8.5)
+        ax1.set_xlim(0, 1.05)
+        ax1.set_xlabel("Normalized Capacity Score [0, 1]", fontsize=9.5)
+        ax1.set_title("B. Smallholder Archetype Profiles", fontweight="bold", fontsize=11, pad=8)
+        ax1.legend(loc="lower right", fontsize=8, frameon=True, facecolor="white", framealpha=0.9)
+        ax1.grid(True, axis="x", linestyle="--", alpha=0.6)
+
+        # Panel C: Micro-Level SHAP Waterfall Attribution (Household #0)
+        ax2 = fig.add_subplot(gs[1, :])
+        plt.sca(ax2)
+        shap.plots.waterfall(shap_single[0], max_display=9, show=False)
+        ax2.set_title("C. Micro-Level SHAP Waterfall Attribution (Household #0)", fontweight="bold", fontsize=11, pad=18)
 
         return self._save_fig(fig, "fig7_leakage_audit_and_household_counterfactuals.png")
 
@@ -1154,7 +1170,7 @@ class PublicationGenerator:
             ("Figure 6: Non-Linear Agronomic Interactions and Resilience Thresholds",
              "Panel A depicts the interaction between seasonal planting delays and livestock assets (TLU). Panel B demonstrates how crop portfolio diversity buffers holdings against complete harvest failures. Panel C illustrates how supplemental irrigation neutralizes the volatility-inducing impact of plot fragmentation."),
             ("Figure 7: Redesigned 5-Pillar Leakage Audit Verification and Household Counterfactuals",
-             "Panel A provides the 5-pillar isolation audit scorecard showing 100% compliance across spatial, target, scaler, latent representation, and feature selection boundaries. Panel B displays a micro-level SHAP waterfall explanation for household #0. Panel C presents comparative capacity profiles across three distinct smallholder archetypes."),
+             "Panel A provides the 5-pillar isolation audit scorecard showing 100% compliance across spatial, target, scaler, latent representation, and feature selection boundaries. Panel B presents comparative capacity profiles across three distinct smallholder archetypes. Panel C displays a micro-level SHAP waterfall explanation for household #0."),
             ("Figure 8: Agro-Ecological Zones and Volatility Hotspots",
              "Panel A details mean yield volatility across Tanzania's seven agro-ecological zones with 95% confidence intervals. Panel B charts harvest failure rate against seasonal yield gap by zone. Panel C displays the Agro-Ecological Resilience Index ($1 - Y_{vol}/2$)."),
             ("Figure 9: Agro-Economic Partial Dependence and Marginal Response Surfaces",
