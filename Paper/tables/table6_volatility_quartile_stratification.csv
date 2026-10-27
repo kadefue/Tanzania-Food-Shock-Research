@@ -1,4 +1,4 @@
-Volatility Stratum,Holdings (N),Mean Y_vol,Mean Yield Gap (kg/ha),Mean Crop Diversity (Shannon),Complete Harvest Failure Rate (%),Fertilizer Intensity (kg),Tropical Livestock Units (TLU),Planting Timing Delta (Months),Plot Fragmentation CV
+Volatility Stratum,Holdings (N),Mean Yield Volatility (Yᵥₒₗ),Mean Yield Gap (kg/ha),Mean Crop Diversity (Shannon),Complete Harvest Failure Rate (%),Fertilizer Intensity (kg),Tropical Livestock Units (TLU),Planting Month Difference (Months),Plot Fragmentation (CV)
 Q1: Low Volatility (Resilient),1141,0.17614690035813302,174.32714355862538,0.24305667851456206,80.4101767839717,400.63643601622533,5.205477651183172,6.013998789699929,0.28412184802885265
 Q2: Moderate-Low Volatility,1141,0.6854230993339652,631.476265057309,0.23064305999133614,81.54969234312699,2556.667999732421,4.4460736196319015,5.920128858384774,0.2981918682086008
 Q3: Moderate-High Volatility,1141,1.475558385854195,1891.0135552704821,0.16072510021370034,76.16830940669679,565.2175565262263,7.331130587204207,5.57521952922917,0.3455653059868135

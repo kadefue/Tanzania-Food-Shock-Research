@@ -112,10 +112,10 @@ SEC_METHODS = """## 2. Materials and Methods
 The empirical foundation of this study was the National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata covering mainland Tanzania and Zanzibar (NBS, 2021). The survey followed a multi-stage stratified cluster sampling design representative of smallholder agricultural households at both national and regional levels (URT, 2020). 
 
 The microdata integration pipeline ingested and harmonized seven primary survey modules:
-- Household demographics and asset rosters (`HOUSEHOLD`)
-- Agricultural plot registers and tenure characteristics (`MASIKAPLOT`, `VULIPLOT`)
-- Crop production, area harvested, and harvest utilization (`MASIKACROP`, `VULICROP`)
-- Input utilization rosters, including inorganic fertilizer, organic manure, pesticides, and improved seed varieties (`inputRoster_masika`, `inputRoster_vuli`)
+- Household demographic profiles and asset ownership rosters
+- Agricultural parcel registers and land tenure characteristics across long- and short-rain seasons
+- Seasonal crop production, cultivated and harvested areas, and harvest utilization records
+- Agricultural input utilization rosters detailing chemical fertilizers, organic manure, agrochemicals, and improved seed varieties
 
 To resolve measurement heterogeneity across rural districts, non-standard harvest volume units (e.g., *debe*, *gunia*, ox-carts, pieces) were harmonized to standard kilograms (kg) using official agro-ecological conversion coefficients published by the Ministry of Agriculture and NBS (NBS, 2021). Crop areas were standardized to hectares (ha). Holdings cultivating during both Masika and Vuli seasons were identified, yielding an eligible analytical cohort of 4,564 bi-modal smallholder households across 27 administrative regions.
 
@@ -186,11 +186,11 @@ Critically, when the identical LightGBM architecture was trained using standard 
 *Figure 2: Multi-model spatial cross-validation benchmark, error residuals, and out-of-fold calibration curves.*
 
 ### 3.3 Feature Importance and SHAP Attribution
-The top 25 features identified through Grandmaster feature selection are detailed in Table 3 and visualized in Figures 3 and 4. The dominant predictor of seasonal yield volatility was seasonal planting date divergence (`plant_month_delta`), which accounted for 34.2% of total feature gain in LightGBM. Smallholders forced to delay Vuli planting due to late-onset rains experienced catastrophic yield penalties.
+The top 25 features identified through Grandmaster feature selection are detailed in Table 3 and visualized in Figures 3 and 4. The dominant predictor of seasonal yield volatility was seasonal planting date divergence (the calendar month difference between Masika and Vuli sowing), which accounted for 34.2% of total feature gain in LightGBM. Smallholders forced to delay Vuli planting due to late-onset rains experienced catastrophic yield penalties.
 
-The second and third most influential features were harvest realization share (`m_harvest_pct_mean`) and crop diversity differential (`shannon_diff_from_region_mean`). SHAP summary attributions (Figure 4) demonstrated that households maintaining higher Shannon diversity than their regional peers exhibited negative SHAP values (driving Yᵥₒₗ lower), confirming that multi-crop portfolios act as a direct biophysical shock absorber (Renard & Tilman, 2019).
+The second and third most influential features were Masika harvest realization rate (the mean proportion of cultivated area successfully harvested) and relative crop diversity differential (household Shannon diversity relative to the regional peer mean). SHAP summary attributions (Figure 4) demonstrated that households maintaining higher Shannon diversity than their regional peers exhibited negative SHAP values (driving Yᵥₒₗ lower), confirming that multi-crop portfolios act as a direct biophysical shock absorber (Renard & Tilman, 2019).
 
-Household asset buffers—specifically Tropical Livestock Units (`total_livestock_tlu`) and plot fragmentation (`plot_area_cv`)—also displayed substantial stabilizing attributions. Households possessing >3.0 TLU were insulated against acute yield volatility, as livestock sales provided liquid capital to purchase supplementary inputs during stressed seasons (Carter & Barrett, 2006).
+Household asset buffers—specifically Tropical Livestock Units (TLU, representing household livestock endowment) and operational plot area fragmentation (parcel size coefficient of variation)—also displayed substantial stabilizing attributions. Households possessing >3.0 TLU were insulated against acute yield volatility, as livestock sales provided liquid capital to purchase supplementary inputs during stressed seasons (Carter & Barrett, 2006).
 
 [Insert Table 3 here]
 *Table 3: Top-25 engineered features ranked by LightGBM split frequency and normalized gain importance.*
@@ -339,12 +339,12 @@ FIGURES_INFO = [
     ("fig1_target_distribution_and_seasonal_dynamics.png", "Figure 1: Target distribution of the smallholder Yield Volatility Index (Yᵥₒₗ) and seasonal log-yield dynamics across Tanzania. (A) Overall empirical density and boxplot of Yᵥₒₗ showing positive skew and significant mass in the hyper-volatile zone (Yᵥₒₗ ≥ 1.50). (B) Bivariate scatter and joint density comparing Masika (long rains) versus Vuli (short rains) log-yields, highlighting seasonal divergence."),
     ("fig2_model_benchmark_spatial_cv.png", "Figure 2: Multi-model spatial cross-validation benchmark, error residuals, and out-of-fold calibration curves. (A) Model comparison across 5-fold spatial CV showing R² and RMSE for LightGBM, XGBoost, Random Forest, CatBoost, and Weighted Ensemble. (B) Out-of-fold predicted versus observed volatility scatter with 1:1 parity line. (C) Decile calibration curves demonstrating close alignment between predicted risk and empirical volatility across all tiers."),
     ("fig3_grandmaster_feature_importance_and_selection.png", "Figure 3: Grandmaster feature importance scree and domain attribution breakdown. (A) Cumulative gain scree plot identifying the elbow point for top-25 feature selection. (B) Normalized feature importance across four functional domains: seasonal input deltas, crop portfolio diversity, household endowments, and spatial agro-climatic context."),
-    ("fig4_shap_global_feature_attributions.png", "Figure 4: Global SHAP feature attributions and directional dependency plots. (A) SHAP beeswarm plot ranking top-15 features by mean absolute SHAP value, illustrating directional influence on volatility predictions. (B) Partial dependence curves for seasonal planting date shift (`plant_month_delta`) and Shannon diversity differential."),
+    ("fig4_shap_global_feature_attributions.png", "Figure 4: Global SHAP feature attributions and directional dependency plots. (A) SHAP beeswarm plot ranking top-15 features by mean absolute SHAP value, illustrating directional influence on volatility predictions. (B) Partial dependence curves for seasonal planting date shift (difference between Masika and Vuli sowing months) and Shannon diversity differential."),
     ("fig5_regional_heterogeneity_and_spatial_transferability.png", "Figure 5: Regional heterogeneity and spatial transferability advantage across 27 administrative regions. (A) Spatial distribution of model R² across Tanzania regions. (B) Out-of-fold performance comparison between the Weighted Ensemble and baseline models by region, demonstrating consistent transferability improvements across both high-potential and semi-arid zones."),
     ("fig6_agronomic_non_linear_interactions.png", "Figure 6: Non-linear agronomic interaction surfaces. (A) Two-way interaction surface between planting date divergence and seasonal fertilizer delta. (B) Interaction between crop portfolio Shannon diversity and drought shock probability, revealing strong buffering thresholds."),
     ("fig7_leakage_audit_and_household_counterfactuals.png", "Figure 7: Redesigned 5-Pillar Leakage Audit quantitative isolation scorecard, archetype counterfactual profiles, and local SHAP waterfall explanation. (A) Quantitative isolation scorecard validating complete independence across spatial partitioning, preprocessing, target encoding, feature selection, and adversarial checks. (B) Comparative capacity profiles across three smallholder archetypes. (C) Local SHAP waterfall explanation for vulnerable smallholder household #0."),
     ("fig8_spatial_hotspots_and_agroecological_zones.png", "Figure 8: Spatial distribution of smallholder yield volatility hotspots and agro-ecological zone vulnerability map. Highlights high-risk clusters in semi-arid central regions (Dodoma, Singida) versus stable high-altitude clusters in the Southern and Northern Highlands."),
-    ("fig9_agroeconomic_partial_dependence_surfaces.png", "Figure 9: Agro-economic partial dependence surfaces and two-way interaction contours. (A) Marginal response of yield volatility to fertilizer application rate. (B) Labor allocation shift response. (C) Plot fragmentation (`plot_area_cv`) interaction surface."),
+    ("fig9_agroeconomic_partial_dependence_surfaces.png", "Figure 9: Agro-economic partial dependence surfaces and two-way interaction contours. (A) Marginal response of yield volatility to fertilizer application rate. (B) Labor allocation shift response. (C) Plot fragmentation (parcel size coefficient of variation) interaction surface."),
     ("fig10_policy_simulation_and_counterfactual_interventions.png", "Figure 10: Policy counterfactual stress-testing and simulated volatility mitigation distributions under four agricultural intervention packages. (A) Kernel density shifts under baseline status quo, +2 TLU livestock transfer, +0.4 Shannon crop diversification, and integrated Climate-Smart Agriculture (CSA). (B) Proportion of hyper-volatile smallholders (Yᵥₒₗ ≥ 1.50) across scenarios. (C) Net percentage reduction in mean smallholder volatility.")
 ]
 
@@ -1085,11 +1085,11 @@ def generate_docx_manuscript(output_path: Path):
     add_scientific_paragraph(
         doc,
         "The top 25 features identified through Grandmaster feature selection are detailed in Table 3 and visualized in Figures 3 and 4. "
-        "The dominant predictor of seasonal yield volatility was seasonal planting date divergence (`plant_month_delta`), which accounted for 34.2% of total feature gain in LightGBM. "
-        "The second and third most influential features were harvest realization share (`m_harvest_pct_mean`) and crop diversity differential (`shannon_diff_from_region_mean`). "
+        "The dominant predictor of seasonal yield volatility was seasonal planting date divergence (the calendar month difference between Masika and Vuli sowing), which accounted for 34.2% of total feature gain in LightGBM. "
+        "The second and third most influential features were Masika harvest realization rate (the mean proportion of cultivated area successfully harvested) and relative crop diversity differential (household Shannon diversity relative to the regional peer mean). "
         "SHAP summary attributions (Figure 4) demonstrated that households maintaining higher Shannon diversity than their regional peers exhibited negative SHAP values (driving Yᵥₒₗ lower), "
         "confirming that multi-crop portfolios act as a direct biophysical shock absorber (Renard & Tilman, 2019). "
-        "Household asset buffers—specifically Tropical Livestock Units (`total_livestock_tlu`) and plot fragmentation (`plot_area_cv`)—also displayed substantial stabilizing attributions. "
+        "Household asset buffers—specifically Tropical Livestock Units (TLU, representing household livestock endowment) and operational plot area fragmentation (parcel size coefficient of variation)—also displayed substantial stabilizing attributions. "
         "Households possessing >3.0 TLU were insulated against acute yield volatility, as livestock sales provided liquid capital to purchase supplementary inputs during stressed seasons (Carter & Barrett, 2006)."
     )
     add_image_figure(FIGURES_INFO[2][0], FIGURES_INFO[2][1])
@@ -1324,7 +1324,7 @@ Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the hig
 \end{figure}
 
 \subsection{Feature Importance and Attribution}
-Figure~\ref{fig:fig3} and Figure~\ref{fig:fig4} illustrate feature attributions. The dominant predictor was planting date divergence (\texttt{plant\_month\_delta}), accounting for 34.2\% of LightGBM total feature gain. Crop diversity differential (\texttt{shannon\_diff\_from\_region\_mean}) and Tropical Livestock Units (\texttt{total\_livestock\_tlu}) provided significant stabilizing effects \cite{renard2019}.
+Figure~\ref{fig:fig3} and Figure~\ref{fig:fig4} illustrate feature attributions. The dominant predictor was seasonal planting date divergence (calendar month difference between Masika and Vuli sowing), accounting for 34.2\% of LightGBM total feature gain. The Masika harvest realization rate, relative crop diversity differential (household Shannon diversity relative to regional peer mean), and Tropical Livestock Units (TLU, representing household livestock endowment) provided significant stabilizing effects \cite{renard2019}.
 
 \begin{figure}[htbp]
 \centering

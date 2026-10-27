@@ -44,10 +44,10 @@ The primary contributions of this work are fourfold:
 The empirical foundation of this study was the National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata covering mainland Tanzania and Zanzibar (NBS, 2021). The survey followed a multi-stage stratified cluster sampling design representative of smallholder agricultural households at both national and regional levels (URT, 2020). 
 
 The microdata integration pipeline ingested and harmonized seven primary survey modules:
-- Household demographics and asset rosters (`HOUSEHOLD`)
-- Agricultural plot registers and tenure characteristics (`MASIKAPLOT`, `VULIPLOT`)
-- Crop production, area harvested, and harvest utilization (`MASIKACROP`, `VULICROP`)
-- Input utilization rosters, including inorganic fertilizer, organic manure, pesticides, and improved seed varieties (`inputRoster_masika`, `inputRoster_vuli`)
+- Household demographic profiles and asset ownership rosters
+- Agricultural parcel registers and land tenure characteristics across long- and short-rain seasons
+- Seasonal crop production, cultivated and harvested areas, and harvest utilization records
+- Agricultural input utilization rosters detailing chemical fertilizers, organic manure, agrochemicals, and improved seed varieties
 
 To resolve measurement heterogeneity across rural districts, non-standard harvest volume units (e.g., *debe*, *gunia*, ox-carts, pieces) were harmonized to standard kilograms (kg) using official agro-ecological conversion coefficients published by the Ministry of Agriculture and NBS (NBS, 2021). Crop areas were standardized to hectares (ha). Holdings cultivating during both Masika and Vuli seasons were identified, yielding an eligible analytical cohort of 4,564 bi-modal smallholder households across 27 administrative regions.
 
@@ -108,7 +108,7 @@ Log-yield comparisons between Masika and Vuli seasons confirmed that Masika yiel
 #### Table 1: Summary statistics of core agronomic variables, household endowments, and target metrics across 4,564 bi-modal smallholder holdings in Tanzania.
 | Variable Description | Domain Category | Observations (N) | Mean | Std Dev | Q1 (25%) | Median | Q3 (75%) | Min | Max |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Yield Volatility Index (Y_vol) | Target Variable | 4564 | 1.084 | 0.727 | 0.400 | 1.014 | 2.000 | 0.000 | 2.000 |
+| Yield Volatility Index (Yᵥₒₗ) | Target Variable | 4564 | 1.084 | 0.727 | 0.400 | 1.014 | 2.000 | 0.000 | 2.000 |
 | Masika Harvest Yield (kg/ha) | Crop Production | 4564 | 930.131 | 2058.0 | 123.790 | 396.948 | 990.099 | 0.000 | 64126.9 |
 | Vuli Harvest Yield (kg/ha) | Crop Production | 4564 | 900.801 | 1952.2 | 123.583 | 414.339 | 998.043 | 0.000 | 59394.2 |
 | Seasonal Yield Difference (kg/ha) | Crop Production | 4564 | 883.520 | 2170.2 | 133.499 | 353.581 | 872.511 | 0.000 | 62855.2 |
@@ -118,12 +118,12 @@ Log-yield comparisons between Masika and Vuli seasons confirmed that Masika yiel
 | Inorganic Fertilizer Applied (kg) | Input Intensification | 4564 | 1086.3 | 41528.4 | 0.000 | 0.000 | 20.000 | 0.000 | 2733766.7 |
 | Pesticide Applied (L or kg) | Input Intensification | 4564 | 118.260 | 1613.4 | 0.000 | 0.000 | 5.638 | 0.000 | 96500.0 |
 | Shannon Crop Diversity Index | Crop Diversification | 4564 | 0.180 | 0.310 | -0.000 | 0.000 | 0.342 | -0.000 | 1.688 |
-| Plot Fragmentation CV | Plot Heterogeneity | 4564 | 0.305 | 0.376 | 0.000 | 0.115 | 0.552 | 0.000 | 3.152 |
+| Plot Fragmentation (Coefficient of Variation) | Plot Heterogeneity | 4564 | 0.305 | 0.376 | 0.000 | 0.115 | 0.552 | 0.000 | 3.152 |
 | Tropical Livestock Units (TLU) | Asset Buffers | 4564 | 4.969 | 23.666 | 0.040 | 0.360 | 4.738 | 0.000 | 1112.5 |
 | Head of Household Age (Years) | Household Demographics | 4564 | 48.715 | 17.535 | 37.000 | 50.000 | 61.000 | 0.000 | 106.000 |
 | Available Adult Labor Count | Labor Dynamics | 4564 | 2.817 | 1.766 | 2.000 | 2.000 | 4.000 | 0.000 | 15.000 |
 | Masika Harvest Percentage (%) | Harvest Outcomes | 4564 | 66.664 | 31.522 | 48.000 | 89.000 | 89.000 | 0.000 | 89.000 |
-| Planting Month Delta (Months) | Agronomic Timing | 4564 | -4.282 | 3.708 | -7.000 | -6.000 | 0.000 | -11.000 | 10.000 |
+| Planting Month Difference (Masika – Vuli, Months) | Agronomic Timing | 4564 | -4.282 | 3.708 | -7.000 | -6.000 | 0.000 | -11.000 | 10.000 |
 
 ### 3.2 Spatial Cross-Validation Benchmark & Model Performance
 Evaluating model architectures under spatial cross-validation revealed substantial performance differentiation (Table 2, Figure 2). Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the highest predictive accuracy (R² = 0.584 ± 0.042, RMSE = 0.231 ± 0.015, MAE = 0.178 ± 0.011). Among standalone models, LightGBM demonstrated superior single-model performance (R² = 0.569 ± 0.045), followed closely by XGBoost (R² = 0.558 ± 0.048) and CatBoost (R² = 0.547 ± 0.051). Random Forest exhibited lower spatial generalization capability (R² = 0.512 ± 0.056).
@@ -131,9 +131,9 @@ Evaluating model architectures under spatial cross-validation revealed substanti
 Critically, when the identical LightGBM architecture was trained using standard non-spatial random cross-validation, the apparent R² jumped to 0.726 ± 0.021 (an artificial inflation of ΔR² = +0.157). This empirical discrepancy quantified the precise magnitude of spatial autocorrelation leakage: non-spatial models exploited spatial coordinates and local cluster proxies to artificially inflate test scores, yielding unreliable models that degraded when transferred to unobserved regions (Roberts et al., 2017).
 
 #### Table 2: Multi-model spatial cross-validation benchmark against pooled non-spatial baselines across 5-fold regional GroupKFold.
-| Model Architecture | Spatial RMSE | Spatial MAE | Spatial R2 | Hyperparameter Configuration | Training Time (s) |
+| Model Architecture | Spatial RMSE | Spatial MAE | Spatial R² | Hyperparameter Configuration | Training Time (s) |
 | --- | --- | --- | --- | --- | --- |
-| Weighted Ensemble | 0.464 | 0.347 | 0.592 | 0.50 LGB + 0.40 XGB + 0.10 RF (Soft Voting) | 9.190 |
+| Weighted Ensemble | 0.464 | 0.347 | 0.592 | 0.50 LightGBM + 0.40 XGBoost + 0.10 Random Forest (Soft Voting) | 9.190 |
 | LightGBM | 0.465 | 0.346 | 0.590 | num_leaves=35, lr=0.03, colsample=0.7 | 6.030 |
 | XGBoost | 0.466 | 0.348 | 0.588 | max_depth=5, lr=0.03, colsample=0.7 | 2.570 |
 | Random Forest | 0.477 | 0.368 | 0.569 | max_depth=16, max_features=sqrt | 0.510 |
@@ -142,37 +142,37 @@ Critically, when the identical LightGBM architecture was trained using standard 
 *Figure 2: Multi-model spatial cross-validation benchmark, error residuals, and out-of-fold calibration curves. (A) Model comparison across 5-fold spatial CV showing R² and RMSE for LightGBM, XGBoost, Random Forest, CatBoost, and Weighted Ensemble. (B) Out-of-fold predicted versus observed volatility scatter with 1:1 parity line. (C) Decile calibration curves demonstrating close alignment between predicted risk and empirical volatility across all tiers.*
 
 ### 3.3 Feature Importance and SHAP Attribution
-The top 25 features identified through Grandmaster feature selection are detailed in Table 3 and visualized in Figures 3 and 4. The dominant predictor of seasonal yield volatility was seasonal planting date divergence (`plant_month_delta`), which accounted for 34.2% of total feature gain in LightGBM. Smallholders forced to delay Vuli planting due to late-onset rains experienced catastrophic yield penalties.
+The top 25 features identified through Grandmaster feature selection are detailed in Table 3 and visualized in Figures 3 and 4. The dominant predictor of seasonal yield volatility was seasonal planting date divergence (the calendar month difference between Masika and Vuli sowing), which accounted for 34.2% of total feature gain in LightGBM. Smallholders forced to delay Vuli planting due to late-onset rains experienced catastrophic yield penalties.
 
-The second and third most influential features were harvest realization share (`m_harvest_pct_mean`) and crop diversity differential (`shannon_diff_from_region_mean`). SHAP summary attributions (Figure 4) demonstrated that households maintaining higher Shannon diversity than their regional peers exhibited negative SHAP values (driving Yᵥₒₗ lower), confirming that multi-crop portfolios act as a direct biophysical shock absorber (Renard & Tilman, 2019).
+The second and third most influential features were Masika harvest realization rate (the mean proportion of cultivated area successfully harvested) and relative crop diversity differential (household Shannon diversity relative to the regional peer mean). SHAP summary attributions (Figure 4) demonstrated that households maintaining higher Shannon diversity than their regional peers exhibited negative SHAP values (driving Yᵥₒₗ lower), confirming that multi-crop portfolios act as a direct biophysical shock absorber (Renard & Tilman, 2019).
 
-Household asset buffers—specifically Tropical Livestock Units (`total_livestock_tlu`) and plot fragmentation (`plot_area_cv`)—also displayed substantial stabilizing attributions. Households possessing >3.0 TLU were insulated against acute yield volatility, as livestock sales provided liquid capital to purchase supplementary inputs during stressed seasons (Carter & Barrett, 2006).
+Household asset buffers—specifically Tropical Livestock Units (TLU, representing household livestock endowment) and operational plot area fragmentation (parcel size coefficient of variation)—also displayed substantial stabilizing attributions. Households possessing >3.0 TLU were insulated against acute yield volatility, as livestock sales provided liquid capital to purchase supplementary inputs during stressed seasons (Carter & Barrett, 2006).
 
 #### Table 3: Top-25 engineered features ranked by LightGBM split frequency and normalized gain importance.
-| Rank | Feature Identifier | Agronomic Domain | Split Frequency | Gain Importance | Agronomic Rationale |
+| Rank | Agronomic Variable Name | Agronomic Domain | Split Frequency | Gain Importance | Agronomic Description & Rationale |
 | --- | --- | --- | --- | --- | --- |
-| 1 | plant_month_delta | Agronomic Timing | 300 | 11375.6 | Misalignment in seasonal onset and crop establishment timing |
-| 2 | m_harvest_pct_mean | Harvest Outcomes | 212 | 2608.2 | Average proportion of cultivated area successfully harvested |
-| 3 | v_plant_month_mean | Agronomic Timing | 205 | 2502.8 | Timing of Vuli short-rain planting relative to dry-season onset |
-| 4 | shannon_diff_from_region_mean | Crop Diversity | 187 | 423.740 | Portfolio diversification relative to local peer average |
-| 5 | delta_evenness | Crop Diversity | 142 | 356.965 | Seasonal shift in Pielou evenness across plot cultivars |
-| 6 | total_livestock_tlu | Asset Buffers | 141 | 132.909 | Tropical Livestock Units providing buffer capital against crop failure |
-| 7 | m_no_harvest_share | Failure Shocks | 131 | 1812.3 | Share of plots suffering total crop abandonment in Masika |
-| 8 | dist_agronomic_archetype_1 | Latent Archetype | 119 | 222.649 | KMeans distance to Commercial Mixed Cropping cluster |
-| 9 | land_per_adult_labor | Labor Dynamics | 118 | 155.704 | Farm capitalization ratio (cultivated hectares per adult laborer) |
-| 10 | plot_area_mean | Plot Heterogeneity | 117 | 127.810 | Mean operational plot area across household holding |
-| 11 | head_age | Demographics | 115 | 124.768 | Farming experience and human capital adaptive capacity |
-| 12 | area_diff_from_region_mean | Farm Structure | 113 | 155.388 | Deviation of farm size from regional agro-ecological mean |
-| 13 | total_livestock_head | Asset Buffers | 105 | 106.063 | Total count of livestock animals owned by holding |
-| 14 | dist_agronomic_archetype_0 | Latent Archetype | 101 | 133.088 | KMeans distance to Subsistence Cereals cluster |
-| 15 | v_drought_fail | Climatic Shocks | 98 | 1689.6 | Reported severe drought failure during Vuli season |
+| 1 | Planting Month Difference (Masika – Vuli) | Agronomic Timing | 300 | 11375.6 | Inter-seasonal gap in crop establishment timing between long and short rains |
+| 2 | Mean Harvested Area Proportion (Masika) | Harvest Outcomes | 212 | 2608.2 | Average proportion of cultivated holding area successfully harvested in Masika |
+| 3 | Mean Planting Month (Vuli) | Agronomic Timing | 205 | 2502.8 | Calendar timing of Vuli short-rain crop sowing relative to rainy season onset |
+| 4 | Shannon Crop Diversity Relative to Regional Mean | Crop Diversity | 187 | 423.740 | Holding-level portfolio diversification benchmarked against regional peer average |
+| 5 | Seasonal Species Evenness Shift (Pielou Index) | Crop Diversity | 142 | 356.965 | Inter-seasonal change in cultivar species evenness and abundance parity |
+| 6 | Total Tropical Livestock Units (TLU) | Asset Buffers | 141 | 132.909 | Aggregated herd size providing liquid capital buffer against acute crop failure |
+| 7 | Crop Failure Plot Share (Masika) | Failure Shocks | 131 | 1812.3 | Proportion of cultivated parcels experiencing total crop loss or abandonment |
+| 8 | Distance to Commercial Mixed Cropping Archetype | Latent Archetype | 119 | 222.649 | Euclidean distance to regional Commercial Mixed Cropping farming cluster |
+| 9 | Cultivated Land per Adult Laborer (ha/adult) | Labor Dynamics | 118 | 155.704 | Household labor capitalization ratio (cultivated hectares per active adult) |
+| 10 | Mean Operational Plot Area (ha) | Plot Heterogeneity | 117 | 127.810 | Average operational parcel size across the agricultural holding |
+| 11 | Age of Household Head (Years) | Demographics | 115 | 124.768 | Farming experience and managerial human capital of the primary decision-maker |
+| 12 | Farm Size Difference from Regional Mean (ha) | Farm Structure | 113 | 155.388 | Deviation of total cultivated farm size from regional agro-ecological average |
+| 13 | Total Livestock Head Count | Asset Buffers | 105 | 106.063 | Total absolute number of domestic farm animals owned by the household |
+| 14 | Distance to Subsistence Cereals Archetype | Latent Archetype | 101 | 133.088 | Euclidean distance to regional Subsistence Cereal Monoculture cluster |
+| 15 | Drought-Induced Harvest Failure Indicator (Vuli) | Climatic Shocks | 98 | 1689.6 | Binary indicator of severe drought-induced crop failure during the short rains |
 *(Showing top 15 features; complete table in Supplementary Materials)*
 
 ![Figure 3](figures/fig3_grandmaster_feature_importance_and_selection.png)
 *Figure 3: Grandmaster feature importance scree and domain attribution breakdown. (A) Cumulative gain scree plot identifying the elbow point for top-25 feature selection. (B) Normalized feature importance across four functional domains: seasonal input deltas, crop portfolio diversity, household endowments, and spatial agro-climatic context.*
 
 ![Figure 4](figures/fig4_shap_global_feature_attributions.png)
-*Figure 4: Global SHAP feature attributions and directional dependency plots. (A) SHAP beeswarm plot ranking top-15 features by mean absolute SHAP value, illustrating directional influence on volatility predictions. (B) Partial dependence curves for seasonal planting date shift (`plant_month_delta`) and Shannon diversity differential.*
+*Figure 4: Global SHAP feature attributions and directional dependency plots. (A) SHAP beeswarm plot ranking top-15 features by mean absolute SHAP value, illustrating directional influence on volatility predictions. (B) Partial dependence curves for seasonal planting date shift (difference between Masika and Vuli sowing months) and Shannon diversity differential.*
 
 ### 3.4 Regional Heterogeneity & Transferability Advantage
 Model accuracy varied substantially across Tanzania's diverse agro-ecological zones (Table 4, Figure 5, Figure 8). Spatial transferability was highest in the Northern Highlands (Kilimanjaro R² = 0.648, Arusha R² = 0.631) and Southern Highlands (Iringa R² = 0.622, Mbeya R² = 0.614), where commercial input markets and organized extension networks produce consistent agronomic response functions. 
@@ -180,7 +180,7 @@ Model accuracy varied substantially across Tanzania's diverse agro-ecological zo
 Conversely, the highest yield volatility and lowest baseline predictability occurred in semi-arid central regions (Dodoma mean Yᵥₒₗ = 1.382, Singida mean Yᵥₒₗ = 1.341), where erratic intra-seasonal dry spells overwhelmed management interventions (Lema & Majule, 2009). Across all 27 regions, the Weighted Ensemble maintained a consistent transferability advantage over single-model estimators (Figure 5).
 
 #### Table 4: Regional performance breakdown, mean volatility indices, and sample sizes across 27 administrative regions.
-| Region ID | Region Name | Holdings (N) | Regional Model RMSE | Regional Model R2 | National Model RMSE | National Model R2 | National Advantage (Delta R2) |
+| Region ID | Region Name | Holdings (N) | Regional Model RMSE | Regional Model R² | National Model RMSE | National Model R² | National Advantage (ΔR²) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 4 | Tanga | 650 | 0.623 | 0.202 | 0.467 | 0.551 | 0.349 |
 | 20 | Mara | 476 | 0.534 | 0.462 | 0.431 | 0.649 | 0.187 |
@@ -226,7 +226,7 @@ Partial dependence and interaction analyses revealed distinct non-linear tipping
 *Figure 6: Non-linear agronomic interaction surfaces. (A) Two-way interaction surface between planting date divergence and seasonal fertilizer delta. (B) Interaction between crop portfolio Shannon diversity and drought shock probability, revealing strong buffering thresholds.*
 
 ![Figure 9](figures/fig9_agroeconomic_partial_dependence_surfaces.png)
-*Figure 9: Agro-economic partial dependence surfaces and two-way interaction contours. (A) Marginal response of yield volatility to fertilizer application rate. (B) Labor allocation shift response. (C) Plot fragmentation (`plot_area_cv`) interaction surface.*
+*Figure 9: Agro-economic partial dependence surfaces and two-way interaction contours. (A) Marginal response of yield volatility to fertilizer application rate. (B) Labor allocation shift response. (C) Plot fragmentation (parcel size coefficient of variation) interaction surface.*
 
 ### 3.6 Spatial Leakage Audit & Household Explanations
 Table 5 and Figure 7 present the quantitative verification of the 5-pillar spatial leakage audit. The adversarial validation ROC-AUC remained at 0.512 ± 0.024, demonstrating that training and test distributions were spatially disentangled. 
@@ -237,7 +237,7 @@ Figure 7 further provides local explanations for individual smallholder holdings
 | Pillar | Audit Domain | Verification Criterion | Quantitative Empirical Result | Verification Status |
 | --- | --- | --- | --- | --- |
 | 1 | Spatial Group Disjointness | Verifies training and validation folds share zero Enumeration Areas (EAs) | Zero overlapping EAs across all 5 spatial cross-validation folds. | CERTIFIED PASS |
-| 2 | Target Variable Isolation | Verifies target Y_vol is strictly excluded from feature space and no trivial target proxies exist | Target variable completely isolated. Maximum absolute feature correlation: 0.4365. | CERTIFIED PASS |
+| 2 | Target Variable Isolation | Verifies target Yield Volatility Index (Yᵥₒₗ) is strictly excluded from feature space and no trivial target proxies exist | Target variable completely isolated. Maximum absolute feature correlation: 0.4365. | CERTIFIED PASS |
 | 3 | Scaler & Imputation Isolation | Verifies preprocessing scalers and medians are strictly computed on training folds | Preprocessing scalers and imputers conform strictly to out-of-fold fit boundaries. | CERTIFIED PASS |
 | 4 | Unsupervised Representation Isolation (KMeans & PCA) | Verifies KMeans cluster centroids and PCA latent components are computed strictly on training data | Latent representations (KMeans agronomic clusters and PCA components) strictly isolated. | CERTIFIED PASS |
 | 5 | Feature Selection & Lookahead Integrity | Verifies feature selection ranking does not access validation target values or lookahead timestamps | Top-100 features selected using independent tree-gain importance; validation targets zero-masked. | CERTIFIED PASS |
@@ -253,7 +253,7 @@ To evaluate actionable agricultural policy interventions, we simulated four coun
 - **Scenario 4 (Integrated Climate-Smart Agriculture Package)**: Combining timely planting advisories, targeted micro-fertilizer vouchers, and intercropping extension cut hyper-volatile holdings by 63.3% (dropping from 38.4% to 14.1%) and delivered an average volatility reduction of 31.4% nationally.
 
 #### Table 6: Smallholder household stratification across yield volatility quartiles.
-| Volatility Stratum | Holdings (N) | Mean Y_vol | Mean Yield Gap (kg/ha) | Mean Crop Diversity (Shannon) | Complete Harvest Failure Rate (%) | Fertilizer Intensity (kg) | Tropical Livestock Units (TLU) | Planting Timing Delta (Months) | Plot Fragmentation CV |
+| Volatility Stratum | Holdings (N) | Mean Yield Volatility (Yᵥₒₗ) | Mean Yield Gap (kg/ha) | Mean Crop Diversity (Shannon) | Complete Harvest Failure Rate (%) | Fertilizer Intensity (kg) | Tropical Livestock Units (TLU) | Planting Month Difference (Months) | Plot Fragmentation (CV) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q1: Low Volatility (Resilient) | 1141 | 0.176 | 174.327 | 0.243 | 80.410 | 400.636 | 5.205 | 6.014 | 0.284 |
 | Q2: Moderate-Low Volatility | 1141 | 0.685 | 631.476 | 0.231 | 81.550 | 2556.7 | 4.446 | 5.920 | 0.298 |
@@ -261,7 +261,7 @@ To evaluate actionable agricultural policy interventions, we simulated four coun
 | Q4: Hyper-Volatile | 1141 | 2.000 | 837.265 | 0.086 | 34.268 | 822.489 | 2.893 | 1.371 | 0.291 |
 
 #### Table 7: Representative smallholder archetypes and simulated counterfactual mitigation gains.
-| Case Scenario | Household Identifier | Archetype Classification | Observed Volatility (Y_vol) | Model Predicted Volatility | Prediction Error (Residual) | Key Structural Characteristics | Targeted Policy Intervention |
+| Case Scenario | Household Identifier | Archetype Classification | Observed Volatility (Yᵥₒₗ) | Model Predicted Volatility | Prediction Error (Residual) | Key Structural Characteristics | Targeted Policy Intervention |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Case A: Resilient Diversified Agro-Pastoralist | 00-42-35-91 | Low Volatility Archetype | 0.183 | 0.285 | 0.101 | High crop diversity, substantial livestock TLU buffer, zero plot failure | Maintain mixed crop-livestock integration and agro-forestry buffers |
 | Case B: Moderate Input-Intensive Specialized Farm | 00-27-16-44 | Moderate Volatility Archetype | 1.007 | 0.483 | 0.523 | Synthetic fertilizer application, moderate planting delta, commercial focus | Introduce supplemental micro-irrigation and crop rotation to reduce seasonal yield swings |
