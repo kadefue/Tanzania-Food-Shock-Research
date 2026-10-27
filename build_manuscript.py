@@ -63,12 +63,12 @@ ABSTRACT = (
     "paradigms suffer from spatial autocorrelation leakage, producing over-optimistic performance estimates that fail upon deployment to "
     "unseen agro-ecological landscapes. Here, we develop a leakage-free spatial machine learning pipeline utilizing the Tanzania National "
     "Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata, encompassing 10,750 smallholder households across 27 "
-    "administrative regions. We formulate a standardized inter-seasonal Yield Volatility Index ($Y_{vol,i}$) and construct domain-engineered "
+    "administrative regions. We formulate a standardized inter-seasonal Yield Volatility Index (Yᵥₒₗ,ᵢ) and construct domain-engineered "
     "agronomic features spanning seasonal input deltas, crop portfolio Shannon diversity, labor allocation dynamics, and livestock buffers. "
     "Using a 5-pillar spatial isolation protocol (Spatial GroupKFold grouped by administrative region), we benchmark LightGBM, XGBoost, "
     "Random Forest, CatBoost, and an out-of-fold optimal Weighted Ensemble against a non-spatial pooled baseline. The Weighted Ensemble "
-    "achieves superior generalization (Spatial Out-of-Fold $R^2 = 0.584 \\pm 0.042$, RMSE = $0.231 \\pm 0.015$), outperforming pooled models "
-    "that exhibit an optimistic bias of $\\Delta R^2 = +0.157$ due to spatial leakage. SHAP interpretability identifies seasonal planting date divergence, "
+    "achieves superior generalization (Spatial Out-of-Fold R² = 0.584 ± 0.042, RMSE = 0.231 ± 0.015), outperforming pooled models "
+    "that exhibit an optimistic bias of ΔR² = +0.157 due to spatial leakage. SHAP interpretability identifies seasonal planting date divergence, "
     "crop diversity differentials, and livestock herd size as dominant non-linear drivers of yield stability. Counterfactual policy "
     "simulations demonstrate that an integrated climate-smart agriculture package reduces hyper-volatile smallholder holdings by 63.3%. "
     "This framework establishes an empirically grounded blueprint for robust, deployment-ready agricultural AI in developing economies."
@@ -94,12 +94,12 @@ While substantial agronomic research has focused on raising mean seasonal crop y
 
 The advent of machine learning (ML) and high-dimensional microdata has unlocked new frontiers in precision agriculture and agricultural vulnerability modeling (Benami et al., 2021; Chlingaryan et al., 2018; Khaki & Wang, 2019; van Klompenburg et al., 2020). Modern tree-based ensembles, such as Random Forest (Breiman, 2001), eXtreme Gradient Boosting (XGBoost; Chen & Guestrin, 2016), LightGBM (Ke et al., 2017), and CatBoost (Prokhorenkova et al., 2018), have repeatedly demonstrated superior empirical performance over classical econometric and biophysical crop models by capturing complex non-linear interactions without rigid parametric assumptions.
 
-However, the application of predictive machine learning to smallholder agriculture faces a critical methodological flaw: **spatial autocorrelation leakage** (Meyer et al., 2018; Ploton et al., 2020; Roberts et al., 2017). Because farm holdings situated within proximity share latent agro-ecological, pedological, and climatic characteristics, conventional random k-fold cross-validation allows training folds to inadvertently access spatial proxies from validation folds (Schratz et al., 2019; Valavi et al., 2019; Wadoux et al., 2021). This spatial data leakage inflates cross-validation performance metrics (often by 15% to 30% in $R^2$), yielding dangerously over-optimistic models that degrade precipitously when transferred to unseen geographic domains or applied by agricultural extension officers in distant rural wards.
+However, the application of predictive machine learning to smallholder agriculture faces a critical methodological flaw: **spatial autocorrelation leakage** (Meyer et al., 2018; Ploton et al., 2020; Roberts et al., 2017). Because farm holdings situated within proximity share latent agro-ecological, pedological, and climatic characteristics, conventional random k-fold cross-validation allows training folds to inadvertently access spatial proxies from validation folds (Schratz et al., 2019; Valavi et al., 2019; Wadoux et al., 2021). This spatial data leakage inflates cross-validation performance metrics (often by 15% to 30% in R²), yielding dangerously over-optimistic models that degrade precipitously when transferred to unseen geographic domains or applied by agricultural extension officers in distant rural wards.
 
 To overcome these barriers, this study establishes a rigorous, leakage-free spatial machine learning framework for predicting smallholder crop yield volatility across Tanzania. Utilizing microdata from the National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS)—comprising 10,750 smallholder households across all 27 administrative regions—we engineer a suite of domain-specific agronomic features, enforce a 5-pillar spatial isolation protocol, evaluate diverse model architectures, explain feature mechanisms via Shapley Additive Explanations (SHAP; Lundberg & Lee, 2017; Lundberg et al., 2020), and conduct counterfactual policy simulations.
 
 The primary contributions of this work are fourfold:
-1. **Target Formulation & Standardization**: We formulate an intra-annual Yield Volatility Index ($Y_{vol,i}$) that standardizes yield variations across heterogeneous agro-ecological zones while accommodating harvest failures.
+1. **Target Formulation & Standardization**: We formulate an intra-annual Yield Volatility Index (Yᵥₒₗ,ᵢ) that standardizes yield variations across heterogeneous agro-ecological zones while accommodating harvest failures.
 2. **5-Pillar Spatial Isolation Architecture**: We introduce an end-to-end spatial validation framework that enforces spatial GroupKFold partitioning by administrative region, nested inside-fold preprocessor fitting, and zero-leakage feature selection (Roberts et al., 2017).
 3. **Multi-Model Benchmark & Weighted Ensembling**: We systematically benchmark LightGBM, XGBoost, Random Forest, CatBoost, and a spatially calibrated Weighted Ensemble, quantifying the precise empirical penalty of spatial cross-validation versus naive pooled splitting.
 4. **Actionable Policy Counterfactuals**: We demonstrate how non-linear ML response surfaces can be converted into targeted policy simulations to evaluate fertilizer subsidies, crop diversification (Beillouin et al., 2019; Renard & Tilman, 2019; Waha et al., 2013), and climate-smart agricultural interventions."""
@@ -118,11 +118,11 @@ The microdata integration pipeline ingests and merges seven primary survey modul
 To resolve measurement heterogeneity across rural districts, non-standard harvest volume units (e.g., *debe*, *gunia*, ox-carts, pieces) were harmonized to standard kilograms (kg) using official agro-ecological conversion coefficients published by the Ministry of Agriculture and NBS (NBS, 2021). Crop areas were standardized to hectares (ha). Holdings cultivating during both Masika and Vuli seasons were identified, yielding an eligible analytical cohort of 4,564 bi-modal smallholder households across 27 administrative regions.
 
 ### 2.2 Yield Volatility Index Target Formulation
-Let $Y_{m,i}$ and $Y_{v,i}$ denote the aggregate crop yield (expressed in metric tons per hectare, t/ha) for household $i$ during the Masika and Vuli production cycles, respectively. To quantify inter-seasonal yield instability independent of baseline holding scale, we formulate the normalized Yield Volatility Index ($Y_{vol,i}$) in Equation (1):
+Let Yₘ,ᵢ and Yᵥ,ᵢ denote the aggregate crop yield (expressed in metric tons per hectare, t/ha) for household i during the Masika and Vuli production cycles, respectively. To quantify inter-seasonal yield instability independent of baseline holding scale, we formulate the normalized Yield Volatility Index (Yᵥₒₗ,ᵢ) in Equation (1):
 
 $$Y_{vol,i} = \\frac{|Y_{m,i} - Y_{v,i}|}{\\frac{1}{2}(Y_{m,i} + Y_{v,i}) + \\epsilon} \\tag{1}$$
 
-where $\\epsilon = 10^{-4}$ prevents numerical instability in rare cases where both seasonal harvests approach zero. The index is continuous, bounded within $[0, 2]$, where $Y_{vol} = 0$ indicates perfect seasonal yield parity ($Y_{m} = Y_{v}$), and $Y_{vol} = 2$ represents complete seasonal collapse (one season achieves normal harvest while the other experiences total failure).
+where ϵ = 10⁻⁴ prevents numerical instability in rare cases where both seasonal harvests approach zero. The index is continuous, bounded within [0, 2], where Yᵥₒₗ = 0 indicates perfect seasonal yield parity (Yₘ = Yᵥ), and Yᵥₒₗ = 2 represents complete seasonal collapse (one season achieves normal harvest while the other experiences total failure).
 
 ### 2.3 Domain-Engineered Agronomic Features
 Smallholder crop volatility is driven by the interaction between biophysical shocks and household buffering capacity. We engineer 137 features categorized into four functional domains:
@@ -131,7 +131,7 @@ Smallholder crop volatility is driven by the interaction between biophysical sho
 
 $$H' = -\\sum_{k=1}^{K} p_k \\ln p_k \\tag{2}$$
 
-along with the inter-seasonal diversity shift ($\\Delta H' = H'_{m} - H'_{v}$). Here, $p_k$ represents the proportional area allocated to crop species $k$ on holding $i$, and $K$ is the total count of cultivated crop varieties. Crop diversification provides biophysical insurance by staggering phenological water demands and hedging against pest pressure (Beillouin et al., 2019; Renard & Tilman, 2019; Waha et al., 2013).
+along with the inter-seasonal diversity shift (ΔH′ = H′ₘ - H′ᵥ). Here, pₖ represents the proportional area allocated to crop species k on holding i, and K is the total count of cultivated crop varieties. Crop diversification provides biophysical insurance by staggering phenological water demands and hedging against pest pressure (Beillouin et al., 2019; Renard & Tilman, 2019; Waha et al., 2013).
 3. **Household Endowments & Buffers**: Total Tropical Livestock Units (TLU, standardized conversion of cattle, goats, sheep, and poultry), cultivated plot fragmentation metrics (plot area coefficient of variation), and demographic dependency ratios (Carter & Barrett, 2006; Dercon & Christiaensen, 2011).
 4. **Spatial Agro-Climatic Context**: Regional target-encoded historical yield stability, spatial distance embeddings from unsupervised K-Means agronomic archetypes, and elevation-derived environmental proxies.
 
@@ -143,7 +143,7 @@ To guarantee complete spatial isolation and ensure models generalize to unmonito
 - **Pillar 2 (Preprocessor Isolation)**: Imputation medians, StandardScaler transformations, and PCA projection bases are fitted exclusively on training fold data and applied downstream to out-of-fold validation data.
 - **Pillar 3 (Out-of-Fold Target Encoding)**: Regional target encoding is computed strictly out-of-fold using regularized Bayesian shrinkage to prevent target leakage.
 - **Pillar 4 (Feature Selection Independence)**: Feature importance ranking is re-evaluated across training splits to verify stability against spatial data leakage.
-- **Pillar 5 (Adversarial Spatial Validation)**: An adversarial classifier trained to distinguish between training and validation folds achieved an ROC-AUC of $0.512 \\pm 0.024$ (indistinguishable from random guessing), proving zero residual spatial data leakage.
+- **Pillar 5 (Adversarial Spatial Validation)**: An adversarial classifier trained to distinguish between training and validation folds achieved an ROC-AUC of 0.512 ± 0.024 (indistinguishable from random guessing), proving zero residual spatial data leakage.
 
 ### 2.5 Machine Learning Architectures & Ensembling
 We benchmark four competitive machine learning model families:
@@ -155,27 +155,27 @@ We benchmark four competitive machine learning model families:
 
 $$\\hat{Y}_{vol,i}^{Ens} = \\sum_{m=1}^{M} w_m \\hat{Y}_{vol,i}^{(m)}, \\quad \\text{subject to} \\quad \\sum_{m=1}^M w_m = 1, \\; w_m \\ge 0 \\tag{3}$$
 
-All models were evaluated under identical 5-fold spatial cross-validation regimes using Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and the Spatial Coefficient of Determination ($R^2$) formulated in Equation (4):
+All models were evaluated under identical 5-fold spatial cross-validation regimes using Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and the Spatial Coefficient of Determination (R²) formulated in Equation (4):
 
-$$R^2 = 1 - \\frac{\\sum_{i=1}^{N} (Y_{vol,i} - \\hat{Y}_{vol,i})^2}{\\sum_{i=1}^{N} (Y_{vol,i} - \\bar{Y}_{vol})^2} \\tag{4}$$"""
+$$R^2 = 1 - \\frac{\\sum_{i=1}^{N} (Y_{vol,i} - \\hat{Y}_{vol,i})^2}{\\sum_{i=1}^{N} (Y_{vol,i} - \\bar{Y}_{vol})^2} \\tag{4}"""
 
 SEC_RESULTS = """## 3. Results
 
 ### 3.1 Exploratory Analysis of Smallholder Volatility
-The empirical distribution of the Yield Volatility Index across Tanzanian smallholders exhibits significant dispersion (Figure 1, Table 1). The mean volatility index across the 4,564 bi-modal smallholders is $1.096 \\pm 0.612$, with a median of $1.154$. Notably, 38.4% of surveyed holdings fall into the 'hyper-volatile' category ($Y_{vol} \\ge 1.50$), indicating severe inter-seasonal harvest crashes. 
+The empirical distribution of the Yield Volatility Index across Tanzanian smallholders exhibits significant dispersion (Figure 1, Table 1). The mean volatility index across the 4,564 bi-modal smallholders is 1.096 ± 0.612, with a median of 1.154. Notably, 38.4% of surveyed holdings fall into the 'hyper-volatile' category (Yᵥₒₗ ≥ 1.50), indicating severe inter-seasonal harvest crashes. 
 
-Log-yield comparisons between Masika and Vuli seasons confirm that Masika yields are systematically higher and more stable (mean $1,248$ kg/ha vs. $612$ kg/ha in Vuli), reflecting the greater reliability of the long rains. However, the correlation between Masika and Vuli yields within individual households is modest ($r = 0.284$), underscoring that high performance in one season provides no guarantee of resilience in the next.
+Log-yield comparisons between Masika and Vuli seasons confirm that Masika yields are systematically higher and more stable (mean 1,248 kg/ha vs. 612 kg/ha in Vuli), reflecting the greater reliability of the long rains. However, the correlation between Masika and Vuli yields within individual households is modest (r = 0.284), underscoring that high performance in one season provides no guarantee of resilience in the next.
 
 [Insert Figure 1 here]
-*Figure 1: Target distribution of the smallholder Yield Volatility Index ($Y_{vol}$) and seasonal log-yield dynamics across Tanzania.*
+*Figure 1: Target distribution of the smallholder Yield Volatility Index (Yᵥₒₗ) and seasonal log-yield dynamics across Tanzania.*
 
 [Insert Table 1 here]
 *Table 1: Summary statistics of core agronomic variables, household endowments, and target metrics.*
 
 ### 3.2 Spatial Cross-Validation Benchmark & Model Performance
-Evaluating model architectures under spatial cross-validation reveals substantial performance differentiation (Table 2, Figure 2). Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the highest predictive accuracy ($R^2 = 0.584 \\pm 0.042$, $\\text{RMSE} = 0.231 \\pm 0.015$, $\\text{MAE} = 0.178 \\pm 0.011$). Among standalone models, LightGBM demonstrated superior single-model performance ($R^2 = 0.569 \\pm 0.045$), followed closely by XGBoost ($R^2 = 0.558 \\pm 0.048$) and CatBoost ($R^2 = 0.547 \\pm 0.051$). Random Forest exhibited lower spatial generalization ($R^2 = 0.512 \\pm 0.056$).
+Evaluating model architectures under spatial cross-validation reveals substantial performance differentiation (Table 2, Figure 2). Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the highest predictive accuracy (R² = 0.584 ± 0.042, RMSE = 0.231 ± 0.015, MAE = 0.178 ± 0.011). Among standalone models, LightGBM demonstrated superior single-model performance (R² = 0.569 ± 0.045), followed closely by XGBoost (R² = 0.558 ± 0.048) and CatBoost (R² = 0.547 ± 0.051). Random Forest exhibited lower spatial generalization (R² = 0.512 ± 0.056).
 
-Critically, when the identical LightGBM architecture was trained using standard non-spatial random cross-validation, the apparent $R^2$ jumped to $0.726 \\pm 0.021$ (an inflation of $\\Delta R^2 = +0.157$). This empirical discrepancy quantifies the precise magnitude of spatial autocorrelation leakage: non-spatial models exploit spatial coordinates and local cluster proxies to artificially inflate test scores, yielding unreliable models that degrade when transferred to unobserved regions (Roberts et al., 2017).
+Critically, when the identical LightGBM architecture was trained using standard non-spatial random cross-validation, the apparent R² jumped to 0.726 ± 0.021 (an inflation of ΔR² = +0.157). This empirical discrepancy quantifies the precise magnitude of spatial autocorrelation leakage: non-spatial models exploit spatial coordinates and local cluster proxies to artificially inflate test scores, yielding unreliable models that degrade when transferred to unobserved regions (Roberts et al., 2017).
 
 [Insert Table 2 here]
 *Table 2: Multi-model spatial cross-validation benchmark against pooled non-spatial baselines.*
@@ -186,9 +186,9 @@ Critically, when the identical LightGBM architecture was trained using standard 
 ### 3.3 Feature Importance and SHAP Attribution
 The top 25 features identified through Grandmaster feature selection are detailed in Table 3 and visualized in Figures 3 and 4. The dominant predictor of seasonal yield volatility is the seasonal planting date divergence (`plant_month_delta`), which accounted for 34.2% of total feature gain in LightGBM. Smallholders forced to delay Vuli planting due to late-onset rains experience catastrophic yield penalties.
 
-The second and third most influential features are harvest realization share (`m_harvest_pct_mean`) and crop diversity differential (`shannon_diff_from_region_mean`). SHAP summary plots (Figure 4) demonstrate that households maintaining higher Shannon diversity than their regional peers exhibit negative SHAP values (pushing $Y_{vol}$ lower), confirming that multi-crop portfolios act as a direct biophysical shock absorber (Renard & Tilman, 2019).
+The second and third most influential features are harvest realization share (`m_harvest_pct_mean`) and crop diversity differential (`shannon_diff_from_region_mean`). SHAP summary plots (Figure 4) demonstrate that households maintaining higher Shannon diversity than their regional peers exhibit negative SHAP values (pushing Yᵥₒₗ lower), confirming that multi-crop portfolios act as a direct biophysical shock absorber (Renard & Tilman, 2019).
 
-Household asset buffers—specifically Tropical Livestock Units (`total_livestock_tlu`) and plot fragmentation (`plot_area_cv`)—also display substantial stabilizing attributions. Households possessing $>3.0$ TLU are insulated from acute yield volatility, as livestock sales provide liquid capital to purchase supplementary inputs during stressed seasons (Carter & Barrett, 2006).
+Household asset buffers—specifically Tropical Livestock Units (`total_livestock_tlu`) and plot fragmentation (`plot_area_cv`)—also display substantial stabilizing attributions. Households possessing >3.0 TLU are insulated from acute yield volatility, as livestock sales provide liquid capital to purchase supplementary inputs during stressed seasons (Carter & Barrett, 2006).
 
 [Insert Table 3 here]
 *Table 3: Top-25 engineered features ranked by LightGBM split frequency and normalized gain importance.*
@@ -200,9 +200,9 @@ Household asset buffers—specifically Tropical Livestock Units (`total_livestoc
 *Figure 4: Global SHAP feature attributions and directional dependency plots.*
 
 ### 3.4 Regional Heterogeneity & Transferability Advantage
-Model accuracy varies across Tanzania's diverse agro-ecological zones (Table 4, Figure 5, Figure 8). Spatial transferability is highest in the Northern Highlands (Kilimanjaro $R^2 = 0.648$, Arusha $R^2 = 0.631$) and Southern Highlands (Iringa $R^2 = 0.622$, Mbeya $R^2 = 0.614$), where commercial input markets and organized extension networks produce consistent agronomic response functions. 
+Model accuracy varies across Tanzania's diverse agro-ecological zones (Table 4, Figure 5, Figure 8). Spatial transferability is highest in the Northern Highlands (Kilimanjaro R² = 0.648, Arusha R² = 0.631) and Southern Highlands (Iringa R² = 0.622, Mbeya R² = 0.614), where commercial input markets and organized extension networks produce consistent agronomic response functions. 
 
-Conversely, the highest yield volatility and lowest baseline predictability occur in semi-arid central regions (Dodoma mean $Y_{vol} = 1.382$, Singida mean $Y_{vol} = 1.341$), where erratic intra-seasonal dry spells overwhelm management interventions (Lema & Majule, 2009). Across all 27 regions, the Weighted Ensemble maintains a consistent transferability advantage over single-model estimators (Figure 5).
+Conversely, the highest yield volatility and lowest baseline predictability occur in semi-arid central regions (Dodoma mean Yᵥₒₗ = 1.382, Singida mean Yᵥₒₗ = 1.341), where erratic intra-seasonal dry spells overwhelm management interventions (Lema & Majule, 2009). Across all 27 regions, the Weighted Ensemble maintains a consistent transferability advantage over single-model estimators (Figure 5).
 
 [Insert Table 4 here]
 *Table 4: Regional performance breakdown, mean volatility indices, and sample sizes across 27 administrative regions.*
@@ -216,8 +216,8 @@ Conversely, the highest yield volatility and lowest baseline predictability occu
 ### 3.5 Non-Linear Agronomic Interactions & Thresholds
 Partial dependence and interaction analyses reveal distinct non-linear tipping points in smallholder stability (Figure 6, Figure 9). 
 1. **Planting Month Tipping Point**: When the gap between Masika and Vuli planting exceeds 4.5 months, yield volatility accelerates non-linearly, climbing by 48% regardless of fertilizer application.
-2. **Fertilizer Buffering Threshold**: In households applying $< 25$ kg/ha of basal fertilizer in Vuli relative to Masika, yield volatility surges to $1.42$. However, beyond an application rate of $60$ kg/ha, the marginal stabilizing return plateaus, suggesting that smallholder stabilization does not require excessive chemical inputs, but rather timely, moderate baseline applications.
-3. **Diversity Tipping Point**: Shannon diversity index values above $0.65$ eliminate $>70%$ of catastrophic harvest crashes during severe drought years (Raseduzzaman & Jensen, 2017).
+2. **Fertilizer Buffering Threshold**: In households applying < 25 kg/ha of basal fertilizer in Vuli relative to Masika, yield volatility surges to 1.42. However, beyond an application rate of 60 kg/ha, the marginal stabilizing return plateaus, suggesting that smallholder stabilization does not require excessive chemical inputs, but rather timely, moderate baseline applications.
+3. **Diversity Tipping Point**: Shannon diversity index values above 0.65 eliminate >70% of catastrophic harvest crashes during severe drought years (Raseduzzaman & Jensen, 2017).
 
 [Insert Figure 6 here]
 *Figure 6: Non-linear agronomic interaction surfaces between planting window shifts, fertilizer differentials, and Shannon diversity.*
@@ -226,9 +226,9 @@ Partial dependence and interaction analyses reveal distinct non-linear tipping p
 *Figure 9: Agro-economic partial dependence surfaces and two-way interaction contours.*
 
 ### 3.6 Spatial Leakage Audit & Household Explanations
-Table 5 and Figure 7 present the quantitative verification of the 5-pillar spatial leakage audit. The adversarial validation ROC-AUC remains at $0.512 \\pm 0.024$, proving that training and test distributions are spatially disentangled. 
+Table 5 and Figure 7 present the quantitative verification of the 5-pillar spatial leakage audit. The adversarial validation ROC-AUC remains at 0.512 ± 0.024, proving that training and test distributions are spatially disentangled. 
 
-Figure 7 further provides local explanations for individual smallholder holdings using SHAP waterfalls. For Household #0 (a vulnerable monocropping holding in Dodoma), late Vuli planting and zero livestock holdings contributed $+0.42$ and $+0.28$ to their elevated volatility prediction ($Y_{vol} = 1.48$). Counterfactual simulation shows that introducing a two-species intercrop and 2 TLU asset buffer would reduce their projected volatility to $0.86$.
+Figure 7 further provides local explanations for individual smallholder holdings using SHAP waterfalls. For Household #0 (a vulnerable monocropping holding in Dodoma), late Vuli planting and zero livestock holdings contributed +0.42 and +0.28 to their elevated volatility prediction (Yᵥₒₗ = 1.48). Counterfactual simulation shows that introducing a two-species intercrop and 2 TLU asset buffer would reduce their projected volatility to 0.86.
 
 [Insert Table 5 here]
 *Table 5: 5-Pillar Spatial Leakage Audit certification matrix and isolation verification metrics.*
@@ -239,7 +239,7 @@ Figure 7 further provides local explanations for individual smallholder holdings
 ### 3.7 Counterfactual Policy Simulations
 To evaluate actionable agricultural policy interventions, we simulated four counterfactual scenarios across the full smallholder cohort (Figure 10, Table 6, Table 7):
 - **Scenario 1 (Status Quo Baseline)**: Current empirical input distribution; 38.4% of holdings in hyper-volatile state.
-- **Scenario 2 (Safety Net Asset Transfer)**: Providing 2 TLU equivalent asset transfers to households with $<1.0$ TLU. This reduces mean national volatility by 14.2% and lowers hyper-volatile holdings to 29.1%.
+- **Scenario 2 (Safety Net Asset Transfer)**: Providing 2 TLU equivalent asset transfers to households with <1.0 TLU. This reduces mean national volatility by 14.2% and lowers hyper-volatile holdings to 29.1%.
 - **Scenario 3 (Crop Diversification Extension)**: Promoting legume intercropping (+0.4 Shannon index) for monocropping smallholders. This achieves a 19.8% mean volatility reduction (Beillouin et al., 2019).
 - **Scenario 4 (Integrated Climate-Smart Agriculture Package)**: Combining timely planting advisories, targeted micro-fertilizer vouchers, and intercropping extension. This integrated intervention cuts hyper-volatile holdings by 63.3% (dropping from 38.4% to 14.1%) and delivers an average volatility reduction of 31.4% nationally.
 
@@ -275,7 +275,7 @@ While this study utilizes national survey microdata, several limitations must be
 
 SEC_CONCL = """## 5. Conclusions
 
-This study developed and validated a leakage-free spatial machine learning pipeline to predict smallholder crop yield volatility across 27 administrative regions of Tanzania. Utilizing national agricultural survey microdata from 10,750 households, we engineered domain-specific agronomic features and established that an out-of-fold Weighted Ensemble achieves superior generalization ($R^2 = 0.584 \\pm 0.042$, $\\text{RMSE} = 0.231$) under strict spatial regional cross-validation. We quantified that naive non-spatial cross-validation introduces an optimistic bias of $+0.157$ in $R^2$, demonstrating the necessity of spatial isolation protocols in agricultural AI. 
+This study developed and validated a leakage-free spatial machine learning pipeline to predict smallholder crop yield volatility across 27 administrative regions of Tanzania. Utilizing national agricultural survey microdata from 10,750 households, we engineered domain-specific agronomic features and established that an out-of-fold Weighted Ensemble achieves superior generalization (R² = 0.584 ± 0.042, RMSE = 0.231) under strict spatial regional cross-validation. We quantified that naive non-spatial cross-validation introduces an optimistic bias of +0.157 in R², demonstrating the necessity of spatial isolation protocols in agricultural AI. 
 
 Explainable AI via SHAP revealed that planting window divergence, seasonal fertilizer differentials, and crop portfolio Shannon diversity are the primary drivers of yield stability. Counterfactual simulations proved that an integrated climate-smart agriculture package reduces hyper-volatile smallholder holdings by 63.3%. This framework provides a deployment-ready decision support tool for climate resilience, input subsidy targeting, and food security planning across Sub-Saharan Africa."""
 
@@ -334,16 +334,16 @@ SEC_REFS = """## References
 - Zorita, E., & Tilya, F. F. (2002). Rainfall variability in Northern Tanzania in the March–May season (Masika) and its links to large-scale climate indices. *Climate Research*, *20*(1), 31–40. https://doi.org/10.3354/cr020031"""
 
 FIGURES_INFO = [
-    ("fig1_target_distribution_and_seasonal_dynamics.png", "Figure 1: Target distribution of the smallholder Yield Volatility Index ($Y_{vol}$) and seasonal log-yield dynamics across Tanzania. (A) Overall empirical density and boxplot of $Y_{vol}$ showing positive skew and significant mass in the hyper-volatile zone ($Y_{vol} \\ge 1.50$). (B) Bivariate scatter and joint density comparing Masika (long rains) versus Vuli (short rains) log-yields, highlighting seasonal divergence."),
-    ("fig2_model_benchmark_spatial_cv.png", "Figure 2: Multi-model spatial cross-validation benchmark, error residuals, and out-of-fold calibration curves. (A) Model comparison across 5-fold spatial CV showing $R^2$ and RMSE for LightGBM, XGBoost, Random Forest, CatBoost, and Weighted Ensemble. (B) Out-of-fold predicted versus observed volatility scatter with 1:1 parity line. (C) Decile calibration curves demonstrating close alignment between predicted risk and empirical volatility across all tiers."),
+    ("fig1_target_distribution_and_seasonal_dynamics.png", "Figure 1: Target distribution of the smallholder Yield Volatility Index (Yᵥₒₗ) and seasonal log-yield dynamics across Tanzania. (A) Overall empirical density and boxplot of Yᵥₒₗ showing positive skew and significant mass in the hyper-volatile zone (Yᵥₒₗ ≥ 1.50). (B) Bivariate scatter and joint density comparing Masika (long rains) versus Vuli (short rains) log-yields, highlighting seasonal divergence."),
+    ("fig2_model_benchmark_spatial_cv.png", "Figure 2: Multi-model spatial cross-validation benchmark, error residuals, and out-of-fold calibration curves. (A) Model comparison across 5-fold spatial CV showing R² and RMSE for LightGBM, XGBoost, Random Forest, CatBoost, and Weighted Ensemble. (B) Out-of-fold predicted versus observed volatility scatter with 1:1 parity line. (C) Decile calibration curves demonstrating close alignment between predicted risk and empirical volatility across all tiers."),
     ("fig3_grandmaster_feature_importance_and_selection.png", "Figure 3: Grandmaster feature importance scree and domain attribution breakdown. (A) Cumulative gain scree plot identifying the elbow point for top-25 feature selection. (B) Normalized feature importance across four functional domains: seasonal input deltas, crop portfolio diversity, household endowments, and spatial agro-climatic context."),
     ("fig4_shap_global_feature_attributions.png", "Figure 4: Global SHAP feature attributions and directional dependency plots. (A) SHAP beeswarm plot ranking top-15 features by mean absolute SHAP value, illustrating directional influence on volatility predictions. (B) Partial dependence curves for seasonal planting date shift (`plant_month_delta`) and Shannon diversity differential."),
-    ("fig5_regional_heterogeneity_and_spatial_transferability.png", "Figure 5: Regional heterogeneity and spatial transferability advantage across 27 administrative regions. (A) Spatial distribution of model $R^2$ across Tanzania regions. (B) Out-of-fold performance comparison between the Weighted Ensemble and baseline models by region, demonstrating consistent transferability improvements across both high-potential and semi-arid zones."),
+    ("fig5_regional_heterogeneity_and_spatial_transferability.png", "Figure 5: Regional heterogeneity and spatial transferability advantage across 27 administrative regions. (A) Spatial distribution of model R² across Tanzania regions. (B) Out-of-fold performance comparison between the Weighted Ensemble and baseline models by region, demonstrating consistent transferability improvements across both high-potential and semi-arid zones."),
     ("fig6_agronomic_non_linear_interactions.png", "Figure 6: Non-linear agronomic interaction surfaces. (A) Two-way interaction surface between planting date divergence and seasonal fertilizer delta. (B) Interaction between crop portfolio Shannon diversity and drought shock probability, revealing strong buffering thresholds."),
     ("fig7_leakage_audit_and_household_counterfactuals.png", "Figure 7: Redesigned 5-Pillar Leakage Audit quantitative isolation scorecard, archetype counterfactual profiles, and local SHAP waterfall explanation. (A) Quantitative isolation scorecard validating complete independence across spatial partitioning, preprocessing, target encoding, feature selection, and adversarial checks. (B) Comparative capacity profiles across three smallholder archetypes. (C) Local SHAP waterfall explanation for vulnerable smallholder household #0."),
     ("fig8_spatial_hotspots_and_agroecological_zones.png", "Figure 8: Spatial distribution of smallholder yield volatility hotspots and agro-ecological zone vulnerability map. Highlights high-risk clusters in semi-arid central regions (Dodoma, Singida) versus stable high-altitude clusters in the Southern and Northern Highlands."),
     ("fig9_agroeconomic_partial_dependence_surfaces.png", "Figure 9: Agro-economic partial dependence surfaces and two-way interaction contours. (A) Marginal response of yield volatility to fertilizer application rate. (B) Labor allocation shift response. (C) Plot fragmentation (`plot_area_cv`) interaction surface."),
-    ("fig10_policy_simulation_and_counterfactual_interventions.png", "Figure 10: Policy counterfactual stress-testing and simulated volatility mitigation distributions under four agricultural intervention packages. (A) Kernel density shifts under baseline status quo, +2 TLU livestock transfer, +0.4 Shannon crop diversification, and integrated Climate-Smart Agriculture (CSA). (B) Proportion of hyper-volatile smallholders ($Y_{vol} \\ge 1.50$) across scenarios. (C) Net percentage reduction in mean smallholder volatility.")
+    ("fig10_policy_simulation_and_counterfactual_interventions.png", "Figure 10: Policy counterfactual stress-testing and simulated volatility mitigation distributions under four agricultural intervention packages. (A) Kernel density shifts under baseline status quo, +2 TLU livestock transfer, +0.4 Shannon crop diversification, and integrated Climate-Smart Agriculture (CSA). (B) Proportion of hyper-volatile smallholders (Yᵥₒₗ ≥ 1.50) across scenarios. (C) Net percentage reduction in mean smallholder volatility.")
 ]
 
 TABLES_INFO = [
@@ -566,58 +566,62 @@ def text_to_omml(m: str) -> str:
     m = re.sub(r'\\text\{([^}]*)\}', r'\1', m)
 
     # Specific composite agronomic/statistical expressions
-    if "H'_{m} - H'_{v}" in m or "H'_m - H'_v" in m:
+    if "H′ₘ - H′ᵥ" in m or "H'_{m} - H'_{v}" in m or "H'_m - H'_v" in m:
         return (
             '<m:r><m:t>ΔH′ = </m:t></m:r>'
             '<m:sSub><m:e><m:r><m:t>H′</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
             '<m:r><m:t> - </m:t></m:r>'
             '<m:sSub><m:e><m:r><m:t>H′</m:t></m:r></m:e><m:sub><m:r><m:t>v</m:t></m:r></m:sub></m:sSub>'
         )
-    if 'Y_m = Y_v' in m or 'Y_{m} = Y_{v}' in m:
+    if 'Yₘ = Yᵥ' in m or 'Y_m = Y_v' in m or 'Y_{m} = Y_{v}' in m:
         return (
             '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
             '<m:r><m:t> = </m:t></m:r>'
             '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>v</m:t></m:r></m:sub></m:sSub>'
         )
-    if '10^{-4}' in m or '10^-4' in m:
+    if '10⁻⁴' in m or '10^{-4}' in m or '10^-4' in m:
         prefix = 'ϵ = ' if ('ϵ' in m or 'epsilon' in m) else ''
         return f'<m:r><m:t>{prefix}</m:t></m:r><m:sSup><m:e><m:r><m:t>10</m:t></m:r></m:e><m:sup><m:r><m:t>-4</m:t></m:r></m:sup></m:sSup>'
 
-    # Known exact math tokens
-    if m in ['R^2', 'R²']:
+    # Exact math tokens (Unicode and ASCII)
+    if m in ['R²', 'R^2']:
         return '<m:sSup><m:e><m:r><m:t>R</m:t></m:r></m:e><m:sup><m:r><m:t>2</m:t></m:r></m:sup></m:sSup>'
-    if m in ['ΔR^2', 'ΔR²', r'\Delta R^2']:
+    if m in ['ΔR²', 'ΔR^2', r'\Delta R^2']:
         return '<m:r><m:t>Δ</m:t></m:r><m:sSup><m:e><m:r><m:t>R</m:t></m:r></m:e><m:sup><m:r><m:t>2</m:t></m:r></m:sup></m:sSup>'
-    if m in ['Y_vol', 'Y_{vol}']:
+    if m in ['Yᵥₒₗ', 'Y_vol', 'Y_{vol}']:
         return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>vol</m:t></m:r></m:sub></m:sSub>'
-    if m in ['Y_vol,i', 'Y_{vol,i}']:
+    if m in ['Yᵥₒₗ,ᵢ', 'Y_vol,i', 'Y_{vol,i}']:
         return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>vol,i</m:t></m:r></m:sub></m:sSub>'
-    if m in ['Y_m,i', 'Y_{m,i}']:
+    if m in ['Yₘ,ᵢ', 'Y_m,i', 'Y_{m,i}']:
         return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>m,i</m:t></m:r></m:sub></m:sSub>'
-    if m in ['Y_v,i', 'Y_{v,i}']:
+    if m in ['Yᵥ,ᵢ', 'Y_v,i', 'Y_{v,i}']:
         return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>v,i</m:t></m:r></m:sub></m:sSub>'
-    if m in ['Y_m', 'Y_{m}']:
+    if m in ['Yₘ', 'Y_m', 'Y_{m}']:
         return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
-    if m in ['Y_v', 'Y_{v}']:
+    if m in ['Yᵥ', 'Y_v', 'Y_{v}']:
         return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>v</m:t></m:r></m:sub></m:sSub>'
     if m in ["H'", "H′"]:
         return '<m:r><m:t>H′</m:t></m:r>'
     if m in ["ΔH'", "ΔH′"]:
         return '<m:r><m:t>ΔH′</m:t></m:r>'
-    if m in ['p_k']:
+    if m in ["H′ₘ", "H'_{m}", "H'_m"]:
+        return '<m:sSub><m:e><m:r><m:t>H′</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
+    if m in ["H′ᵥ", "H'_{v}", "H'_v"]:
+        return '<m:sSub><m:e><m:r><m:t>H′</m:t></m:r></m:e><m:sub><m:r><m:t>v</m:t></m:r></m:sub></m:sSub>'
+    if m in ['pₖ', 'p_k']:
         return '<m:sSub><m:e><m:r><m:t>p</m:t></m:r></m:e><m:sub><m:r><m:t>k</m:t></m:r></m:sub></m:sSub>'
-    if m in ['w_m']:
+    if m in ['wₘ', 'w_m']:
         return '<m:sSub><m:e><m:r><m:t>w</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
 
-    # Prefix compound patterns (e.g. R^2 = 0.584 ± 0.042)
-    if m.startswith('R^2') or m.startswith('R²'):
-        rest = m[3:] if m.startswith('R^2') else m[2:]
+    # Prefix compound patterns (e.g. R² = 0.584 ± 0.042, Yᵥₒₗ = 1.382)
+    if m.startswith('R²') or m.startswith('R^2'):
+        rest = m[2:] if m.startswith('R²') else m[3:]
         return f'<m:sSup><m:e><m:r><m:t>R</m:t></m:r></m:e><m:sup><m:r><m:t>2</m:t></m:r></m:sup></m:sSup><m:r><m:t>{xml_escape(rest)}</m:t></m:r>'
-    if m.startswith('ΔR^2') or m.startswith('ΔR²'):
-        rest = m[4:] if m.startswith('ΔR^2') else m[3:]
+    if m.startswith('ΔR²') or m.startswith('ΔR^2'):
+        rest = m[3:] if m.startswith('ΔR²') else m[4:]
         return f'<m:r><m:t>Δ</m:t></m:r><m:sSup><m:e><m:r><m:t>R</m:t></m:r></m:e><m:sup><m:r><m:t>2</m:t></m:r></m:sup></m:sSup><m:r><m:t>{xml_escape(rest)}</m:t></m:r>'
-    if m.startswith('Y_vol') or m.startswith('Y_{vol}'):
-        rest = m[5:] if m.startswith('Y_vol') else m[7:]
+    if m.startswith('Yᵥₒₗ') or m.startswith('Y_vol') or m.startswith('Y_{vol}'):
+        rest = m[4:] if m.startswith('Yᵥₒₗ') else (m[5:] if m.startswith('Y_vol') else m[7:])
         return f'<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>vol</m:t></m:r></m:sub></m:sSub><m:r><m:t>{xml_escape(rest)}</m:t></m:r>'
 
     # Generic subscript: Base_sub
@@ -654,9 +658,13 @@ def format_text_into_paragraph(p, text: str, is_bold=False, is_italic=False, fon
     t = t.replace(r'\epsilon', 'ϵ')
     t = t.replace(r'\times', '×')
 
-    # Regex tokenization
+    # Regex tokenization for scientific math objects and styling
     pattern = re.compile(
         r'(\$.*?\$|\*\*.*?\*\*|\*.*?\*|`.*?`|'
+        r'ΔR²|R²|'
+        r'Yᵥₒₗ,ᵢ|Yᵥₒₗ|Yₘ,ᵢ|Yᵥ,ᵢ|Yₘ|Yᵥ|'
+        r'ΔH′|H′ₘ|H′ᵥ|H′|'
+        r'pₖ|wₘ|10⁻⁴|'
         r'ΔR\^2|R\^2|'
         r'Y_\{vol,i\}|Y_vol,i|Y_\{vol\}|Y_vol|'
         r'Y_\{m,i\}|Y_m,i|Y_\{v,i\}|Y_v,i|'
@@ -671,9 +679,8 @@ def format_text_into_paragraph(p, text: str, is_bold=False, is_italic=False, fon
         if tok.startswith('$') and tok.endswith('$'):
             inner = tok[1:-1].strip()
             insert_inline_omml(p, text_to_omml(inner))
-        elif tok in ['R^2', 'ΔR^2', 'Y_vol', 'Y_{vol}', 'Y_vol,i', 'Y_{vol,i}', 'Y_m,i', 'Y_{m,i}',
-                     'Y_v,i', 'Y_{v,i}', 'Y_m', 'Y_{m}', 'Y_v', 'Y_{v}', "H'", "ΔH'", 'p_k', 'w_m',
-                     '10^-4', '10^{-4}']:
+        elif any(sym in tok for sym in ['R²', 'ΔR²', 'Yᵥₒₗ', 'Yₘ', 'Yᵥ', 'H′', 'pₖ', 'wₘ', '10⁻⁴',
+                                        'R^2', 'ΔR^2', 'Y_vol', 'Y_m', 'Y_v', 'p_k', 'w_m', "H'", '10^-4', '10^{-4}']):
             insert_inline_omml(p, text_to_omml(tok))
         elif tok.startswith('**') and tok.endswith('**'):
             r = p.add_run(tok[2:-2])
@@ -1050,10 +1057,10 @@ def generate_docx_manuscript(output_path: Path):
     add_scientific_paragraph(
         doc,
         "The empirical distribution of the Yield Volatility Index across Tanzanian smallholders exhibits significant dispersion (Figure 1, Table 1). "
-        "The mean volatility index across the 4,564 bi-modal smallholders is $1.096 \\pm 0.612$, with a median of $1.154$. Notably, 38.4% of surveyed holdings "
-        "fall into the 'hyper-volatile' category ($Y_{vol} \\ge 1.50$), indicating severe inter-seasonal harvest crashes. "
-        "Log-yield comparisons between Masika and Vuli seasons confirm that Masika yields are systematically higher and more stable (mean $1,248$ kg/ha vs. $612$ kg/ha in Vuli), "
-        "reflecting the greater reliability of the long rains. However, the correlation between Masika and Vuli yields within individual households is modest ($r = 0.284$)."
+        "The mean volatility index across the 4,564 bi-modal smallholders is 1.096 ± 0.612, with a median of 1.154. Notably, 38.4% of surveyed holdings "
+        "fall into the 'hyper-volatile' category (Yᵥₒₗ ≥ 1.50), indicating severe inter-seasonal harvest crashes. "
+        "Log-yield comparisons between Masika and Vuli seasons confirm that Masika yields are systematically higher and more stable (mean 1,248 kg/ha vs. 612 kg/ha in Vuli), "
+        "reflecting the greater reliability of the long rains. However, the correlation between Masika and Vuli yields within individual households is modest (r = 0.284)."
     )
     add_image_figure(FIGURES_INFO[0][0], FIGURES_INFO[0][1])
     add_df_table(pd.read_csv(TAB_DIR / TABLES_INFO[0][0]), TABLES_INFO[0][1])
@@ -1062,9 +1069,9 @@ def generate_docx_manuscript(output_path: Path):
     add_scientific_paragraph(
         doc,
         "Evaluating model architectures under spatial cross-validation reveals substantial performance differentiation (Table 2, Figure 2). "
-        "Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the highest predictive accuracy ($R^2 = 0.584 \\pm 0.042$, $\\text{RMSE} = 0.231 \\pm 0.015$, $\\text{MAE} = 0.178 \\pm 0.011$). "
-        "Among standalone models, LightGBM demonstrated superior single-model performance ($R^2 = 0.569 \\pm 0.045$), followed closely by XGBoost ($R^2 = 0.558 \\pm 0.048$) and CatBoost ($R^2 = 0.547 \\pm 0.051$). "
-        "Critically, when the identical LightGBM architecture was trained using standard non-spatial random cross-validation, the apparent $R^2$ jumped to $0.726 \\pm 0.021$ (an inflation of $\\Delta R^2 = +0.157$), "
+        "Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the highest predictive accuracy (R² = 0.584 ± 0.042, RMSE = 0.231 ± 0.015, MAE = 0.178 ± 0.011). "
+        "Among standalone models, LightGBM demonstrated superior single-model performance (R² = 0.569 ± 0.045), followed closely by XGBoost (R² = 0.558 ± 0.048) and CatBoost (R² = 0.547 ± 0.051). "
+        "Critically, when the identical LightGBM architecture was trained using standard non-spatial random cross-validation, the apparent R² jumped to 0.726 ± 0.021 (an inflation of ΔR² = +0.157), "
         "quantifying the precise magnitude of spatial autocorrelation leakage (Roberts et al., 2017)."
     )
     add_image_figure(FIGURES_INFO[1][0], FIGURES_INFO[1][1])
@@ -1076,7 +1083,7 @@ def generate_docx_manuscript(output_path: Path):
         "The top 25 features identified through Grandmaster feature selection are detailed in Table 3 and visualized in Figures 3 and 4. "
         "The dominant predictor of seasonal yield volatility is the seasonal planting date divergence (`plant_month_delta`), which accounted for 34.2% of total feature gain in LightGBM. "
         "The second and third most influential features are harvest realization share (`m_harvest_pct_mean`) and crop diversity differential (`shannon_diff_from_region_mean`). "
-        "SHAP summary plots (Figure 4) demonstrate that households maintaining higher Shannon diversity than their regional peers exhibit negative SHAP values (pushing $Y_{vol}$ lower), "
+        "SHAP summary plots (Figure 4) demonstrate that households maintaining higher Shannon diversity than their regional peers exhibit negative SHAP values (pushing Yᵥₒₗ lower), "
         "confirming that multi-crop portfolios act as a direct biophysical shock absorber (Renard & Tilman, 2019)."
     )
     add_image_figure(FIGURES_INFO[2][0], FIGURES_INFO[2][1])
@@ -1087,8 +1094,8 @@ def generate_docx_manuscript(output_path: Path):
     add_scientific_paragraph(
         doc,
         "Model accuracy varies across Tanzania's diverse agro-ecological zones (Table 4, Figure 5, Figure 8). "
-        "Spatial transferability is highest in the Northern Highlands (Kilimanjaro $R^2 = 0.648$, Arusha $R^2 = 0.631$) and Southern Highlands (Iringa $R^2 = 0.622$, Mbeya $R^2 = 0.614$). "
-        "Conversely, the highest yield volatility and lowest baseline predictability occur in semi-arid central regions (Dodoma mean $Y_{vol} = 1.382$, Singida mean $Y_{vol} = 1.341$), "
+        "Spatial transferability is highest in the Northern Highlands (Kilimanjaro R² = 0.648, Arusha R² = 0.631) and Southern Highlands (Iringa R² = 0.622, Mbeya R² = 0.614). "
+        "Conversely, the highest yield volatility and lowest baseline predictability occur in semi-arid central regions (Dodoma mean Yᵥₒₗ = 1.382, Singida mean Yᵥₒₗ = 1.341), "
         "where erratic intra-seasonal dry spells overwhelm management interventions (Lema & Majule, 2009). Across all 27 regions, the Weighted Ensemble maintains a consistent transferability advantage."
     )
     add_image_figure(FIGURES_INFO[4][0], FIGURES_INFO[4][1])
@@ -1100,8 +1107,8 @@ def generate_docx_manuscript(output_path: Path):
         doc,
         "Partial dependence and interaction analyses reveal distinct non-linear tipping points in smallholder stability (Figure 6, Figure 9). "
         "When the gap between Masika and Vuli planting exceeds 4.5 months, yield volatility accelerates non-linearly, climbing by 48% regardless of fertilizer application. "
-        "In households applying $< 25$ kg/ha of basal fertilizer in Vuli relative to Masika, yield volatility surges to $1.42$, but the stabilizing return plateaus beyond $60$ kg/ha. "
-        "Furthermore, Shannon diversity index values above $0.65$ eliminate $>70%$ of catastrophic harvest crashes during severe drought years (Raseduzzaman & Jensen, 2017)."
+        "In households applying < 25 kg/ha of basal fertilizer in Vuli relative to Masika, yield volatility surges to 1.42, but the stabilizing return plateaus beyond 60 kg/ha. "
+        "Furthermore, Shannon diversity index values above 0.65 eliminate >70% of catastrophic harvest crashes during severe drought years (Raseduzzaman & Jensen, 2017)."
     )
     add_image_figure(FIGURES_INFO[5][0], FIGURES_INFO[5][1])
     add_image_figure(FIGURES_INFO[8][0], FIGURES_INFO[8][1])
@@ -1109,10 +1116,10 @@ def generate_docx_manuscript(output_path: Path):
     add_heading_2("3.6 Spatial Leakage Audit & Household Explanations")
     add_scientific_paragraph(
         doc,
-        "Table 5 and Figure 7 present the quantitative verification of the 5-pillar spatial leakage audit. The adversarial validation ROC-AUC remains at $0.512 \\pm 0.024$, "
+        "Table 5 and Figure 7 present the quantitative verification of the 5-pillar spatial leakage audit. The adversarial validation ROC-AUC remains at 0.512 ± 0.024, "
         "proving that training and test distributions are spatially disentangled. Figure 7 further provides local explanations for individual smallholder holdings using SHAP waterfalls. "
-        "For Household #0 (a vulnerable monocropping holding in Dodoma), late Vuli planting and zero livestock holdings contributed $+0.42$ and $+0.28$ to their elevated volatility prediction ($Y_{vol} = 1.48$). "
-        "Counterfactual simulation shows that introducing a two-species intercrop and 2 TLU asset buffer would reduce their projected volatility to $0.86$."
+        "For Household #0 (a vulnerable monocropping holding in Dodoma), late Vuli planting and zero livestock holdings contributed +0.42 and +0.28 to their elevated volatility prediction (Yᵥₒₗ = 1.48). "
+        "Counterfactual simulation shows that introducing a two-species intercrop and 2 TLU asset buffer would reduce their projected volatility to 0.86."
     )
     add_image_figure(FIGURES_INFO[6][0], FIGURES_INFO[6][1])
     add_df_table(pd.read_csv(TAB_DIR / TABLES_INFO[4][0]), TABLES_INFO[4][1])
