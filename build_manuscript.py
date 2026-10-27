@@ -7,15 +7,11 @@ Across Agro-Ecological Zones: A Leakage-Free Spatial Machine Learning Framework 
 
 Target Journal: Cogent Food & Agriculture (Taylor & Francis)
 Author: Kadeghe Goodluck Fue (kadefue@sua.ac.tz)
-Affiliation: Department of Agricultural Engineering and Technology,
+Affiliation: Department of Agricultural Engineering,
+             School of Engineering and Technology,
              Sokoine University of Agriculture, Morogoro, Tanzania
 
-Features:
-  - APA 7th Edition Citations & References (34 authentic peer-reviewed sources with DOIs).
-  - Explicitly Numbered Equations: (1) Yield Volatility Index, (2) Shannon Equitability,
-    (3) Weighted Ensemble, (4) Spatial Coefficient of Determination.
-  - Microsoft Word Office Open XML Math (OMML) for display equations and formatted scientific symbols.
-  - Synchronized Markdown (.md), Microsoft Word (.docx), and LaTeX (.tex) manuscript generation.
+
 """
 
 import os
@@ -23,6 +19,7 @@ import re
 import sys
 from pathlib import Path
 import pandas as pd
+from xml.sax.saxutils import escape as xml_escape
 
 # Check python-docx
 try:
@@ -43,7 +40,7 @@ TAB_DIR = PAPER_DIR / "tables"
 
 TITLE = "Predicting Smallholder Crop Yield Volatility Across Agro-Ecological Zones: A Leakage-Free Spatial Machine Learning Framework for Tanzania"
 AUTHOR = "Kadeghe Goodluck Fue"
-AFFILIATION = "Department of Agricultural Engineering and Technology, School of Agricultural Sciences and Fisheries Technology, Sokoine University of Agriculture, P.O. Box 3003, Chuo Kikuu, Morogoro, Tanzania"
+AFFILIATION = "Department of Agricultural Engineering, School of Engineering and Technology, Sokoine University of Agriculture, P.O. Box 3003, Chuo Kikuu, Morogoro, Tanzania"
 EMAIL = "kadefue@sua.ac.tz"
 
 PUBLIC_INTEREST_STATEMENT = (
@@ -66,12 +63,12 @@ ABSTRACT = (
     "paradigms suffer from spatial autocorrelation leakage, producing over-optimistic performance estimates that fail upon deployment to "
     "unseen agro-ecological landscapes. Here, we develop a leakage-free spatial machine learning pipeline utilizing the Tanzania National "
     "Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata, encompassing 10,750 smallholder households across 27 "
-    "administrative regions. We formulate a standardized inter-seasonal Yield Volatility Index (Y_vol,i) and construct domain-engineered "
+    "administrative regions. We formulate a standardized inter-seasonal Yield Volatility Index ($Y_{vol,i}$) and construct domain-engineered "
     "agronomic features spanning seasonal input deltas, crop portfolio Shannon diversity, labor allocation dynamics, and livestock buffers. "
     "Using a 5-pillar spatial isolation protocol (Spatial GroupKFold grouped by administrative region), we benchmark LightGBM, XGBoost, "
     "Random Forest, CatBoost, and an out-of-fold optimal Weighted Ensemble against a non-spatial pooled baseline. The Weighted Ensemble "
-    "achieves superior generalization (Spatial Out-of-Fold R^2 = 0.584 ± 0.042, RMSE = 0.231 ± 0.015), outperforming pooled models "
-    "that exhibit an optimistic bias of ΔR^2 = +0.157 due to spatial leakage. SHAP interpretability identifies seasonal planting date divergence, "
+    "achieves superior generalization (Spatial Out-of-Fold $R^2 = 0.584 \\pm 0.042$, RMSE = $0.231 \\pm 0.015$), outperforming pooled models "
+    "that exhibit an optimistic bias of $\\Delta R^2 = +0.157$ due to spatial leakage. SHAP interpretability identifies seasonal planting date divergence, "
     "crop diversity differentials, and livestock herd size as dominant non-linear drivers of yield stability. Counterfactual policy "
     "simulations demonstrate that an integrated climate-smart agriculture package reduces hyper-volatile smallholder holdings by 63.3%. "
     "This framework establishes an empirically grounded blueprint for robust, deployment-ready agricultural AI in developing economies."
@@ -91,9 +88,9 @@ KEYWORDS = [
 # Section texts
 SEC_INTRO = """## 1. Introduction
 
-Smallholder agricultural systems form the economic foundation and primary food source for more than 70% of the population in Sub-Saharan Africa (SSA) (Food and Agriculture Organization [FAO], 2021). In Tanzania, where agriculture contributes nearly 27% of Gross Domestic Product and employs over 65% of the national workforce, smallholder productivity is acutely tied to rainfall seasonality (National Bureau of Statistics [NBS], 2021; United Republic of Tanzania [URT], 2020). Across large expanses of the country—particularly the northern, eastern, and Lake Victoria basins—crop production is governed by a bimodal precipitation regime consisting of the long rains (*Masika*, typically March to May) and the short rains (*Vuli*, October to December) (Mary & Majule, 2009; Rowhani et al., 2011; Zorita & Tilya, 2002).
+Smallholder agricultural systems form the economic foundation and primary food source for more than 70% of the population in Sub-Saharan Africa (SSA) (Food and Agriculture Organization [FAO], 2021). In Tanzania, where agriculture contributes nearly 27% of Gross Domestic Product and employs over 65% of the national workforce, smallholder productivity is acutely tied to rainfall seasonality (National Bureau of Statistics [NBS], 2021; United Republic of Tanzania [URT], 2020). Across large expanses of the country—particularly the northern, eastern, and Lake Victoria basins—crop production is governed by a bimodal precipitation regime consisting of the long rains (*Masika*, typically March to May) and the short rains (*Vuli*, October to December) (Lema & Majule, 2009; Rowhani et al., 2011; Zorita & Tilya, 2002).
 
-While substantial agronomic research has focused on raising mean seasonal crop yields, inter-seasonal yield volatility—defined as the relative fluctuation in crop productivity between successive growing seasons within the same agricultural holding—constitutes an equally severe, yet under-investigated, driver of acute food insecurity (Birthal et al., 2014; Ray et al., 2015). When smallholder yields collapse from one season to the next, farm households experience severe caloric shortfalls, distress sales of productive assets, and deepened poverty traps (Carter & Barrett, 2006; Dercon & Christiaensen, 2011).
+While substantial agronomic research has focused on raising mean seasonal crop yields, inter-seasonal yield volatility—defined as the relative fluctuation in crop productivity between successive growing seasons within the same agricultural holding—constitutes an equally severe, yet under-investigated, driver of acute food insecurity (Birthal et al., 2015; Ray et al., 2015). When smallholder yields collapse from one season to the next, farm households experience severe caloric shortfalls, distress sales of productive assets, and deepened poverty traps (Carter & Barrett, 2006; Dercon & Christiaensen, 2011).
 
 The advent of machine learning (ML) and high-dimensional microdata has unlocked new frontiers in precision agriculture and agricultural vulnerability modeling (Benami et al., 2021; Chlingaryan et al., 2018; Khaki & Wang, 2019; van Klompenburg et al., 2020). Modern tree-based ensembles, such as Random Forest (Breiman, 2001), eXtreme Gradient Boosting (XGBoost; Chen & Guestrin, 2016), LightGBM (Ke et al., 2017), and CatBoost (Prokhorenkova et al., 2018), have repeatedly demonstrated superior empirical performance over classical econometric and biophysical crop models by capturing complex non-linear interactions without rigid parametric assumptions.
 
@@ -205,7 +202,7 @@ Household asset buffers—specifically Tropical Livestock Units (`total_livestoc
 ### 3.4 Regional Heterogeneity & Transferability Advantage
 Model accuracy varies across Tanzania's diverse agro-ecological zones (Table 4, Figure 5, Figure 8). Spatial transferability is highest in the Northern Highlands (Kilimanjaro $R^2 = 0.648$, Arusha $R^2 = 0.631$) and Southern Highlands (Iringa $R^2 = 0.622$, Mbeya $R^2 = 0.614$), where commercial input markets and organized extension networks produce consistent agronomic response functions. 
 
-Conversely, the highest yield volatility and lowest baseline predictability occur in semi-arid central regions (Dodoma mean $Y_{vol} = 1.382$, Singida mean $Y_{vol} = 1.341$), where erratic intra-seasonal dry spells overwhelm management interventions (Mary & Majule, 2009). Across all 27 regions, the Weighted Ensemble maintains a consistent transferability advantage over single-model estimators (Figure 5).
+Conversely, the highest yield volatility and lowest baseline predictability occur in semi-arid central regions (Dodoma mean $Y_{vol} = 1.382$, Singida mean $Y_{vol} = 1.341$), where erratic intra-seasonal dry spells overwhelm management interventions (Lema & Majule, 2009). Across all 27 regions, the Weighted Ensemble maintains a consistent transferability advantage over single-model estimators (Figure 5).
 
 [Insert Table 4 here]
 *Table 4: Regional performance breakdown, mean volatility indices, and sample sizes across 27 administrative regions.*
@@ -302,9 +299,9 @@ The secondary microdata analyzed in this study are publicly accessible upon form
 SEC_REFS = """## References
 
 - Barrett, C. B., Marenya, P. P., McPeak, J., Minten, B., Murithi, F., Oluoch-Kosura, W., Place, F., Randrianarisoa, J. C., Rasambainarivo, J., & Wangila, J. (2006). Welfare dynamics in rural Kenya and Madagascar. *The Journal of Development Studies*, *42*(2), 248–277. https://doi.org/10.1080/00220380500405394
-- Beillouin, D., Ben-Ari, T., & Makowski, D. (2019). Evidence map of crop diversification strategies at the global scale. *Environmental Research Letters*, *14*(12), Article 123001. https://doi.org/10.1088/1748-9326/ab44be
+- Beillouin, D., Ben-Ari, T., & Makowski, D. (2019). Evidence map of crop diversification strategies at the global scale. *Environmental Research Letters*, *14*(12), Article 123001. https://doi.org/10.1088/1748-9326/ab4449
 - Benami, E., Carter, M. R., Ghosh, R., Hijmans, R. J., Hobbs, A., Kenduiywo, B., & Rozelle, S. (2021). Uniting remote sensing, crop modelling and economics for agricultural risk management. *Nature Reviews Earth & Environment*, *2*(2), 140–159. https://doi.org/10.1038/s43017-020-00122-y
-- Birthal, P. S., Negi, D. S., Khan, M. T., & Agarwal, S. (2014). Is Indian agriculture becoming resilient to droughts? Evidence from rice production. *Food Policy*, *44*, 28–41. https://doi.org/10.1016/j.foodpol.2013.10.005
+- Birthal, P. S., Negi, D. S., Khan, M. T., & Agarwal, S. (2015). Is Indian agriculture becoming resilient to droughts? Evidence from rice production systems. *Food Policy*, *56*, 1–12. https://doi.org/10.1016/j.foodpol.2015.07.005
 - Breiman, L. (2001). Random forests. *Machine Learning*, *45*(1), 5–32. https://doi.org/10.1023/A:1010933404324
 - Carter, M. R., & Barrett, C. B. (2006). The economics of poverty traps and persistent poverty: An asset-based approach. *The Journal of Development Studies*, *42*(2), 178–199. https://doi.org/10.1080/00220380500405261
 - Chen, T., & Guestrin, C. (2016). XGBoost: A scalable tree boosting system. In *Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining* (pp. 785–794). Association for Computing Machinery. https://doi.org/10.1145/2939672.2939785
@@ -314,15 +311,15 @@ SEC_REFS = """## References
 - Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., & Liu, T.-Y. (2017). LightGBM: A highly efficient gradient boosting decision tree. *Advances in Neural Information Processing Systems*, *30*, 3146–3154.
 - Khaki, S., & Wang, L. (2019). Crop yield prediction using deep neural networks. *Frontiers in Plant Science*, *10*, Article 621. https://doi.org/10.3389/fpls.2019.00621
 - Kursa, M. B., & Rudnicki, W. R. (2010). Feature selection with the Boruta package. *Journal of Statistical Software*, *36*(11), 1–13. https://doi.org/10.18637/jss.v036.i11
+- Lema, M. A., & Majule, A. E. (2009). Impacts of climate change, variability and adaptation strategies on agriculture in semi-arid areas of Tanzania: The case of Manyoni District in Singida Region, Tanzania. *African Journal of Environmental Science and Technology*, *3*(8), 206–218. https://doi.org/10.5897/AJEST09.099
 - Lobell, D. B., Di Tommaso, S., You, C., Yabroudi, I., & Ortiz-Monasterio, I. (2020). Sight for sorghums: Comparisons of satellite- and ground-based sorghum yield estimates in Mali. *Nature Food*, *1*(7), 424–431. https://doi.org/10.1038/s43016-020-0112-7
 - Lundberg, S. M., Erion, G., Chen, H., DeGrave, A., Prutkin, J. M., Nair, B., Katz, R., Himmelfarb, J., Bansal, N., & Lee, S.-I. (2020). From local explanations to global understanding with explainable AI for trees. *Nature Machine Intelligence*, *2*(1), 56–67. https://doi.org/10.1038/s42256-019-0138-9
 - Lundberg, S. M., & Lee, S.-I. (2017). A unified approach to interpreting model predictions. *Advances in Neural Information Processing Systems*, *30*, 4765–4774.
-- Mary, A. L., & Majule, A. E. (2009). Impacts of climate change, variability and adaptation strategies on agriculture in semi-arid areas of Tanzania: A case of Manyoni District in Singida Region, Tanzania. *African Journal of Environmental Science and Technology*, *3*(8), 206–218.
 - Meyer, H., Reudenbach, C., Hengl, T., Katurji, M., & Nauss, T. (2018). Improving performance of spatio-temporal machine learning models using forward feature selection and target-oriented validation. *Ecological Modelling*, *372*, 1–9. https://doi.org/10.1016/j.ecolmodel.2017.12.001
 - National Bureau of Statistics. (2021). *Annual Agricultural Sample Survey 2019/20: Final report*. Ministry of Finance and Planning, United Republic of Tanzania.
 - Ploton, P., Mortier, F., Réjou-Méchain, M., Barbier, N., Picard, N., Rossi, V., Dormann, C. F., Cornu, G., Viennois, G., Bayol, N., & Gourlet-Fleury, S. (2020). Spatial validation reveals poor predictive performance of large-scale ecological mapping models. *Nature Communications*, *11*(1), Article 4540. https://doi.org/10.1038/s41467-020-18321-y
 - Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V., & Gulin, A. (2018). CatBoost: Unbiased boosting with categorical features. *Advances in Neural Information Processing Systems*, *31*, 6638–6648.
-- Raseduzzaman, M., & Jensen, E. S. (2017). Does intercropping enhance yield stability in sustainable agriculture? A meta-analysis. *Agronomy for Sustainable Development*, *37*(3), Article 25. https://doi.org/10.1007/s13593-017-0432-9
+- Raseduzzaman, M., & Jensen, E. S. (2017). Does intercropping enhance yield stability in sustainable agriculture? A meta-analysis. *European Journal of Agronomy*, *91*, 25–33. https://doi.org/10.1016/j.eja.2017.09.009
 - Ray, D. K., Gerber, J. S., MacDonald, G. K., & West, P. C. (2015). Climate variation explains a third of global crop yield variability. *Nature Communications*, *6*(1), Article 5989. https://doi.org/10.1038/ncomms6989
 - Renard, D., & Tilman, D. (2019). National food production stabilized by crop diversity. *Nature*, *571*(7764), 257–260. https://doi.org/10.1038/s41586-019-1316-y
 - Roberts, D. R., Bahn, V., Ciuti, S., Boyce, M. S., Elith, J., Guillera-Arroita, G., Hauenstein, S., Lahoz-Monfort, J. J., Schröder, B., Thuiller, W., & Warton, D. I. (2017). Cross-validation strategies for data with spatial, temporal, or phylogenetic structure. *Ecography*, *40*(8), 913–929. https://doi.org/10.1111/ecog.02881
@@ -333,20 +330,20 @@ SEC_REFS = """## References
 - Valavi, R., Elith, J., Lahoz-Monfort, J. J., & Guillera-Arroita, G. (2019). blockCV: An R package for generating spatially or environmentally separated folds for k-fold cross-validation of species distribution models. *Methods in Ecology and Evolution*, *10*(2), 225–232. https://doi.org/10.1111/2041-210X.13107
 - van Klompenburg, T., Kassahun, A., & Catal, C. (2020). Crop yield prediction using machine learning: A systematic literature review. *Computers and Electronics in Agriculture*, *177*, Article 105709. https://doi.org/10.1016/j.compag.2020.105709
 - Wadoux, A. M. J. C., Brus, D. J., & Heuvelink, G. B. M. (2021). Sampling design optimization for spatial cross-validation of machine learning models. *Ecological Modelling*, *459*, Article 109724. https://doi.org/10.1016/j.ecolmodel.2021.109724
-- Waha, K., Müller, C., Bondeau, A., Dietrich, J. P., Kurukulasuriya, P., Heinke, J., & Lotze-Campen, H. (2013). Adaptation to climate change through balanced harvest intervals: Insights from agricultural systems in Sub-Saharan Africa. *Global Environmental Change*, *23*(1), 130–143. https://doi.org/10.1016/j.gloenvcha.2012.10.003
+- Waha, K., Müller, C., Bondeau, A., Dietrich, J. P., Kurukulasuriya, P., Heinke, J., & Lotze-Campen, H. (2013). Adaptation to climate change through the choice of cropping system and sowing date in sub-Saharan Africa. *Global Environmental Change*, *23*(1), 130–143. https://doi.org/10.1016/j.gloenvcha.2012.11.001
 - Zorita, E., & Tilya, F. F. (2002). Rainfall variability in Northern Tanzania in the March–May season (Masika) and its links to large-scale climate indices. *Climate Research*, *20*(1), 31–40. https://doi.org/10.3354/cr020031"""
 
 FIGURES_INFO = [
-    ("fig1_target_distribution_and_seasonal_dynamics.png", "Figure 1: Target distribution of the smallholder Yield Volatility Index (Y_vol) and seasonal log-yield dynamics across Tanzania. (A) Overall empirical density and boxplot of Y_vol showing positive skew and significant mass in the hyper-volatile zone (Y_vol >= 1.50). (B) Bivariate scatter and joint density comparing Masika (long rains) versus Vuli (short rains) log-yields, highlighting seasonal divergence."),
-    ("fig2_model_benchmark_spatial_cv.png", "Figure 2: Multi-model spatial cross-validation benchmark, error residuals, and out-of-fold calibration curves. (A) Model comparison across 5-fold spatial CV showing R^2 and RMSE for LightGBM, XGBoost, Random Forest, CatBoost, and Weighted Ensemble. (B) Out-of-fold predicted versus observed volatility scatter with 1:1 parity line. (C) Decile calibration curves demonstrating close alignment between predicted risk and empirical volatility across all tiers."),
+    ("fig1_target_distribution_and_seasonal_dynamics.png", "Figure 1: Target distribution of the smallholder Yield Volatility Index ($Y_{vol}$) and seasonal log-yield dynamics across Tanzania. (A) Overall empirical density and boxplot of $Y_{vol}$ showing positive skew and significant mass in the hyper-volatile zone ($Y_{vol} \\ge 1.50$). (B) Bivariate scatter and joint density comparing Masika (long rains) versus Vuli (short rains) log-yields, highlighting seasonal divergence."),
+    ("fig2_model_benchmark_spatial_cv.png", "Figure 2: Multi-model spatial cross-validation benchmark, error residuals, and out-of-fold calibration curves. (A) Model comparison across 5-fold spatial CV showing $R^2$ and RMSE for LightGBM, XGBoost, Random Forest, CatBoost, and Weighted Ensemble. (B) Out-of-fold predicted versus observed volatility scatter with 1:1 parity line. (C) Decile calibration curves demonstrating close alignment between predicted risk and empirical volatility across all tiers."),
     ("fig3_grandmaster_feature_importance_and_selection.png", "Figure 3: Grandmaster feature importance scree and domain attribution breakdown. (A) Cumulative gain scree plot identifying the elbow point for top-25 feature selection. (B) Normalized feature importance across four functional domains: seasonal input deltas, crop portfolio diversity, household endowments, and spatial agro-climatic context."),
-    ("fig4_shap_global_feature_attributions.png", "Figure 4: Global SHAP feature attributions and directional dependency plots. (A) SHAP beeswarm plot ranking top-15 features by mean absolute SHAP value, illustrating directional influence on volatility predictions. (B) Partial dependence curves for seasonal planting date shift (plant_month_delta) and Shannon diversity differential."),
-    ("fig5_regional_heterogeneity_and_spatial_transferability.png", "Figure 5: Regional heterogeneity and spatial transferability advantage across 27 administrative regions. (A) Spatial distribution of model R^2 across Tanzania regions. (B) Out-of-fold performance comparison between the Weighted Ensemble and baseline models by region, demonstrating consistent transferability improvements across both high-potential and semi-arid zones."),
+    ("fig4_shap_global_feature_attributions.png", "Figure 4: Global SHAP feature attributions and directional dependency plots. (A) SHAP beeswarm plot ranking top-15 features by mean absolute SHAP value, illustrating directional influence on volatility predictions. (B) Partial dependence curves for seasonal planting date shift (`plant_month_delta`) and Shannon diversity differential."),
+    ("fig5_regional_heterogeneity_and_spatial_transferability.png", "Figure 5: Regional heterogeneity and spatial transferability advantage across 27 administrative regions. (A) Spatial distribution of model $R^2$ across Tanzania regions. (B) Out-of-fold performance comparison between the Weighted Ensemble and baseline models by region, demonstrating consistent transferability improvements across both high-potential and semi-arid zones."),
     ("fig6_agronomic_non_linear_interactions.png", "Figure 6: Non-linear agronomic interaction surfaces. (A) Two-way interaction surface between planting date divergence and seasonal fertilizer delta. (B) Interaction between crop portfolio Shannon diversity and drought shock probability, revealing strong buffering thresholds."),
     ("fig7_leakage_audit_and_household_counterfactuals.png", "Figure 7: Redesigned 5-Pillar Leakage Audit quantitative isolation scorecard, archetype counterfactual profiles, and local SHAP waterfall explanation. (A) Quantitative isolation scorecard validating complete independence across spatial partitioning, preprocessing, target encoding, feature selection, and adversarial checks. (B) Comparative capacity profiles across three smallholder archetypes. (C) Local SHAP waterfall explanation for vulnerable smallholder household #0."),
     ("fig8_spatial_hotspots_and_agroecological_zones.png", "Figure 8: Spatial distribution of smallholder yield volatility hotspots and agro-ecological zone vulnerability map. Highlights high-risk clusters in semi-arid central regions (Dodoma, Singida) versus stable high-altitude clusters in the Southern and Northern Highlands."),
-    ("fig9_agroeconomic_partial_dependence_surfaces.png", "Figure 9: Agro-economic partial dependence surfaces and two-way interaction contours. (A) Marginal response of yield volatility to fertilizer application rate. (B) Labor allocation shift response. (C) Plot fragmentation (plot_area_cv) interaction surface."),
-    ("fig10_policy_simulation_and_counterfactual_interventions.png", "Figure 10: Policy counterfactual stress-testing and simulated volatility mitigation distributions under four agricultural intervention packages. (A) Kernel density shifts under baseline status quo, +2 TLU livestock transfer, +0.4 Shannon crop diversification, and integrated Climate-Smart Agriculture (CSA). (B) Proportion of hyper-volatile smallholders (Y_vol >= 1.50) across scenarios. (C) Net percentage reduction in mean smallholder volatility.")
+    ("fig9_agroeconomic_partial_dependence_surfaces.png", "Figure 9: Agro-economic partial dependence surfaces and two-way interaction contours. (A) Marginal response of yield volatility to fertilizer application rate. (B) Labor allocation shift response. (C) Plot fragmentation (`plot_area_cv`) interaction surface."),
+    ("fig10_policy_simulation_and_counterfactual_interventions.png", "Figure 10: Policy counterfactual stress-testing and simulated volatility mitigation distributions under four agricultural intervention packages. (A) Kernel density shifts under baseline status quo, +2 TLU livestock transfer, +0.4 Shannon crop diversification, and integrated Climate-Smart Agriculture (CSA). (B) Proportion of hyper-volatile smallholders ($Y_{vol} \\ge 1.50$) across scenarios. (C) Net percentage reduction in mean smallholder volatility.")
 ]
 
 TABLES_INFO = [
@@ -359,7 +356,7 @@ TABLES_INFO = [
     ("table7_household_counterfactual_archetypes.csv", "Table 7: Representative smallholder archetypes and simulated counterfactual mitigation gains.")
 ]
 
-# Office Open XML Math (OMML) strings for Equations (1), (2), (3), (4)
+# Office Open XML Math (OMML) strings for numbered display equations (1), (2), (3), (4)
 EQ_OMML = {
     "1": """<m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">
   <m:sSub>
@@ -471,8 +468,12 @@ EQ_OMML = {
       <m:chr m:val="∑"/>
       <m:limLoc m:val="undOvr"/>
     </m:naryPr>
-    <m:sub><m:r><m:t>m=1</m:t></m:r></m:sub>
-    <m:sup><m:r><m:t>M</m:t></m:r></m:sup>
+    <m:sub>
+      <m:r><m:t>m=1</m:t></m:r>
+    </m:sub>
+    <m:sup>
+      <m:r><m:t>M</m:t></m:r>
+    </m:sup>
     <m:e>
       <m:sSub><m:e><m:r><m:t>w</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>
     </m:e>
@@ -552,6 +553,154 @@ EQ_OMML = {
   </m:f>
 </m:oMath>"""
 }
+
+
+def text_to_omml(m: str) -> str:
+    """Converts mathematical text containing subscripts or superscripts to native Office Open XML Math (OMML)."""
+    m = m.replace(r'\pm', '±').replace('+/-', '±')
+    m = m.replace(r'\ge', '≥').replace('>=', '≥')
+    m = m.replace(r'\le', '≤').replace('<=', '≤')
+    m = m.replace(r'\Delta', 'Δ')
+    m = m.replace(r'\epsilon', 'ϵ')
+    m = m.replace(r'\times', '×')
+    m = re.sub(r'\\text\{([^}]*)\}', r'\1', m)
+
+    # Specific composite agronomic/statistical expressions
+    if "H'_{m} - H'_{v}" in m or "H'_m - H'_v" in m:
+        return (
+            '<m:r><m:t>ΔH′ = </m:t></m:r>'
+            '<m:sSub><m:e><m:r><m:t>H′</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
+            '<m:r><m:t> - </m:t></m:r>'
+            '<m:sSub><m:e><m:r><m:t>H′</m:t></m:r></m:e><m:sub><m:r><m:t>v</m:t></m:r></m:sub></m:sSub>'
+        )
+    if 'Y_m = Y_v' in m or 'Y_{m} = Y_{v}' in m:
+        return (
+            '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
+            '<m:r><m:t> = </m:t></m:r>'
+            '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>v</m:t></m:r></m:sub></m:sSub>'
+        )
+    if '10^{-4}' in m or '10^-4' in m:
+        prefix = 'ϵ = ' if ('ϵ' in m or 'epsilon' in m) else ''
+        return f'<m:r><m:t>{prefix}</m:t></m:r><m:sSup><m:e><m:r><m:t>10</m:t></m:r></m:e><m:sup><m:r><m:t>-4</m:t></m:r></m:sup></m:sSup>'
+
+    # Known exact math tokens
+    if m in ['R^2', 'R²']:
+        return '<m:sSup><m:e><m:r><m:t>R</m:t></m:r></m:e><m:sup><m:r><m:t>2</m:t></m:r></m:sup></m:sSup>'
+    if m in ['ΔR^2', 'ΔR²', r'\Delta R^2']:
+        return '<m:r><m:t>Δ</m:t></m:r><m:sSup><m:e><m:r><m:t>R</m:t></m:r></m:e><m:sup><m:r><m:t>2</m:t></m:r></m:sup></m:sSup>'
+    if m in ['Y_vol', 'Y_{vol}']:
+        return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>vol</m:t></m:r></m:sub></m:sSub>'
+    if m in ['Y_vol,i', 'Y_{vol,i}']:
+        return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>vol,i</m:t></m:r></m:sub></m:sSub>'
+    if m in ['Y_m,i', 'Y_{m,i}']:
+        return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>m,i</m:t></m:r></m:sub></m:sSub>'
+    if m in ['Y_v,i', 'Y_{v,i}']:
+        return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>v,i</m:t></m:r></m:sub></m:sSub>'
+    if m in ['Y_m', 'Y_{m}']:
+        return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
+    if m in ['Y_v', 'Y_{v}']:
+        return '<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>v</m:t></m:r></m:sub></m:sSub>'
+    if m in ["H'", "H′"]:
+        return '<m:r><m:t>H′</m:t></m:r>'
+    if m in ["ΔH'", "ΔH′"]:
+        return '<m:r><m:t>ΔH′</m:t></m:r>'
+    if m in ['p_k']:
+        return '<m:sSub><m:e><m:r><m:t>p</m:t></m:r></m:e><m:sub><m:r><m:t>k</m:t></m:r></m:sub></m:sSub>'
+    if m in ['w_m']:
+        return '<m:sSub><m:e><m:r><m:t>w</m:t></m:r></m:e><m:sub><m:r><m:t>m</m:t></m:r></m:sub></m:sSub>'
+
+    # Prefix compound patterns (e.g. R^2 = 0.584 ± 0.042)
+    if m.startswith('R^2') or m.startswith('R²'):
+        rest = m[3:] if m.startswith('R^2') else m[2:]
+        return f'<m:sSup><m:e><m:r><m:t>R</m:t></m:r></m:e><m:sup><m:r><m:t>2</m:t></m:r></m:sup></m:sSup><m:r><m:t>{xml_escape(rest)}</m:t></m:r>'
+    if m.startswith('ΔR^2') or m.startswith('ΔR²'):
+        rest = m[4:] if m.startswith('ΔR^2') else m[3:]
+        return f'<m:r><m:t>Δ</m:t></m:r><m:sSup><m:e><m:r><m:t>R</m:t></m:r></m:e><m:sup><m:r><m:t>2</m:t></m:r></m:sup></m:sSup><m:r><m:t>{xml_escape(rest)}</m:t></m:r>'
+    if m.startswith('Y_vol') or m.startswith('Y_{vol}'):
+        rest = m[5:] if m.startswith('Y_vol') else m[7:]
+        return f'<m:sSub><m:e><m:r><m:t>Y</m:t></m:r></m:e><m:sub><m:r><m:t>vol</m:t></m:r></m:sub></m:sSub><m:r><m:t>{xml_escape(rest)}</m:t></m:r>'
+
+    # Generic subscript: Base_sub
+    m_sub = re.match(r'^([A-Za-z]+)_\{?([A-Za-z0-9,]+)\}?(.*)$', m)
+    if m_sub:
+        base, sub, rest = m_sub.groups()
+        return f'<m:sSub><m:e><m:r><m:t>{xml_escape(base)}</m:t></m:r></m:e><m:sub><m:r><m:t>{xml_escape(sub)}</m:t></m:r></m:sub></m:sSub><m:r><m:t>{xml_escape(rest)}</m:t></m:r>'
+
+    # Generic superscript: Base^sup
+    m_sup = re.match(r'^([A-Za-z0-9]+)\^\{?([A-Za-z0-9,+-]+)\}?(.*)$', m)
+    if m_sup:
+        base, sup, rest = m_sup.groups()
+        return f'<m:sSup><m:e><m:r><m:t>{xml_escape(base)}</m:t></m:r></m:e><m:sup><m:r><m:t>{xml_escape(sup)}</m:t></m:r></m:sup></m:sSup><m:r><m:t>{xml_escape(rest)}</m:t></m:r>'
+
+    return f'<m:r><m:t>{xml_escape(m)}</m:t></m:r>'
+
+
+def insert_inline_omml(p, omml_xml_content: str):
+    """Parses and appends an inline OMML element to a python-docx paragraph."""
+    full_xml = f'<m:oMath xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">{omml_xml_content}</m:oMath>'
+    p._p.append(parse_xml(full_xml))
+
+
+def format_text_into_paragraph(p, text: str, is_bold=False, is_italic=False, font_size=None):
+    """Parses text containing scientific symbols, inline math, and markdown formatting,
+
+    and appends native Word OMML math zones and formatted runs (avoiding literal '_' and '^').
+    """
+    # Normalize ASCII operators to genuine scientific Unicode
+    t = text.replace(r'\pm', '±').replace('+/-', '±')
+    t = t.replace(r'\ge', '≥').replace('>=', '≥')
+    t = t.replace(r'\le', '≤').replace('<=', '≤')
+    t = t.replace(r'\Delta', 'Δ')
+    t = t.replace(r'\epsilon', 'ϵ')
+    t = t.replace(r'\times', '×')
+
+    # Regex tokenization
+    pattern = re.compile(
+        r'(\$.*?\$|\*\*.*?\*\*|\*.*?\*|`.*?`|'
+        r'ΔR\^2|R\^2|'
+        r'Y_\{vol,i\}|Y_vol,i|Y_\{vol\}|Y_vol|'
+        r'Y_\{m,i\}|Y_m,i|Y_\{v,i\}|Y_v,i|'
+        r'Y_\{m\}|Y_m|Y_\{v\}|Y_v|'
+        r'ΔH\'|H\'|p_k|w_m|10\^\{-4\}|10\^-4)'
+    )
+    tokens = pattern.split(t)
+    for tok in tokens:
+        if not tok:
+            continue
+        # Check inline math with dollar signs
+        if tok.startswith('$') and tok.endswith('$'):
+            inner = tok[1:-1].strip()
+            insert_inline_omml(p, text_to_omml(inner))
+        elif tok in ['R^2', 'ΔR^2', 'Y_vol', 'Y_{vol}', 'Y_vol,i', 'Y_{vol,i}', 'Y_m,i', 'Y_{m,i}',
+                     'Y_v,i', 'Y_{v,i}', 'Y_m', 'Y_{m}', 'Y_v', 'Y_{v}', "H'", "ΔH'", 'p_k', 'w_m',
+                     '10^-4', '10^{-4}']:
+            insert_inline_omml(p, text_to_omml(tok))
+        elif tok.startswith('**') and tok.endswith('**'):
+            r = p.add_run(tok[2:-2])
+            r.bold = True
+            r.font.name = 'Times New Roman'
+            if font_size:
+                r.font.size = font_size
+        elif tok.startswith('*') and tok.endswith('*'):
+            r = p.add_run(tok[1:-1])
+            r.italic = True
+            r.font.name = 'Times New Roman'
+            if font_size:
+                r.font.size = font_size
+        elif tok.startswith('`') and tok.endswith('`'):
+            r = p.add_run(tok[1:-1])
+            r.font.name = 'Courier New'
+            if font_size:
+                r.font.size = Pt(font_size.pt - 1)
+        else:
+            r = p.add_run(tok)
+            if is_bold:
+                r.bold = True
+            if is_italic:
+                r.italic = True
+            if font_size:
+                r.font.size = font_size
+            r.font.name = 'Times New Roman'
 
 
 def df_to_markdown(df: pd.DataFrame) -> str:
@@ -698,10 +847,7 @@ def add_omml_equation_table(doc, omml_xml: str, eq_num_str: str):
 
 
 def add_scientific_paragraph(doc, text: str, space_after=6, left_indent=0.0, first_line_indent=0.0):
-    """Parses text containing inline scientific math ($...$), bold (**...**), and italics (*...*)
-
-    and creates a properly formatted paragraph with native Word symbols (±, ≥, ≤, Δ, ϵ, superscripts, subscripts).
-    """
+    """Creates a paragraph with native Word OMML equations and scientific symbols."""
     p = doc.add_paragraph()
     p.paragraph_format.line_spacing = 1.15
     p.paragraph_format.space_after = Pt(space_after)
@@ -710,129 +856,7 @@ def add_scientific_paragraph(doc, text: str, space_after=6, left_indent=0.0, fir
     if first_line_indent != 0.0:
         p.paragraph_format.first_line_indent = Inches(first_line_indent)
 
-    # Normalize mathematical symbols to true scientific Unicode
-    t = text.replace('\\pm', '±').replace('+/-', '±')
-    t = t.replace('\\ge', '≥').replace('>=', '≥')
-    t = t.replace('\\le', '≤').replace('<=', '≤')
-    t = t.replace('\\Delta', 'Δ')
-    t = t.replace('\\epsilon', 'ϵ')
-    t = t.replace('\\times', '×')
-
-    # Split on tokens: bold, italic, inline math, and code spans
-    tokens = re.split(r'(\$.*?\$|\*\*.*?\*\*|\*.*?\*|`.*?`)', t)
-    for tok in tokens:
-        if not tok:
-            continue
-        if tok.startswith('**') and tok.endswith('**'):
-            r = p.add_run(tok[2:-2])
-            r.bold = True
-            r.font.name = 'Times New Roman'
-        elif tok.startswith('*') and tok.endswith('*'):
-            r = p.add_run(tok[1:-1])
-            r.italic = True
-            r.font.name = 'Times New Roman'
-        elif tok.startswith('`') and tok.endswith('`'):
-            r = p.add_run(tok[1:-1])
-            r.font.name = 'Courier New'
-            r.font.size = Pt(10)
-        elif tok.startswith('$') and tok.endswith('$'):
-            m = tok[1:-1].strip()
-            # Handle recognized scientific mathematical variables and metrics
-            if m == 'R^2':
-                r1 = p.add_run('R')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('2')
-                r2.font.superscript = True
-                r2.font.name = 'Times New Roman'
-            elif m in ['\\Delta R^2', 'ΔR^2']:
-                p.add_run('Δ').font.name = 'Times New Roman'
-                r1 = p.add_run('R')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('2')
-                r2.font.superscript = True
-                r2.font.name = 'Times New Roman'
-            elif m in ['\\Delta H\'', 'ΔH\'']:
-                p.add_run('Δ').font.name = 'Times New Roman'
-                r1 = p.add_run('H′')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-            elif m in ['Y_{vol}', 'Y_vol']:
-                r1 = p.add_run('Y')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('vol')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            elif m in ['Y_{vol,i}', 'Y_vol,i']:
-                r1 = p.add_run('Y')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('vol,i')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            elif m in ['Y_{m,i}', 'Y_m,i']:
-                r1 = p.add_run('Y')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('m,i')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            elif m in ['Y_{v,i}', 'Y_v,i']:
-                r1 = p.add_run('Y')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('v,i')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            elif m == 'Y_m':
-                r1 = p.add_run('Y')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('m')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            elif m == 'Y_v':
-                r1 = p.add_run('Y')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('v')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            elif m == "H'":
-                r1 = p.add_run('H′')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-            elif m == "H'_{m}":
-                r1 = p.add_run('H′')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('m')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            elif m == "H'_{v}":
-                r1 = p.add_run('H′')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('v')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            elif m == "p_k":
-                r1 = p.add_run('p')
-                r1.italic = True
-                r1.font.name = 'Times New Roman'
-                r2 = p.add_run('k')
-                r2.font.subscript = True
-                r2.font.name = 'Times New Roman'
-            else:
-                clean_m = m.replace('\\text{', '').replace('}', '')
-                r = p.add_run(clean_m)
-                r.italic = True
-                r.font.name = 'Times New Roman'
-        else:
-            r = p.add_run(tok)
-            r.font.name = 'Times New Roman'
+    format_text_into_paragraph(p, text)
     return p
 
 
@@ -858,36 +882,36 @@ def generate_docx_manuscript(output_path: Path):
 
     def add_heading_1(text):
         p = doc.add_paragraph()
+        p.paragraph_format.space_before = Pt(14)
+        p.paragraph_format.space_after = Pt(4)
         run = p.add_run(text)
         run.bold = True
         run.font.name = 'Times New Roman'
         run.font.size = Pt(15)
         run.font.color.rgb = RGBColor(0x1B, 0x36, 0x5D) # Academic Navy
-        p.paragraph_format.space_before = Pt(14)
-        p.paragraph_format.space_after = Pt(4)
         return p
 
     def add_heading_2(text):
         p = doc.add_paragraph()
+        p.paragraph_format.space_before = Pt(10)
+        p.paragraph_format.space_after = Pt(3)
         run = p.add_run(text)
         run.bold = True
         run.font.name = 'Times New Roman'
         run.font.size = Pt(13)
         run.font.color.rgb = RGBColor(0x2B, 0x5C, 0x8F) # Steel Blue
-        p.paragraph_format.space_before = Pt(10)
-        p.paragraph_format.space_after = Pt(3)
         return p
 
     def add_heading_3(text):
         p = doc.add_paragraph()
+        p.paragraph_format.space_before = Pt(8)
+        p.paragraph_format.space_after = Pt(2)
         run = p.add_run(text)
         run.bold = True
         run.italic = True
         run.font.name = 'Times New Roman'
         run.font.size = Pt(11.5)
         run.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
-        p.paragraph_format.space_before = Pt(8)
-        p.paragraph_format.space_after = Pt(2)
         return p
 
     # Title & Metadata
@@ -949,11 +973,9 @@ def generate_docx_manuscript(output_path: Path):
 
     def add_df_table(df: pd.DataFrame, title: str):
         p_t = doc.add_paragraph()
-        r_t = p_t.add_run(title)
-        r_t.bold = True
-        r_t.font.size = Pt(10)
         p_t.paragraph_format.space_before = Pt(8)
         p_t.paragraph_format.space_after = Pt(3)
+        format_text_into_paragraph(p_t, title, is_bold=True, font_size=Pt(10))
 
         table = doc.add_table(rows=df.shape[0] + 1, cols=df.shape[1])
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -961,29 +983,18 @@ def generate_docx_manuscript(output_path: Path):
 
         for c_idx, col_name in enumerate(df.columns):
             cell = table.cell(0, c_idx)
-            cell.text = str(col_name)
-            for p in cell.paragraphs:
-                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                for run in p.runs:
-                    run.bold = True
-                    run.font.size = Pt(9)
-                    run.font.name = 'Times New Roman'
+            p = cell.paragraphs[0]
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            format_text_into_paragraph(p, str(col_name), is_bold=True, font_size=Pt(9))
 
         for r_idx in range(df.shape[0]):
             for c_idx in range(df.shape[1]):
                 cell = table.cell(r_idx + 1, c_idx)
                 val = df.iloc[r_idx, c_idx]
-                if pd.isna(val):
-                    cell.text = "-"
-                elif isinstance(val, float):
-                    cell.text = f"{val:.3f}" if abs(val) < 1000 else f"{val:.1f}"
-                else:
-                    cell.text = str(val)
-                for p in cell.paragraphs:
-                    p.alignment = WD_ALIGN_PARAGRAPH.LEFT if c_idx == 0 else WD_ALIGN_PARAGRAPH.RIGHT
-                    for run in p.runs:
-                        run.font.size = Pt(8.5)
-                        run.font.name = 'Times New Roman'
+                val_str = "-" if pd.isna(val) else (f"{val:.3f}" if isinstance(val, float) and abs(val) < 1000 else (f"{val:.1f}" if isinstance(val, float) else str(val)))
+                p = cell.paragraphs[0]
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT if c_idx == 0 else WD_ALIGN_PARAGRAPH.RIGHT
+                format_text_into_paragraph(p, val_str, font_size=Pt(8.5))
 
         p_sp = doc.add_paragraph()
         p_sp.paragraph_format.space_after = Pt(6)
@@ -998,12 +1009,9 @@ def generate_docx_manuscript(output_path: Path):
             run.add_picture(str(fig_path), width=Inches(6.2))
 
             p_cap = doc.add_paragraph()
-            r_cap = p_cap.add_run(caption)
-            r_cap.italic = True
-            r_cap.font.size = Pt(9.5)
-            r_cap.font.name = 'Times New Roman'
             p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p_cap.paragraph_format.space_after = Pt(12)
+            format_text_into_paragraph(p_cap, caption, is_italic=True, font_size=Pt(9.5))
 
     # 1. Introduction
     add_heading_1("1. Introduction")
@@ -1081,7 +1089,7 @@ def generate_docx_manuscript(output_path: Path):
         "Model accuracy varies across Tanzania's diverse agro-ecological zones (Table 4, Figure 5, Figure 8). "
         "Spatial transferability is highest in the Northern Highlands (Kilimanjaro $R^2 = 0.648$, Arusha $R^2 = 0.631$) and Southern Highlands (Iringa $R^2 = 0.622$, Mbeya $R^2 = 0.614$). "
         "Conversely, the highest yield volatility and lowest baseline predictability occur in semi-arid central regions (Dodoma mean $Y_{vol} = 1.382$, Singida mean $Y_{vol} = 1.341$), "
-        "where erratic intra-seasonal dry spells overwhelm management interventions (Mary & Majule, 2009). Across all 27 regions, the Weighted Ensemble maintains a consistent transferability advantage."
+        "where erratic intra-seasonal dry spells overwhelm management interventions (Lema & Majule, 2009). Across all 27 regions, the Weighted Ensemble maintains a consistent transferability advantage."
     )
     add_image_figure(FIGURES_INFO[4][0], FIGURES_INFO[4][1])
     add_image_figure(FIGURES_INFO[7][0], FIGURES_INFO[7][1])
@@ -1209,7 +1217,7 @@ def generate_latex_manuscript(output_path: Path):
 \title{\textbf{Predicting Smallholder Crop Yield Volatility Across Agro-Ecological Zones: A Leakage-Free Spatial Machine Learning Framework for Tanzania}}
 
 \author[1]{Kadeghe Goodluck Fue\thanks{Corresponding author: \texttt{kadefue@sua.ac.tz}}}
-\affil[1]{Department of Agricultural Engineering and Technology, School of Agricultural Sciences and Fisheries Technology, Sokoine University of Agriculture, P.O. Box 3003, Chuo Kikuu, Morogoro, Tanzania}
+\affil[1]{Department of Agricultural Engineering, School of Engineering and Technology, Sokoine University of Agriculture, P.O. Box 3003, Chuo Kikuu, Morogoro, Tanzania}
 
 \date{\today}
 
@@ -1229,9 +1237,9 @@ Smallholder farmers in Sub-Saharan Africa operate on the frontlines of climate v
 \newpage
 
 \section{Introduction}
-Smallholder agricultural systems form the economic foundation and primary food source for more than 70\% of the population in Sub-Saharan Africa (SSA) \cite{fao2021}. In Tanzania, where agriculture contributes nearly 27\% of Gross Domestic Product and employs over 65\% of the national workforce, smallholder productivity is acutely tied to rainfall seasonality \cite{nbs2021, urt2020}. Across large expanses of the country---particularly the northern, eastern, and Lake Victoria basins---crop production is governed by a bimodal precipitation regime consisting of the long rains (\textit{Masika}, typically March to May) and the short rains (\textit{Vuli}, October to December) \cite{mary2009, rowhani2011, zorita2002}.
+Smallholder agricultural systems form the economic foundation and primary food source for more than 70\% of the population in Sub-Saharan Africa (SSA) \cite{fao2021}. In Tanzania, where agriculture contributes nearly 27\% of Gross Domestic Product and employs over 65\% of the national workforce, smallholder productivity is acutely tied to rainfall seasonality \cite{nbs2021, urt2020}. Across large expanses of the country---particularly the northern, eastern, and Lake Victoria basins---crop production is governed by a bimodal precipitation regime consisting of the long rains (\textit{Masika}, typically March to May) and the short rains (\textit{Vuli}, October to December) \cite{lema2009, rowhani2011, zorita2002}.
 
-While substantial agronomic research has focused on raising mean seasonal crop yields, inter-seasonal yield volatility---defined as the relative fluctuation in crop productivity between successive growing seasons within the same agricultural holding---constitutes an equally severe, yet under-investigated, driver of acute food insecurity \cite{birthal2014, ray2015}. When smallholder yields collapse from one season to the next, farm households experience severe caloric shortfalls, distress sales of productive assets, and deepened poverty traps \cite{carter2006, dercon2011}.
+While substantial agronomic research has focused on raising mean seasonal crop yields, inter-seasonal yield volatility---defined as the relative fluctuation in crop productivity between successive growing seasons within the same agricultural holding---constitutes an equally severe, yet under-investigated, driver of acute food insecurity \cite{birthal2015, ray2015}. When smallholder yields collapse from one season to the next, farm households experience severe caloric shortfalls, distress sales of productive assets, and deepened poverty traps \cite{carter2006, dercon2011}.
 
 The advent of machine learning (ML) and high-dimensional microdata has unlocked new frontiers in precision agriculture and agricultural vulnerability modeling \cite{benami2021, chlingaryan2018, khaki2019, vanklompenburg2020}. Modern tree-based ensembles, such as Random Forest \cite{breiman2001}, XGBoost \cite{chen2016}, LightGBM \cite{ke2017}, and CatBoost \cite{prokhorenkova2018}, have repeatedly demonstrated superior empirical performance over classical econometric and biophysical crop models.
 
@@ -1318,7 +1326,7 @@ Figure~\ref{fig:fig3} and Figure~\ref{fig:fig4} illustrate feature attributions.
 \end{figure}
 
 \subsection{Regional Heterogeneity and Hotspots}
-Figure~\ref{fig:fig5} and Figure~\ref{fig:fig8} demonstrate that predictive transferability is highest in high-altitude zones (Kilimanjaro $R^2 = 0.648$, Iringa $R^2 = 0.622$) and lowest in semi-arid central areas (Dodoma $Y_{vol} = 1.382$, Singida $Y_{vol} = 1.341$) \cite{mary2009}.
+Figure~\ref{fig:fig5} and Figure~\ref{fig:fig8} demonstrate that predictive transferability is highest in high-altitude zones (Kilimanjaro $R^2 = 0.648$, Arusha $R^2 = 0.631$) and Southern Highlands (Iringa $R^2 = 0.622$, Mbeya $R^2 = 0.614$) and lowest in semi-arid central areas (Dodoma $Y_{vol} = 1.382$, Singida $Y_{vol} = 1.341$) \cite{lema2009}.
 
 \begin{figure}[htbp]
 \centering
@@ -1392,9 +1400,9 @@ Data are available upon request from the National Bureau of Statistics of Tanzan
 
 \begin{thebibliography}{99}
 \bibitem{barrett2006} Barrett, C. B., Marenya, P. P., McPeak, J., Minten, B., Murithi, F., Oluoch-Kosura, W., Place, F., Randrianarisoa, J. C., Rasambainarivo, J., \& Wangila, J. (2006). Welfare dynamics in rural Kenya and Madagascar. \textit{The Journal of Development Studies}, \textit{42}(2), 248--277. \url{https://doi.org/10.1080/00220380500405394}
-\bibitem{beillouin2019} Beillouin, D., Ben-Ari, T., \& Makowski, D. (2019). Evidence map of crop diversification strategies at the global scale. \textit{Environmental Research Letters}, \textit{14}(12), Article 123001. \url{https://doi.org/10.1088/1748-9326/ab44be}
+\bibitem{beillouin2019} Beillouin, D., Ben-Ari, T., \& Makowski, D. (2019). Evidence map of crop diversification strategies at the global scale. \textit{Environmental Research Letters}, \textit{14}(12), Article 123001. \url{https://doi.org/10.1088/1748-9326/ab4449}
 \bibitem{benami2021} Benami, E., Carter, M. R., Ghosh, R., Hijmans, R. J., Hobbs, A., Kenduiywo, B., \& Rozelle, S. (2021). Uniting remote sensing, crop modelling and economics for agricultural risk management. \textit{Nature Reviews Earth \& Environment}, \textit{2}(2), 140--159. \url{https://doi.org/10.1038/s43017-020-00122-y}
-\bibitem{birthal2014} Birthal, P. S., Negi, D. S., Khan, M. T., \& Agarwal, S. (2014). Is Indian agriculture becoming resilient to droughts? Evidence from rice production. \textit{Food Policy}, \textit{44}, 28--41. \url{https://doi.org/10.1016/j.foodpol.2013.10.005}
+\bibitem{birthal2015} Birthal, P. S., Negi, D. S., Khan, M. T., \& Agarwal, S. (2015). Is Indian agriculture becoming resilient to droughts? Evidence from rice production systems. \textit{Food Policy}, \textit{56}, 1--12. \url{https://doi.org/10.1016/j.foodpol.2015.07.005}
 \bibitem{breiman2001} Breiman, L. (2001). Random forests. \textit{Machine Learning}, \textit{45}(1), 5--32. \url{https://doi.org/10.1023/A:1010933404324}
 \bibitem{carter2006} Carter, M. R., \& Barrett, C. B. (2006). The economics of poverty traps and persistent poverty: An asset-based approach. \textit{The Journal of Development Studies}, \textit{42}(2), 178--199. \url{https://doi.org/10.1080/00220380500405261}
 \bibitem{chen2016} Chen, T., \& Guestrin, C. (2016). XGBoost: A scalable tree boosting system. In \textit{Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining} (pp. 785--794). ACM. \url{https://doi.org/10.1145/2939672.2939785}
@@ -1404,15 +1412,15 @@ Data are available upon request from the National Bureau of Statistics of Tanzan
 \bibitem{ke2017} Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., \& Liu, T.-Y. (2017). LightGBM: A highly efficient gradient boosting decision tree. \textit{Advances in Neural Information Processing Systems}, \textit{30}, 3146--3154.
 \bibitem{khaki2019} Khaki, S., \& Wang, L. (2019). Crop yield prediction using deep neural networks. \textit{Frontiers in Plant Science}, \textit{10}, Article 621. \url{https://doi.org/10.3389/fpls.2019.00621}
 \bibitem{kursa2010} Kursa, M. B., \& Rudnicki, W. R. (2010). Feature selection with the Boruta package. \textit{Journal of Statistical Software}, \textit{36}(11), 1--13. \url{https://doi.org/10.18637/jss.v036.i11}
+\bibitem{lema2009} Lema, M. A., \& Majule, A. E. (2009). Impacts of climate change, variability and adaptation strategies on agriculture in semi-arid areas of Tanzania: The case of Manyoni District in Singida Region, Tanzania. \textit{African Journal of Environmental Science and Technology}, \textit{3}(8), 206--218. \url{https://doi.org/10.5897/AJEST09.099}
 \bibitem{lobell2020} Lobell, D. B., Di Tommaso, S., You, C., Yabroudi, I., \& Ortiz-Monasterio, I. (2020). Sight for sorghums: Comparisons of satellite- and ground-based sorghum yield estimates in Mali. \textit{Nature Food}, \textit{1}(7), 424--431. \url{https://doi.org/10.1038/s43016-020-0112-7}
 \bibitem{lundberg2017} Lundberg, S. M., \& Lee, S.-I. (2017). A unified approach to interpreting model predictions. \textit{Advances in Neural Information Processing Systems}, \textit{30}, 4765--4774.
 \bibitem{lundberg2020} Lundberg, S. M., Erion, G., Chen, H., DeGrave, A., Prutkin, J. M., Nair, B., Katz, R., Himmelfarb, J., Bansal, N., \& Lee, S.-I. (2020). From local explanations to global understanding with explainable AI for trees. \textit{Nature Machine Intelligence}, \textit{2}(1), 56--67. \url{https://doi.org/10.1038/s42256-019-0138-9}
-\bibitem{mary2009} Mary, A. L., \& Majule, A. E. (2009). Impacts of climate change, variability and adaptation strategies on agriculture in semi-arid areas of Tanzania: A case of Manyoni District in Singida Region, Tanzania. \textit{African Journal of Environmental Science and Technology}, \textit{3}(8), 206--218.
 \bibitem{meyer2018} Meyer, H., Reudenbach, C., Hengl, T., Katurji, M., \& Nauss, T. (2018). Improving performance of spatio-temporal machine learning models using forward feature selection and target-oriented validation. \textit{Ecological Modelling}, \textit{372}, 1--9. \url{https://doi.org/10.1016/j.ecolmodel.2017.12.001}
 \bibitem{nbs2021} National Bureau of Statistics. (2021). \textit{Annual Agricultural Sample Survey 2019/20: Final report}. Ministry of Finance and Planning, United Republic of Tanzania.
 \bibitem{ploton2020} Ploton, P., Mortier, F., Réjou-Méchain, M., Barbier, N., Picard, N., Rossi, V., Dormann, C. F., Cornu, G., Viennois, G., Bayol, N., \& Gourlet-Fleury, S. (2020). Spatial validation reveals poor predictive performance of large-scale ecological mapping models. \textit{Nature Communications}, \textit{11}(1), Article 4540. \url{https://doi.org/10.1038/s41467-020-18321-y}
 \bibitem{prokhorenkova2018} Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V., \& Gulin, A. (2018). CatBoost: Unbiased boosting with categorical features. \textit{Advances in Neural Information Processing Systems}, \textit{31}, 6638--6648.
-\bibitem{raseduzzaman2017} Raseduzzaman, M., \& Jensen, E. S. (2017). Does intercropping enhance yield stability in sustainable agriculture? A meta-analysis. \textit{Agronomy for Sustainable Development}, \textit{37}(3), Article 25. \url{https://doi.org/10.1007/s13593-017-0432-9}
+\bibitem{raseduzzaman2017} Raseduzzaman, M., \& Jensen, E. S. (2017). Does intercropping enhance yield stability in sustainable agriculture? A meta-analysis. \textit{European Journal of Agronomy}, \textit{91}, 25--33. \url{https://doi.org/10.1016/j.eja.2017.09.009}
 \bibitem{ray2015} Ray, D. K., Gerber, J. S., MacDonald, G. K., \& West, P. C. (2015). Climate variation explains a third of global crop yield variability. \textit{Nature Communications}, \textit{6}(1), Article 5989. \url{https://doi.org/10.1038/ncomms6989}
 \bibitem{renard2019} Renard, D., \& Tilman, D. (2019). National food production stabilized by crop diversity. \textit{Nature}, \textit{571}(7764), 257--260. \url{https://doi.org/10.1038/s41586-019-1316-y}
 \bibitem{roberts2017} Roberts, D. R., Bahn, V., Ciuti, S., Boyce, M. S., Elith, J., Guillera-Arroita, G., Hauenstein, S., Lahoz-Monfort, J. J., Schröder, B., Thuiller, W., \& Warton, D. I. (2017). Cross-validation strategies for data with spatial, temporal, or phylogenetic structure. \textit{Ecography}, \textit{40}(8), 913--929. \url{https://doi.org/10.1111/ecog.02881}
@@ -1423,7 +1431,7 @@ Data are available upon request from the National Bureau of Statistics of Tanzan
 \bibitem{valavi2019} Valavi, R., Elith, J., Lahoz-Monfort, J. J., \& Guillera-Arroita, G. (2019). blockCV: An R package for generating spatially or environmentally separated folds for k-fold cross-validation of species distribution models. \textit{Methods in Ecology and Evolution}, \textit{10}(2), 225--232. \url{https://doi.org/10.1111/2041-210X.13107}
 \bibitem{vanklompenburg2020} van Klompenburg, T., Kassahun, A., \& Catal, C. (2020). Crop yield prediction using machine learning: A systematic literature review. \textit{Computers and Electronics in Agriculture}, \textit{177}, Article 105709. \url{https://doi.org/10.1016/j.compag.2020.105709}
 \bibitem{wadoux2021} Wadoux, A. M. J. C., Brus, D. J., \& Heuvelink, G. B. M. (2021). Sampling design optimization for spatial cross-validation of machine learning models. \textit{Ecological Modelling}, \textit{459}, Article 109724. \url{https://doi.org/10.1016/j.ecolmodel.2021.109724}
-\bibitem{waha2013} Waha, K., Müller, C., Bondeau, A., Dietrich, J. P., Kurukulasuriya, P., Heinke, J., \& Lotze-Campen, H. (2013). Adaptation to climate change through balanced harvest intervals: Insights from agricultural systems in Sub-Saharan Africa. \textit{Global Environmental Change}, \textit{23}(1), 130--143. \url{https://doi.org/10.1016/j.gloenvcha.2012.10.003}
+\bibitem{waha2013} Waha, K., Müller, C., Bondeau, A., Dietrich, J. P., Kurukulasuriya, P., Heinke, J., \& Lotze-Campen, H. (2013). Adaptation to climate change through the choice of cropping system and sowing date in sub-Saharan Africa. \textit{Global Environmental Change}, \textit{23}(1), 130--143. \url{https://doi.org/10.1016/j.gloenvcha.2012.11.001}
 \bibitem{zorita2002} Zorita, E., \& Tilya, F. F. (2002). Rainfall variability in Northern Tanzania in the March--May season (Masika) and its links to large-scale climate indices. \textit{Climate Research}, \textit{20}(1), 31--40. \url{https://doi.org/10.3354/cr020031}
 \end{thebibliography}
 
