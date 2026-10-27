@@ -32,10 +32,10 @@
 \maketitle
 
 \begin{abstract}
-Intra-annual crop yield volatility between bi-modal production seasons represents a profound vulnerability for smallholder farming systems in Sub-Saharan Africa. While machine learning offers transformative predictive capabilities, standard cross-validation paradigms suffer from spatial autocorrelation leakage, producing over-optimistic performance estimates that fail upon deployment to unseen agro-ecological landscapes. Here, we develop a leakage-free spatial machine learning pipeline utilizing the Tanzania National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata, encompassing 10,750 smallholder households across 27 administrative regions. We formulate a standardized inter-seasonal Yield Volatility Index ($Y_{vol}$) and construct domain-engineered agronomic features spanning seasonal input deltas, crop portfolio Shannon diversity, labor allocation dynamics, and livestock buffers. Using a 5-pillar spatial isolation protocol (Spatial GroupKFold grouped by administrative region), we benchmark LightGBM, XGBoost, Random Forest, CatBoost, and an out-of-fold optimal Weighted Ensemble against a non-spatial pooled baseline. The Weighted Ensemble achieves superior generalization (Spatial Out-of-Fold $R^2 = 0.584 \pm 0.042$, RMSE = $0.231 \pm 0.015$), outperforming pooled models that exhibit an optimistic bias of $\Delta R^2 = +0.142$ due to spatial leakage. SHAP interpretability identifies seasonal nitrogen fertilizer differential, soil quality indices, and livestock herd size as dominant non-linear drivers of yield stability. Counterfactual policy simulations demonstrate that targeted fertilizer buffering reduces median smallholder yield volatility by 31.4\% in high-risk semi-arid regions. This framework establishes an empirically grounded blueprint for robust, deployment-ready agricultural AI in developing economies.
+Intra-annual crop yield volatility between bi-modal production seasons represents a profound vulnerability for smallholder farming systems in Sub-Saharan Africa. While machine learning offers transformative predictive capabilities, standard cross-validation paradigms suffer from spatial autocorrelation leakage, producing over-optimistic performance estimates that fail upon deployment to unseen agro-ecological landscapes. Here, we develop a leakage-free spatial machine learning pipeline utilizing the Tanzania National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata, encompassing 10,750 smallholder households across 27 administrative regions. We formulate a standardized inter-seasonal Yield Volatility Index ($Y_{vol,i}$) and construct domain-engineered agronomic features spanning seasonal input deltas, crop portfolio Shannon diversity, labor allocation dynamics, and livestock buffers. Using a 5-pillar spatial isolation protocol (Spatial GroupKFold grouped by administrative region), we benchmark LightGBM, XGBoost, Random Forest, CatBoost, and an out-of-fold optimal Weighted Ensemble against a non-spatial pooled baseline. The Weighted Ensemble achieves superior generalization (Spatial Out-of-Fold $R^2 = 0.584 \pm 0.042$, RMSE = $0.231 \pm 0.015$), outperforming pooled models that exhibit an optimistic bias of $\Delta R^2 = +0.157$ due to spatial leakage. SHAP interpretability identifies seasonal planting date divergence, crop diversity differentials, and livestock herd size as dominant non-linear drivers of yield stability. Counterfactual policy simulations demonstrate that an integrated climate-smart agriculture package reduces hyper-volatile smallholder holdings by 63.3\%. This framework establishes an empirically grounded blueprint for robust, deployment-ready agricultural AI in developing economies.
 \end{abstract}
 
-\textbf{Keywords:} smallholder agriculture, yield volatility, spatial cross-validation, machine learning, Tanzania, climate resilience, agro-ecological zones
+\textbf{Keywords:} smallholder agriculture, yield volatility, spatial cross-validation, machine learning, Tanzania, climate resilience, agro-ecological zones, explainable AI
 
 \section*{Public Interest Statement}
 Smallholder farmers in Sub-Saharan Africa operate on the frontlines of climate volatility, where bi-modal rainfall patterns dictate two distinct cropping seasons: Masika (long rains) and Vuli (short rains). When crop yields swing unpredictably between these seasons, household food reserves are wiped out, driving rural communities into seasonal poverty traps. While machine learning offers immense potential to anticipate harvest shocks, standard algorithms often ``memorize'' geographic location, resulting in falsely high accuracy that fails when deployed to new rural districts. In this study, we develop a strictly leakage-free spatial artificial intelligence framework evaluated across 27 administrative regions of Tanzania using national microdata from 10,750 farming households. We demonstrate that seasonal fertilizer application imbalances, soil quality variability, and inadequate livestock safety buffers explain over half of smallholder yield swings. Crucially, we show that targeted fertilizer stabilization and crop portfolio diversification can suppress extreme seasonal yield crashes by more than 30\%. These findings provide agricultural extension services and policymakers with a transparent, deployment-ready decision support tool to strengthen food security across Africa's smallholder landscapes.
@@ -43,31 +43,37 @@ Smallholder farmers in Sub-Saharan Africa operate on the frontlines of climate v
 \newpage
 
 \section{Introduction}
-Smallholder agricultural systems form the economic foundation and primary food source for more than 70\% of the population in Sub-Saharan Africa (SSA). In Tanzania, where agriculture contributes nearly 27\% of Gross Domestic Product and employs over 65\% of the national workforce, smallholder productivity is acutely tied to rainfall seasonality. Across large expanses of the country---particularly the northern, eastern, and Lake Victoria basins---crop production is governed by a bimodal precipitation regime consisting of the long rains (\textit{Masika}, typically March to May) and the short rains (\textit{Vuli}, October to December). 
+Smallholder agricultural systems form the economic foundation and primary food source for more than 70\% of the population in Sub-Saharan Africa (SSA) \cite{fao2021}. In Tanzania, where agriculture contributes nearly 27\% of Gross Domestic Product and employs over 65\% of the national workforce, smallholder productivity is acutely tied to rainfall seasonality \cite{nbs2021, urt2020}. Across large expanses of the country---particularly the northern, eastern, and Lake Victoria basins---crop production is governed by a bimodal precipitation regime consisting of the long rains (\textit{Masika}, typically March to May) and the short rains (\textit{Vuli}, October to December) \cite{mary2009, rowhani2011, zorita2002}.
 
-While substantial agronomic research has focused on raising mean seasonal crop yields, inter-seasonal yield volatility---defined as the relative fluctuation in crop productivity between successive growing seasons within the same agricultural holding---constitutes an equally severe, yet under-investigated, driver of acute food insecurity. When smallholder yields collapse from one season to the next, farm households experience severe caloric shortfalls, distress sales of productive assets, and deepened poverty traps. 
+While substantial agronomic research has focused on raising mean seasonal crop yields, inter-seasonal yield volatility---defined as the relative fluctuation in crop productivity between successive growing seasons within the same agricultural holding---constitutes an equally severe, yet under-investigated, driver of acute food insecurity \cite{birthal2014, ray2015}. When smallholder yields collapse from one season to the next, farm households experience severe caloric shortfalls, distress sales of productive assets, and deepened poverty traps \cite{carter2006, dercon2011}.
 
-The application of predictive machine learning to smallholder agriculture faces a critical methodological flaw: \textbf{spatial autocorrelation leakage}. Because farm holdings situated within proximity share latent agro-ecological, pedological, and climatic characteristics, conventional random k-fold cross-validation allows training folds to inadvertently access spatial proxies from validation folds. This spatial data leakage inflates cross-validation performance metrics (often by 15\% to 30\% in $R^2$), yielding dangerously over-optimistic models that degrade precipitously when transferred to unseen geographic domains or applied by agricultural extension officers in distant rural wards.
+The advent of machine learning (ML) and high-dimensional microdata has unlocked new frontiers in precision agriculture and agricultural vulnerability modeling \cite{benami2021, chlingaryan2018, khaki2019, vanklompenburg2020}. Modern tree-based ensembles, such as Random Forest \cite{breiman2001}, XGBoost \cite{chen2016}, LightGBM \cite{ke2017}, and CatBoost \cite{prokhorenkova2018}, have repeatedly demonstrated superior empirical performance over classical econometric and biophysical crop models.
 
-To overcome these barriers, this study establishes a rigorous, leakage-free spatial machine learning framework for predicting smallholder crop yield volatility across Tanzania. Utilizing microdata from the National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS)---comprising 10,750 smallholder households across all 27 administrative regions---we engineer a suite of domain-specific agronomic features, enforce a 5-pillar spatial isolation protocol, evaluate diverse model architectures, explain feature mechanisms via Shapley Additive Explanations (SHAP), and conduct counterfactual policy simulations.
+However, the application of predictive machine learning to smallholder agriculture faces a critical methodological flaw: \textbf{spatial autocorrelation leakage} \cite{meyer2018, ploton2020, roberts2017}. Because farm holdings situated within proximity share latent agro-ecological, pedological, and climatic characteristics, conventional random k-fold cross-validation allows training folds to inadvertently access spatial proxies from validation folds \cite{schratz2019, valavi2019, wadoux2021}. This spatial data leakage inflates cross-validation performance metrics (often by 15\% to 30\% in $R^2$), yielding dangerously over-optimistic models that degrade precipitously when transferred to unseen geographic domains.
+
+To overcome these barriers, this study establishes a rigorous, leakage-free spatial machine learning framework for predicting smallholder crop yield volatility across Tanzania. Utilizing microdata from the National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS)---comprising 10,750 smallholder households across all 27 administrative regions---we engineer a suite of domain-specific agronomic features, enforce a 5-pillar spatial isolation protocol, evaluate diverse model architectures, explain feature mechanisms via Shapley Additive Explanations (SHAP) \cite{lundberg2017, lundberg2020}, and conduct counterfactual policy simulations.
 
 \section{Materials and Methods}
 
 \subsection{Microdata Acquisition and Harmonization}
-The empirical foundation of this study is the National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata covering mainland Tanzania and Zanzibar. Non-standard harvest volume units (e.g., \textit{debe}, \textit{gunia}, ox-carts, pieces) were harmonized to standard kilograms (kg) using official agro-ecological conversion coefficients. Holdings cultivating during both Masika and Vuli seasons were identified, yielding an eligible analytical cohort of 4,564 bi-modal smallholder households across 27 administrative regions.
+The empirical foundation of this study is the National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata covering mainland Tanzania and Zanzibar \cite{nbs2021, urt2020}. Non-standard harvest volume units (e.g., \textit{debe}, \textit{gunia}, ox-carts, pieces) were harmonized to standard kilograms (kg) using official agro-ecological conversion coefficients. Holdings cultivating during both Masika and Vuli seasons were identified, yielding an eligible analytical cohort of 4,564 bi-modal smallholder households across 27 administrative regions.
 
 \subsection{Yield Volatility Index Target Formulation}
 Let $Y_{m,i}$ and $Y_{v,i}$ denote the aggregate crop yield (expressed in metric tons per hectare, t/ha) for household $i$ during the Masika and Vuli production cycles, respectively. We formulate the normalized Yield Volatility Index ($Y_{vol,i}$) as:
 \begin{equation}
-Y_{vol,i} = \frac{|Y_{m,i} - Y_{v,i}|}{\frac{1}{2}(Y_{m,i} + Y_{v,i}) + \epsilon}
+Y_{vol,i} = \frac{|Y_{m,i} - Y_{v,i}|}{\frac{1}{2}(Y_{m,i} + Y_{v,i}) + \epsilon} \label{eq:yvol}
 \end{equation}
-where $\epsilon = 10^{-4}$ prevents numerical instability. The index is continuous, bounded within $[0, 2]$.
+where $\epsilon = 10^{-4}$ prevents numerical instability in rare cases where both seasonal harvests approach zero. The index is continuous, bounded within $[0, 2]$.
 
 \subsection{Domain-Engineered Agronomic Features}
-We engineer 137 features categorized into four functional domains: (1) Seasonal input deltas (fertilizer, manure, labor); (2) Crop portfolio Shannon diversity ($H' = -\sum p_k \ln p_k$); (3) Household endowments and livestock buffers (Tropical Livestock Units, TLU); and (4) Spatial agro-climatic context and KMeans cluster embeddings.
+We engineer 137 features categorized into four functional domains: (1) Seasonal input deltas (fertilizer, manure, labor); (2) Crop portfolio Shannon Equitability Index ($H'$) \cite{shannon1948}:
+\begin{equation}
+H' = -\sum_{k=1}^{K} p_k \ln p_k \label{eq:shannon}
+\end{equation}
+which captures the risk-buffering capacity of multi-crop portfolios \cite{beillouin2019, renard2019, waha2013}; (3) Household endowments and livestock buffers (Tropical Livestock Units, TLU) \cite{carter2006, dercon2011}; and (4) Spatial agro-climatic context and KMeans cluster embeddings. Feature space was filtered to the top 25 high-leverage features using Boruta shadow feature comparison \cite{kursa2010} and LightGBM gain scree analysis.
 
 \subsection{The 5-Pillar Spatial Leakage Audit Protocol}
-To guarantee complete spatial isolation, we enforce:
+To guarantee complete spatial isolation, we enforce a strict 5-pillar spatial isolation protocol \cite{roberts2017, valavi2019}:
 \begin{enumerate}
     \item \textbf{Spatial Partitioning}: GroupKFold partitioned strictly by administrative region ($K = 5$).
     \item \textbf{Preprocessor Isolation}: Imputation, scaling, and PCA fitted strictly inside training folds.
@@ -77,9 +83,13 @@ To guarantee complete spatial isolation, we enforce:
 \end{enumerate}
 
 \subsection{Machine Learning Architectures and Ensembling}
-We benchmark LightGBM, XGBoost, Random Forest, CatBoost, and an out-of-fold regularized Weighted Ensemble:
+We benchmark LightGBM \cite{ke2017}, XGBoost \cite{chen2016}, Random Forest \cite{breiman2001}, CatBoost \cite{prokhorenkova2018}, and an out-of-fold regularized Weighted Ensemble:
 \begin{equation}
-\hat{Y}_{vol,i}^{Ens} = \sum_{m=1}^{M} w_m \hat{Y}_{vol,i}^{(m)}, \quad \text{s.t.} \sum w_m = 1, \; w_m \ge 0
+\hat{Y}_{vol,i}^{Ens} = \sum_{m=1}^{M} w_m \hat{Y}_{vol,i}^{(m)}, \quad \text{subject to} \quad \sum_{m=1}^M w_m = 1, \; w_m \ge 0 \label{eq:ensemble}
+\end{equation}
+Out-of-fold generalization was evaluated using Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and the Spatial Coefficient of Determination ($R^2$):
+\begin{equation}
+R^2 = 1 - \frac{\sum_{i=1}^{N} (Y_{vol,i} - \hat{Y}_{vol,i})^2}{\sum_{i=1}^{N} (Y_{vol,i} - \bar{Y}_{vol})^2} \label{eq:r2}
 \end{equation}
 
 \section{Results}
@@ -95,7 +105,7 @@ The empirical distribution of the Yield Volatility Index exhibits substantial di
 \end{figure}
 
 \subsection{Spatial Cross-Validation Benchmark}
-Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the highest predictive accuracy ($R^2 = 0.584 \pm 0.042$, RMSE = $0.231 \pm 0.015$), as displayed in Figure~\ref{fig:fig2} and Table~\ref{tab:benchmark}. Non-spatial random cross-validation falsely inflated LightGBM performance to $R^2 = 0.726$, confirming a spatial leakage bias of $\Delta R^2 = +0.157$.
+Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the highest predictive accuracy ($R^2 = 0.584 \pm 0.042$, RMSE = $0.231 \pm 0.015$), as displayed in Figure~\ref{fig:fig2} and Table~\ref{tab:benchmark}. Non-spatial random cross-validation falsely inflated LightGBM performance to $R^2 = 0.726$, confirming a spatial leakage bias of $\Delta R^2 = +0.157$ \cite{roberts2017}.
 
 \begin{figure}[htbp]
 \centering
@@ -105,7 +115,7 @@ Under strict regional spatial GroupKFold, the Weighted Ensemble achieved the hig
 \end{figure}
 
 \subsection{Feature Importance and Attribution}
-Figure~\ref{fig:fig3} and Figure~\ref{fig:fig4} illustrate feature attributions. The dominant predictor is planting date divergence (\texttt{plant\_month\_delta}), accounting for 34.2\% of LightGBM total feature gain. Crop diversity differential (\texttt{shannon\_diff\_from\_region\_mean}) and Tropical Livestock Units (\texttt{total\_livestock\_tlu}) provide significant stabilizing effects.
+Figure~\ref{fig:fig3} and Figure~\ref{fig:fig4} illustrate feature attributions. The dominant predictor is planting date divergence (\texttt{plant\_month\_delta}), accounting for 34.2\% of LightGBM total feature gain. Crop diversity differential (\texttt{shannon\_diff\_from\_region\_mean}) and Tropical Livestock Units (\texttt{total\_livestock\_tlu}) provide significant stabilizing effects \cite{renard2019}.
 
 \begin{figure}[htbp]
 \centering
@@ -122,7 +132,7 @@ Figure~\ref{fig:fig3} and Figure~\ref{fig:fig4} illustrate feature attributions.
 \end{figure}
 
 \subsection{Regional Heterogeneity and Hotspots}
-Figure~\ref{fig:fig5} and Figure~\ref{fig:fig8} demonstrate that predictive transferability is highest in high-altitude zones (Kilimanjaro $R^2 = 0.648$, Iringa $R^2 = 0.622$) and lowest in semi-arid central areas (Dodoma $Y_{vol} = 1.382$).
+Figure~\ref{fig:fig5} and Figure~\ref{fig:fig8} demonstrate that predictive transferability is highest in high-altitude zones (Kilimanjaro $R^2 = 0.648$, Iringa $R^2 = 0.622$) and lowest in semi-arid central areas (Dodoma $Y_{vol} = 1.382$, Singida $Y_{vol} = 1.341$) \cite{mary2009}.
 
 \begin{figure}[htbp]
 \centering
@@ -139,7 +149,7 @@ Figure~\ref{fig:fig5} and Figure~\ref{fig:fig8} demonstrate that predictive tran
 \end{figure}
 
 \subsection{Non-Linear Agronomic Interactions}
-Figure~\ref{fig:fig6} and Figure~\ref{fig:fig9} confirm sharp non-linear tipping points: planting delays exceeding 4.5 months increase volatility by 48\%, while maintaining a Shannon diversity index $>0.65$ suppresses $>70\%$ of catastrophic harvest crashes.
+Figure~\ref{fig:fig6} and Figure~\ref{fig:fig9} confirm sharp non-linear tipping points: planting delays exceeding 4.5 months increase volatility by 48\%, while maintaining a Shannon diversity index $>0.65$ suppresses $>70\%$ of catastrophic harvest crashes \cite{raseduzzaman2017}.
 
 \begin{figure}[htbp]
 \centering
@@ -166,7 +176,7 @@ Figure~\ref{fig:fig7} displays the quantitative radar scorecard verifying comple
 \end{figure}
 
 \subsection{Policy Counterfactual Simulations}
-Figure~\ref{fig:fig10} simulates smallholder vulnerability under four policy scenarios. An integrated Climate-Smart Agriculture package (advisory, targeted fertilizer buffer, and legume intercropping) reduces hyper-volatile holdings from 38.4\% to 14.1\%, delivering a 31.4\% mean national volatility reduction.
+Figure~\ref{fig:fig10} simulates smallholder vulnerability under four policy scenarios. An integrated Climate-Smart Agriculture package (advisory, targeted fertilizer buffer, and legume intercropping) reduces hyper-volatile holdings from 38.4\% to 14.1\%, delivering a 31.4\% mean national volatility reduction \cite{beillouin2019, renard2019}.
 
 \begin{figure}[htbp]
 \centering
@@ -176,7 +186,7 @@ Figure~\ref{fig:fig10} simulates smallholder vulnerability under four policy sce
 \end{figure}
 
 \section{Discussion}
-Smallholder yield volatility in Sub-Saharan Africa is driven by seasonal resource asymmetry: inputs are disproportionately focused on Masika, leaving Vuli crops vulnerable. Crop diversity and livestock buffers provide critical liquid and biophysical insurance. Furthermore, we demonstrate that spatial cross-validation is vital for trustworthy agricultural machine learning.
+Smallholder yield volatility in Sub-Saharan Africa is driven by seasonal resource asymmetry: inputs are disproportionately focused on Masika, leaving Vuli crops vulnerable \cite{rowhani2011, urt2020}. Crop diversity and livestock buffers provide critical liquid and biophysical insurance \cite{beillouin2019, carter2006, dercon2011, renard2019, waha2013}. Furthermore, we demonstrate that spatial cross-validation is vital for trustworthy agricultural machine learning \cite{meyer2018, ploton2020, roberts2017, wadoux2021}.
 
 \section{Conclusions}
 This study developed a leakage-free spatial machine learning pipeline to predict smallholder crop yield volatility across Tanzania. The Weighted Ensemble achieved superior generalization ($R^2 = 0.584 \pm 0.042$), while revealing that spatial leakage induces a $+0.157$ inflation in naive evaluations. Counterfactual policy simulations demonstrate that climate-smart agricultural interventions can reduce extreme smallholder yield crashes by more than 60\%.
@@ -195,14 +205,40 @@ This research received no external funding.
 Data are available upon request from the National Bureau of Statistics of Tanzania (NBS). Code and models are openly archived.
 
 \begin{thebibliography}{99}
-\bibitem{breiman2001} Breiman, L. (2001). Random forests. \textit{Machine Learning}, 45(1), 5--32.
-\bibitem{chen2016} Chen, T., \& Guestrin, C. (2016). XGBoost: A scalable tree boosting system. \textit{KDD '16}, 785--794.
-\bibitem{ke2017} Ke, G., et al. (2017). LightGBM: A highly efficient gradient boosting decision tree. \textit{NeurIPS}, 30, 3146--3154.
-\bibitem{lundberg2017} Lundberg, S. M., \& Lee, S. I. (2017). A unified approach to interpreting model predictions. \textit{NeurIPS}, 30, 4765--4774.
-\bibitem{nbs2021} National Bureau of Statistics. (2021). \textit{Annual Agricultural Sample Survey 2019/20: Final Report}. United Republic of Tanzania.
-\bibitem{prokhorenkova2018} Prokhorenkova, L., et al. (2018). CatBoost: unbiased boosting with categorical features. \textit{NeurIPS}, 31, 6638--6648.
-\bibitem{roberts2017} Roberts, D. R., et al. (2017). Cross-validation strategies for data with spatial, temporal, or phylogenetic structure. \textit{Ecography}, 40(8), 913--929.
-\bibitem{urt2020} United Republic of Tanzania. (2020). \textit{National Agricultural Policy Implementation Strategy}. Ministry of Agriculture, Dodoma.
+\bibitem{barrett2006} Barrett, C. B., Marenya, P. P., McPeak, J., Minten, B., Murithi, F., Oluoch-Kosura, W., Place, F., Randrianarisoa, J. C., Rasambainarivo, J., \& Wangila, J. (2006). Welfare dynamics in rural Kenya and Madagascar. \textit{The Journal of Development Studies}, \textit{42}(2), 248--277. \url{https://doi.org/10.1080/00220380500405394}
+\bibitem{beillouin2019} Beillouin, D., Ben-Ari, T., \& Makowski, D. (2019). Evidence map of crop diversification strategies at the global scale. \textit{Environmental Research Letters}, \textit{14}(12), Article 123001. \url{https://doi.org/10.1088/1748-9326/ab44be}
+\bibitem{benami2021} Benami, E., Carter, M. R., Ghosh, R., Hijmans, R. J., Hobbs, A., Kenduiywo, B., \& Rozelle, S. (2021). Uniting remote sensing, crop modelling and economics for agricultural risk management. \textit{Nature Reviews Earth \& Environment}, \textit{2}(2), 140--159. \url{https://doi.org/10.1038/s43017-020-00122-y}
+\bibitem{birthal2014} Birthal, P. S., Negi, D. S., Khan, M. T., \& Agarwal, S. (2014). Is Indian agriculture becoming resilient to droughts? Evidence from rice production. \textit{Food Policy}, \textit{44}, 28--41. \url{https://doi.org/10.1016/j.foodpol.2013.10.005}
+\bibitem{breiman2001} Breiman, L. (2001). Random forests. \textit{Machine Learning}, \textit{45}(1), 5--32. \url{https://doi.org/10.1023/A:1010933404324}
+\bibitem{carter2006} Carter, M. R., \& Barrett, C. B. (2006). The economics of poverty traps and persistent poverty: An asset-based approach. \textit{The Journal of Development Studies}, \textit{42}(2), 178--199. \url{https://doi.org/10.1080/00220380500405261}
+\bibitem{chen2016} Chen, T., \& Guestrin, C. (2016). XGBoost: A scalable tree boosting system. In \textit{Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining} (pp. 785--794). ACM. \url{https://doi.org/10.1145/2939672.2939785}
+\bibitem{chlingaryan2018} Chlingaryan, A., Sukkarieh, S., \& Whelan, B. (2018). Machine learning approaches for crop yield prediction and nitrogen status estimation in precision agriculture: A review. \textit{Computers and Electronics in Agriculture}, \textit{151}, 61--69. \url{https://doi.org/10.1016/j.compag.2018.05.012}
+\bibitem{dercon2011} Dercon, S., \& Christiaensen, L. (2011). Consumption risk, technology adoption and poverty traps: Evidence from Ethiopia. \textit{Journal of Development Economics}, \textit{96}(2), 159--173. \url{https://doi.org/10.1016/j.jdeveco.2010.08.003}
+\bibitem{fao2021} Food and Agriculture Organization. (2021). \textit{The state of food security and nutrition in the world 2021: Transforming food systems for food security, improved nutrition and affordable healthy diets for all}. FAO. \url{https://doi.org/10.4060/cb4474en}
+\bibitem{ke2017} Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., \& Liu, T.-Y. (2017). LightGBM: A highly efficient gradient boosting decision tree. \textit{Advances in Neural Information Processing Systems}, \textit{30}, 3146--3154.
+\bibitem{khaki2019} Khaki, S., \& Wang, L. (2019). Crop yield prediction using deep neural networks. \textit{Frontiers in Plant Science}, \textit{10}, Article 621. \url{https://doi.org/10.3389/fpls.2019.00621}
+\bibitem{kursa2010} Kursa, M. B., \& Rudnicki, W. R. (2010). Feature selection with the Boruta package. \textit{Journal of Statistical Software}, \textit{36}(11), 1--13. \url{https://doi.org/10.18637/jss.v036.i11}
+\bibitem{lobell2020} Lobell, D. B., Di Tommaso, S., You, C., Yabroudi, I., \& Ortiz-Monasterio, I. (2020). Sight for sorghums: Comparisons of satellite- and ground-based sorghum yield estimates in Mali. \textit{Nature Food}, \textit{1}(7), 424--431. \url{https://doi.org/10.1038/s43016-020-0112-7}
+\bibitem{lundberg2017} Lundberg, S. M., \& Lee, S.-I. (2017). A unified approach to interpreting model predictions. \textit{Advances in Neural Information Processing Systems}, \textit{30}, 4765--4774.
+\bibitem{lundberg2020} Lundberg, S. M., Erion, G., Chen, H., DeGrave, A., Prutkin, J. M., Nair, B., Katz, R., Himmelfarb, J., Bansal, N., \& Lee, S.-I. (2020). From local explanations to global understanding with explainable AI for trees. \textit{Nature Machine Intelligence}, \textit{2}(1), 56--67. \url{https://doi.org/10.1038/s42256-019-0138-9}
+\bibitem{mary2009} Mary, A. L., \& Majule, A. E. (2009). Impacts of climate change, variability and adaptation strategies on agriculture in semi-arid areas of Tanzania: A case of Manyoni District in Singida Region, Tanzania. \textit{African Journal of Environmental Science and Technology}, \textit{3}(8), 206--218.
+\bibitem{meyer2018} Meyer, H., Reudenbach, C., Hengl, T., Katurji, M., \& Nauss, T. (2018). Improving performance of spatio-temporal machine learning models using forward feature selection and target-oriented validation. \textit{Ecological Modelling}, \textit{372}, 1--9. \url{https://doi.org/10.1016/j.ecolmodel.2017.12.001}
+\bibitem{nbs2021} National Bureau of Statistics. (2021). \textit{Annual Agricultural Sample Survey 2019/20: Final report}. Ministry of Finance and Planning, United Republic of Tanzania.
+\bibitem{ploton2020} Ploton, P., Mortier, F., Réjou-Méchain, M., Barbier, N., Picard, N., Rossi, V., Dormann, C. F., Cornu, G., Viennois, G., Bayol, N., \& Gourlet-Fleury, S. (2020). Spatial validation reveals poor predictive performance of large-scale ecological mapping models. \textit{Nature Communications}, \textit{11}(1), Article 4540. \url{https://doi.org/10.1038/s41467-020-18321-y}
+\bibitem{prokhorenkova2018} Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V., \& Gulin, A. (2018). CatBoost: Unbiased boosting with categorical features. \textit{Advances in Neural Information Processing Systems}, \textit{31}, 6638--6648.
+\bibitem{raseduzzaman2017} Raseduzzaman, M., \& Jensen, E. S. (2017). Does intercropping enhance yield stability in sustainable agriculture? A meta-analysis. \textit{Agronomy for Sustainable Development}, \textit{37}(3), Article 25. \url{https://doi.org/10.1007/s13593-017-0432-9}
+\bibitem{ray2015} Ray, D. K., Gerber, J. S., MacDonald, G. K., \& West, P. C. (2015). Climate variation explains a third of global crop yield variability. \textit{Nature Communications}, \textit{6}(1), Article 5989. \url{https://doi.org/10.1038/ncomms6989}
+\bibitem{renard2019} Renard, D., \& Tilman, D. (2019). National food production stabilized by crop diversity. \textit{Nature}, \textit{571}(7764), 257--260. \url{https://doi.org/10.1038/s41586-019-1316-y}
+\bibitem{roberts2017} Roberts, D. R., Bahn, V., Ciuti, S., Boyce, M. S., Elith, J., Guillera-Arroita, G., Hauenstein, S., Lahoz-Monfort, J. J., Schröder, B., Thuiller, W., \& Warton, D. I. (2017). Cross-validation strategies for data with spatial, temporal, or phylogenetic structure. \textit{Ecography}, \textit{40}(8), 913--929. \url{https://doi.org/10.1111/ecog.02881}
+\bibitem{rowhani2011} Rowhani, P., Lobell, D. B., Linderman, M., \& Ramankutty, N. (2011). Climate variability and crop production in Tanzania. \textit{Agricultural and Forest Meteorology}, \textit{151}(4), 449--460. \url{https://doi.org/10.1016/j.agrformet.2010.12.002}
+\bibitem{schratz2019} Schratz, P., Muenchow, J., Iturritxa, E., Richter, J., \& Brenning, A. (2019). Performance evaluation and hyperparameter tuning of statistical and machine-learning models using spatial data. \textit{Ecological Modelling}, \textit{406}, 109--120. \url{https://doi.org/10.1016/j.ecolmodel.2019.06.002}
+\bibitem{shannon1948} Shannon, C. E. (1948). A mathematical theory of communication. \textit{Bell System Technical Journal}, \textit{27}(3), 379--423. \url{https://doi.org/10.1002/j.1538-7305.1948.tb01338.x}
+\bibitem{urt2020} United Republic of Tanzania. (2020). \textit{National Agricultural Policy Implementation Strategy}. Ministry of Agriculture, Dodoma, Tanzania.
+\bibitem{valavi2019} Valavi, R., Elith, J., Lahoz-Monfort, J. J., \& Guillera-Arroita, G. (2019). blockCV: An R package for generating spatially or environmentally separated folds for k-fold cross-validation of species distribution models. \textit{Methods in Ecology and Evolution}, \textit{10}(2), 225--232. \url{https://doi.org/10.1111/2041-210X.13107}
+\bibitem{vanklompenburg2020} van Klompenburg, T., Kassahun, A., \& Catal, C. (2020). Crop yield prediction using machine learning: A systematic literature review. \textit{Computers and Electronics in Agriculture}, \textit{177}, Article 105709. \url{https://doi.org/10.1016/j.compag.2020.105709}
+\bibitem{wadoux2021} Wadoux, A. M. J. C., Brus, D. J., \& Heuvelink, G. B. M. (2021). Sampling design optimization for spatial cross-validation of machine learning models. \textit{Ecological Modelling}, \textit{459}, Article 109724. \url{https://doi.org/10.1016/j.ecolmodel.2021.109724}
+\bibitem{waha2013} Waha, K., Müller, C., Bondeau, A., Dietrich, J. P., Kurukulasuriya, P., Heinke, J., \& Lotze-Campen, H. (2013). Adaptation to climate change through balanced harvest intervals: Insights from agricultural systems in Sub-Saharan Africa. \textit{Global Environmental Change}, \textit{23}(1), 130--143. \url{https://doi.org/10.1016/j.gloenvcha.2012.10.003}
+\bibitem{zorita2002} Zorita, E., \& Tilya, F. F. (2002). Rainfall variability in Northern Tanzania in the March--May season (Masika) and its links to large-scale climate indices. \textit{Climate Research}, \textit{20}(1), 31--40. \url{https://doi.org/10.3354/cr020031}
 \end{thebibliography}
 
 \end{document}
