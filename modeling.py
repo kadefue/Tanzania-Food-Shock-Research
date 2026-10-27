@@ -254,7 +254,7 @@ class FeatureEngineer:
     """
     Constructs the Yield Volatility Index and domain-specific predictive smallholder features.
 
-    Implements 12 Kaggle Grandmaster-level Feature Engineering Techniques:
+    Implements Grandmaster-level Feature Engineering Techniques:
     1.  Spatial Groupby Aggregations (Deviations and Ratios to Regional Peer Means)
     2.  Herfindahl-Hirschman Index (HHI) for Crop Portfolio Concentration
     3.  Berger-Parker Dominance Index (Single-Crop Vulnerability)

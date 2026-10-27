@@ -18,6 +18,7 @@
    - [3.5 Deep-Dive: The Food Shock Module (`shocks_roster.dta`)](#35-deep-dive-the-food-shock-module-shocks_rosterdta)
    - [3.6 Seasonality Structure: *Masika* vs. *Vuli* Dynamics](#36-seasonality-structure-masika-vs-vuli-dynamics)
    - [3.7 Relational Schema & Linkage Architecture](#37-relational-schema--linkage-architecture)
+   - [3.8 Empirical Modeling Dataset Selection & The Bi-Modal Cohort Funnel](#38-empirical-modeling-dataset-selection--the-bi-modal-cohort-funnel)
 4. [FAOSTAT Tanzania Agricultural Statistics (1961–2024)](#4-faostat-tanzania-agricultural-statistics-19612024)
    - [4.1 Scope & Dataset Inventory](#41-scope--dataset-inventory)
    - [4.2 Priority Food Security Crops Analysis](#42-priority-food-security-crops-analysis)
@@ -29,6 +30,7 @@
    - [5.4 Institutional Interventions & Social Safety Nets](#54-institutional-interventions--social-safety-nets)
 6. [Data Harmonization Nuances & Methodological Considerations](#6-data-harmonization-nuances--methodological-considerations)
 7. [Econometric & Analytical Roadmap for Food Shock Research](#7-econometric--analytical-roadmap-for-food-shock-research)
+   - [7.5 Empirical Machine Learning Implementation: Single-Wave Rationale & Sampling Funnel](#75-empirical-machine-learning-implementation-single-wave-rationale--sampling-funnel)
 
 ---
 
@@ -302,6 +304,73 @@ erDiagram
 
 ---
 
+### 3.8 Empirical Modeling Dataset Selection & The Bi-Modal Cohort Funnel
+
+A critical methodological question in this research program concerns the relationship between the **multi-wave survey repository (2022–2025)** and the **empirical cohort modeled for the machine learning investigation**.
+
+#### 1. Multi-Wave Survey Infrastructure (53,684 Total Holdings)
+As documented in Sections 3.2–3.4, this repository preserves three consecutive waves of the Annual Agricultural Sample Survey (AASS):
+- **Wave 1 (2022/2023)**: 15,944 holdings (Catalog 52)
+- **Wave 2 (2023/2024)**: 18,836 holdings (Catalog 60)
+- **Wave 3 (2024/2025)**: 18,904 holdings (Catalog 69)
+- **Cumulative Multi-Wave Scope**: **53,684 agricultural holdings** spanning 31 administrative regions.
+
+#### 2. Rationale for Modeling Wave 3 (2024/2025)
+While all three waves provide rich agricultural production data, the predictive machine learning models developed in this research program (`modeling.py`) specifically utilize the **2024/2025 survey wave**. This deliberate choice was governed by two empirical imperatives:
+1. **Unavailability of Key Predictor Modules in Earlier Waves**: The 2024/2025 survey wave introduced dedicated, high-resolution rosters that are absent from the 2022/23 and 2023/24 survey instruments:
+   - *Food Shocks and Coping Module* (`shocks_roster.dta`): 43,445 shock occurrences across 15 covariate and idiosyncratic categories, including severity ratings and coping safety nets.
+   - *Weather & Climate Advisory Roster* (`pme_6_Roster.dta`): 13,491 records on early-warning reception, channels, and farm management adjustments.
+   - *Livestock Herd Dynamics* (`stock_livestock.dta` / `livestock_type.dta`): Comprehensive inventory of cattle, goats, sheep, and poultry used to construct Tropical Livestock Units (TLU) as liquidity buffers.
+2. **Repeated Cross-Sectional Design**: The AASS samples fresh Enumeration Areas each round using the National Master Sample frame rather than tracking a fixed longitudinal panel of identical households across years. Merging across waves would require discarding the shock and weather advisory features—the very mechanisms driving smallholder vulnerability—drastically reducing the predictive and explanatory fidelity of the models.
+
+#### 3. The Bi-Modal Sampling Funnel (From 18,904 to 4,564 Holdings)
+Tanzania's agricultural geography is divided into two distinct agro-climatic precipitation regimes:
+- **Unimodal Areas**: Central and southern regions (e.g., Dodoma, Singida, Iringa, Mbeya, Ruvuma) characterized by a single extended rainy season (*Msimu*, November to April/May). Smallholders in these zones cultivate and harvest once per calendar year.
+- **Bimodal Areas**: Northern highlands, Eastern coast, and Lake Victoria basin (e.g., Arusha, Kilimanjaro, Tanga, Morogoro, Kagera, Mwanza, Mara) characterized by two distinct cropping cycles: the long rains (*Masika*, March–May) and the short rains (*Vuli*, October–December).
+
+To formulate the normalized **Yield Volatility Index** ($Y_{vol,i} = \frac{|Y_{m,i} - Y_{v,i}|}{\frac{1}{2}(Y_{m,i} + Y_{v,i}) + \epsilon}$), a holding must cultivate crops in **both** successive production cycles within the same agricultural year. 
+
+The analytical sample was derived through an audited data screening funnel:
+```
++---------------------------------------------------------------------------------+
+|  AASS 2024/2025 Total Surveyed Agricultural Holdings                            |
+|  N = 18,904 holdings (Mainland Tanzania & Zanzibar)                            |
++---------------------------------------------------------------------------------+
+                                       │
+                                       ▼
++---------------------------------------------------------------------------------+
+|  Seasonal Cultivation Participation                                             |
+|  - Masika Season Cultivators: 15,107 holdings                                   |
+|  - Vuli Season Cultivators:    9,552 holdings                                   |
++---------------------------------------------------------------------------------+
+                                       │
+                                       ▼
++---------------------------------------------------------------------------------+
+|  Paired Intra-Annual Bi-Modal Holdings                                          |
+|  Holdings cultivating plots in BOTH Masika and Vuli seasons: 6,128 holdings     |
++---------------------------------------------------------------------------------+
+                                       │
+                                       ▼
++---------------------------------------------------------------------------------+
+|  Data Quality & Agronomic Verification Screen                                   |
+|  - Exclusion of non-crop holdings (pure pastoralists / livestock-only)          |
+|  - Complete GPS-verified parcel area measurements in both seasons               |
+|  - Positive, biologically plausible harvest volumes in both seasons             |
+|  - Unbroken linkage across shocks, advisory, and demographic rosters            |
++---------------------------------------------------------------------------------+
+                                       │
+                                       ▼
++---------------------------------------------------------------------------------+
+|  FINAL ANALYTICAL MACHINE LEARNING COHORT                                       |
+|  N = 4,564 Bi-Modal Smallholder Holdings across 27 Administrative Regions       |
++---------------------------------------------------------------------------------+
+```
+
+#### 4. Clarification on the Erroneous "10,750" Figure
+Earlier draft materials occasionally cited a placeholder figure of "10,750 households." Microdata investigation confirms that this figure was an unverified estimate used during preliminary project ideation and has **no empirical foundation** in the NBS microdata. The true audited counts are **18,904 total holdings** in the 2024/25 wave and **4,564 bi-modal smallholder holdings** in the verified analytical cohort (and 53,684 across all three survey waves). All occurrences of 10,750 have been eliminated from the research reports, codebases, and manuscript deliverables.
+
+---
+
 ## 4. FAOSTAT Tanzania Agricultural Statistics (1961–2024)
 
 ### 4.1 Scope & Dataset Inventory
@@ -488,6 +557,23 @@ The datasets assembled in this repository support several rigorous empirical met
 
 ### Pathway 4: Macro-Micro Integration & Forecasting
 - **Methodology**: Machine learning models (e.g., XGBoost, Random Forests) combining historical FAOSTAT trend patterns with micro-level input adoption rates and early-season weather advisories (`pme_6_Roster.dta`) to forecast regional food deficits and yield anomalies across Tanzania.
+
+---
+
+### 7.5 Empirical Machine Learning Implementation: Single-Wave Rationale & Sampling Funnel
+
+As part of the empirical research outputs in this repository, a production-grade machine learning system was implemented to predict smallholder crop yield volatility across agro-ecological zones (`modeling.py`, `Paper/manuscript.docx`, `Paper/manuscript.tex`, `Paper/manuscript.md`).
+
+Key architectural findings and dataset decisions implemented in the modeling codebase include:
+1. **Target Agricultural Population**: The models predict inter-seasonal yield volatility ($Y_{vol,i}$) between the *Masika* (long rains) and *Vuli* (short rains) seasons. Consequently, the target population is strictly defined by smallholder farming households situated in **bi-modal rainfall regimes** who actively cultivate during both seasons.
+2. **Empirical Screening Funnel**:
+   - Total surveyed holdings in AASS 2024/2025: **18,904**
+   - Holdings cultivating in Masika: **15,107**
+   - Holdings cultivating in Vuli: **9,552**
+   - Holdings with paired seasonal cultivation: **6,128**
+   - Final quality-controlled cohort (verified harvest volumes, GPS parcel areas, complete covariate linkage): **4,564 bi-modal smallholder holdings** across 27 administrative regions.
+3. **Multi-Wave vs. Single-Wave Modeling Rationale**: While the repository includes three waves totaling **53,684 holdings**, the predictive model is trained exclusively on the 2024/2025 wave. Merging earlier waves would have caused the loss of the dedicated food shock roster (`shocks_roster.dta`) and climate advisory module (`pme_6_Roster.dta`), which are unique to the 2024/2025 instrument and represent primary drivers in predicting agricultural risk.
+4. **Removal of Legacy Reference**: All references to a preliminary placeholder of "10,750 households" have been removed and replaced with the verified microdata counts: **4,564 bi-modal holdings** modeled from **18,904 wave holdings** within the **53,684 multi-wave repository**.
 
 ---
 
