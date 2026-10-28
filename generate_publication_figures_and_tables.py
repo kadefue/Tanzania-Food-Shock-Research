@@ -484,8 +484,8 @@ class PublicationGenerator:
         logger.info("Rendering Figure 3: Feature Selection & Importance Scree...")
         ranking_df = ctx["ranking_df"]
 
-        fig = plt.figure(figsize=(15.2, 5.2))
-        gs = gridspec.GridSpec(1, 3, width_ratios=[0.95, 1.35, 0.90], wspace=0.58)
+        fig = plt.figure(figsize=(16.8, 5.2))
+        gs = gridspec.GridSpec(1, 3, width_ratios=[0.92, 1.35, 0.90], wspace=0.84)
 
         # Panel (a): Cumulative Gain Scree Curve
         ax0 = fig.add_subplot(gs[0])
@@ -499,10 +499,10 @@ class PublicationGenerator:
         ax0.axhline(top_100_gain, color="gray", linestyle=":", linewidth=1.0)
         ax0.scatter([100], [top_100_gain], color="red", s=40, zorder=5)
         ax0.text(
-            106, top_100_gain - 16,
+            106, top_100_gain - 20,
             f"{top_100_gain:.1f}% Info Gain\n(146 Noisy Features\nPruned)",
-            fontsize=7.8, fontweight="bold", color="#a00000",
-            bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor="#e0b0b0", alpha=0.92)
+            fontsize=7.4, fontweight="bold", color="#a00000",
+            bbox=dict(boxstyle="round,pad=0.22", facecolor="white", edgecolor="#e0b0b0", alpha=0.92)
         )
 
         ax0.set_xlim(0, len(ranking_df) + 5)
@@ -582,8 +582,8 @@ class PublicationGenerator:
         mean_abs = np.abs(shap_vals).mean(axis=0)
         top_idx = np.argsort(mean_abs)[-14:]  # Ascending order (top feature last)
 
-        fig = plt.figure(figsize=(15.2, 5.8))
-        gs = gridspec.GridSpec(1, 2, width_ratios=[1.18, 0.88], wspace=0.58)
+        fig = plt.figure(figsize=(16.4, 5.8))
+        gs = gridspec.GridSpec(1, 2, width_ratios=[1.15, 0.88], wspace=0.74)
 
         # Panel (a): Beeswarm plot with normalized feature value colouring
         ax0 = fig.add_subplot(gs[0])
@@ -916,18 +916,22 @@ class PublicationGenerator:
 
         x_span = max(x_vals) - min(x_vals)
         y_span = max(y_vals) - min(y_vals)
-        ax1.set_xlim(min(x_vals) - 0.15 * x_span, max(x_vals) + 0.32 * x_span)
-        ax1.set_ylim(min(y_vals) - 0.15 * y_span, max(y_vals) + 0.18 * y_span)
+        ax1.set_xlim(min(x_vals) - 0.15 * x_span, max(x_vals) + 0.34 * x_span)
+        ax1.set_ylim(min(y_vals) - 0.16 * y_span, max(y_vals) + 0.18 * y_span)
 
         for z, x_val, y_val in zip(zone_names, x_vals, y_vals):
             if "Central" in z:
-                ax1.text(x_val - 0.8, y_val + 22, z, fontsize=7.5, fontweight="bold", color="#222222", ha="right")
+                ax1.text(x_val, y_val + 65, z, fontsize=7.5, fontweight="bold", color="#222222", ha="center")
+            elif "Zanzibar" in z:
+                ax1.text(x_val + 0.9, y_val + 18, z, fontsize=7.5, fontweight="bold", color="#222222", ha="left")
             elif "Western" in z:
-                ax1.text(x_val + 0.7, y_val - 35, z, fontsize=7.5, fontweight="bold", color="#222222", ha="left")
+                ax1.text(x_val, y_val + 65, z, fontsize=7.5, fontweight="bold", color="#222222", ha="center")
+            elif "Lake" in z:
+                ax1.text(x_val, y_val - 72, z, fontsize=7.5, fontweight="bold", color="#222222", ha="center")
             elif "Northern" in z:
-                ax1.text(x_val + 0.7, y_val - 30, z, fontsize=7.5, fontweight="bold", color="#222222", ha="left")
+                ax1.text(x_val + 0.9, y_val - 38, z, fontsize=7.5, fontweight="bold", color="#222222", ha="left")
             else:
-                ax1.text(x_val + 0.7, y_val + 16, z, fontsize=7.5, fontweight="bold", color="#222222", ha="left")
+                ax1.text(x_val + 0.9, y_val + 16, z, fontsize=7.5, fontweight="bold", color="#222222", ha="left")
 
         ax1.set_title("(b) Harvest Abandonment vs Yield Gap", fontweight="bold")
         ax1.set_xlabel("Mean Harvest Failure Rate (%)")

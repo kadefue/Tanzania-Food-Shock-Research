@@ -4,22 +4,22 @@ Rank,Agronomic Variable Name,Agronomic Domain,Split Frequency,Gain Importance,Ag
 3,Mean Harvested Area Share (Masika),Harvest Outcomes,191,2633.402318805456,Average proportion of cultivated holding area successfully harvested in Masika
 4,Crop Diversity vs Regional Mean,Crop Diversity,185,412.0527629777789,Holding-level portfolio diversification benchmarked against regional peer average
 5,Crop Failure Plot Share (Masika),Failure Shocks,128,1754.4215924437158,Proportion of cultivated parcels experiencing total crop loss or abandonment
-6,Tropical Livestock Units (TLU),Asset Buffers,126,110.46184429526329,Aggregated herd size providing liquid capital buffer against acute crop failure
+6,Tropical Livestock Units (TLU),Asset Buffers,126,110.46184429526328,Aggregated herd size providing liquid capital buffer against acute crop failure
 7,Seasonal Crop Evenness Shift,Crop Diversity,125,330.83167320489883,Inter-seasonal change in cultivar species evenness and abundance parity
 8,Cultivated Land per Adult Labourer,Labour Dynamics,123,145.06975631322712,Household labour capitalisation ratio (cultivated hectares per active adult)
 9,Mean Planting Month (Masika),Agronomic Timing,115,316.3781150961295,Calendar month of Masika long-rain crop sowing and field establishment
 10,Farm Area vs Regional Mean (ha),Farm Structure,109,164.06221481226385,Deviation of total cultivated farm size from regional agro-ecological average
 11,Mean Operational Plot Area (ha),Plot Heterogeneity,109,141.22141404543072,Average operational parcel size across the agricultural holding
-12,Age of Household Head (Years),Demographics,107,127.29504055529833,Farming experience and managerial human capital of the primary decision-maker
-13,Subsistence Cereal Cluster Distance,Latent Archetype,103,121.99691793322563,Euclidean distance to regional Subsistence Cereal Monoculture cluster
+12,Age of Household Head (Years),Demographics,107,127.29504055529831,Farming experience and managerial human capital of the primary decision-maker
+13,Subsistence Cereal Cluster Distance,Latent Archetype,103,121.99691793322565,Euclidean distance to regional Subsistence Cereal Monoculture cluster
 14,Capital–Labour Latent Factor (PCA 2),Latent PCA,100,131.06063338558306,Orthogonal dimension capturing input capital investment versus labour reliance
 15,Drought Failure Indicator (Vuli),Climatic Shocks,97,1673.8983497917652,Binary indicator of severe drought-induced crop failure during the short rains
 16,Plot Fragmentation (Area CV),Plot Heterogeneity,97,134.83195462822914,Spatial fragmentation and parcel size inequality across operational plots
-17,Total Livestock Head Count,Asset Buffers,96,100.68554922938347,Total absolute number of domestic farm animals owned by the household
+17,Total Livestock Head Count,Asset Buffers,96,100.68554922938348,Total absolute number of domestic farm animals owned by the household
 18,Commercial Cropping Cluster Distance,Latent Archetype,94,200.88653542054817,Euclidean distance to regional Commercial Mixed Cropping farming cluster
 19,Fertiliser vs Regional Mean (kg),Input Technology,89,107.91343448869884,Synthetic fertiliser usage rate relative to local farming community benchmark
 20,Fallow Land Proportion (Masika),Soil Management,88,381.4258250296116,Proportion of holding area maintained under fallow for soil fertility restoration
-21,Plot Area Standard Deviation (ha),Plot Heterogeneity,87,95.32491086423397,Dispersion and size disparity among cultivated parcels within the holding
+21,Plot Area Standard Deviation (ha),Plot Heterogeneity,87,95.32491086423396,Dispersion and size disparity among cultivated parcels within the holding
 22,Seasonal Fertiliser Ratio,Agro-economic,85,281.7274386615827,Predictive feature
 23,"Pesticide Intensity (Masika, kg/ha)",Input Technology,84,89.88998664915562,Chemical crop protection intensity per cultivated hectare during long rains
 24,Minimum Harvest Share (Masika),Harvest Outcomes,82,456.9690265059471,Lowest plot-level harvest realisation rate observed within the holding
