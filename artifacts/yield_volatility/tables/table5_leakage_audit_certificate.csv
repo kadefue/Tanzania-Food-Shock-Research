@@ -1,6 +1,6 @@
 Pillar,Audit Domain,Verification Criterion,Quantitative Empirical Result,Verification Status
 1,Spatial Group Disjointness,Verifies training and validation folds share zero Enumeration Areas (EAs),Zero overlapping EAs across all 5 spatial cross-validation folds.,CERTIFIED PASS
-2,Target Variable Isolation,Verifies target Yield Volatility Index (Yᵥₒₗ) is strictly excluded from feature space and no trivial target proxies exist,Target variable completely isolated. Maximum absolute feature correlation: 0.4365.,CERTIFIED PASS
+2,Target Variable Isolation,Verifies target Yᵥₒₗ is strictly excluded from feature space and no trivial target proxies exist,Target variable completely isolated. Maximum absolute feature correlation: 0.4365.,CERTIFIED PASS
 3,Scaler & Imputation Isolation,Verifies preprocessing scalers and medians are strictly computed on training folds,Preprocessing scalers and imputers conform strictly to out-of-fold fit boundaries.,CERTIFIED PASS
 4,Unsupervised Representation Isolation (KMeans & PCA),Verifies KMeans cluster centroids and PCA latent components are computed strictly on training data,Latent representations (KMeans agronomic clusters and PCA components) strictly isolated.,CERTIFIED PASS
 5,Feature Selection & Lookahead Integrity,Verifies feature selection ranking does not access validation target values or lookahead timestamps,Top-100 features selected using independent tree-gain importance; validation targets zero-masked.,CERTIFIED PASS

@@ -36,8 +36,17 @@ matplotlib.use("Agg")  # Non-interactive backend for headless execution
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import pyreadstat
-import shap
+try:
+    import pyreadstat
+    HAS_PYREADSTAT = True
+except ImportError:
+    HAS_PYREADSTAT = False
+
+try:
+    import shap
+    HAS_SHAP = True
+except ImportError:
+    HAS_SHAP = False
 from sklearn.cluster import KMeans
 from sklearn.compose import ColumnTransformer
 from sklearn.decomposition import PCA
@@ -135,7 +144,10 @@ class DataPreprocessor:
                 raise FileNotFoundError(f"Required table {filename} not found in {self.data_dir}")
 
         logger.info("Loading %s...", target_path.name)
-        df, _ = pyreadstat.read_dta(str(target_path))
+        if HAS_PYREADSTAT:
+            df, _ = pyreadstat.read_dta(str(target_path))
+        else:
+            df = pd.read_stata(str(target_path), convert_categoricals=False)
 
         # Standardize holding identifier to HHFARMID
         rename_dict = {}
@@ -449,14 +461,12 @@ class FeatureEngineer:
         m_crop_col = "MASIKACROP__id" if "MASIKACROP__id" in mc.columns else "crop_id"
         v_crop_col = "VULICROP__id" if "VULICROP__id" in vc.columns else "crop_id"
 
-        m_port_metrics = mc.groupby("HHFARMID").apply(
-            lambda g: pd.Series(self._compute_portfolio_metrics(g, m_crop_col, "production_kg")),
-            include_groups=False
+        m_port_metrics = mc.groupby("HHFARMID")[[m_crop_col, "production_kg"]].apply(
+            lambda g: pd.Series(self._compute_portfolio_metrics(g, m_crop_col, "production_kg"))
         ).rename(columns=lambda c: f"{c}_masika")
 
-        v_port_metrics = vc.groupby("HHFARMID").apply(
-            lambda g: pd.Series(self._compute_portfolio_metrics(g, v_crop_col, "production_kg")),
-            include_groups=False
+        v_port_metrics = vc.groupby("HHFARMID")[[v_crop_col, "production_kg"]].apply(
+            lambda g: pd.Series(self._compute_portfolio_metrics(g, v_crop_col, "production_kg"))
         ).rename(columns=lambda c: f"{c}_vuli")
 
         crop_count_m = mc.groupby("HHFARMID")[m_crop_col].nunique().rename("num_crops_masika")
@@ -750,8 +760,12 @@ class FeatureEngineer:
 
         transformers = []
         if cat_present:
+            try:
+                ohe = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+            except TypeError:
+                ohe = OneHotEncoder(handle_unknown="ignore", sparse=False)
             transformers.append(
-                ("cat", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat_present)
+                ("cat", ohe, cat_present)
             )
         if num_cols:
             transformers.append(
