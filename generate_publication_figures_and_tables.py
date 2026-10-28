@@ -633,47 +633,89 @@ class PublicationGenerator:
         return self._save_fig(fig, "fig4_shap_global_feature_attributions.png")
 
     def generate_figure_5(self, ctx: Dict[str, Any]) -> Path:
-        """Figure 5: Regional Heterogeneity & Spatial Model Transferability."""
-        logger.info("Rendering Figure 5: Regional Heterogeneity & Transferability...")
-        reg_df = ctx["regional_df"]
-        clean_df = reg_df[reg_df["Region ID"] > 0].copy()
+        """Figure 5: Regional Heterogeneity & Spatial Model Transferability (Tanzania Shapefile Maps)."""
+        logger.info("Rendering Figure 5: Regional Maps and Spatial Transferability...")
+        import geopandas as gpd
 
-        fig = plt.figure(figsize=(13.8, 6.4))
-        gs = gridspec.GridSpec(1, 2, width_ratios=[1.25, 0.80], wspace=0.28)
+        geojson_path = self.paper_dir / "tanzania_maps" / "tanzania_regions_2022phc.geojson"
+        gdf = gpd.read_file(geojson_path)
+        tab_path = self.paper_tab_dir / "regional_spatial_map_data.csv"
+        if not tab_path.exists():
+            # Build regional_spatial_map_data if needed
+            tab4 = pd.read_csv(self.paper_tab_dir / "table4_regional_performance_breakdown.csv")
+            eligible_df = ctx["eligible_df"].copy()
+            tables = ctx["tables"]
+            master = tables["master"].set_index("HHFARMID") if "HHFARMID" in tables["master"].columns else tables["master"]
+            eligible_df["region_id"] = master.loc[eligible_df.index, "region_id"].fillna(0).astype(int)
+            eligible_df["y_vol"] = ctx["y"]
+            id_to_name = dict(zip(tab4["Region ID"], tab4["Region Name"]))
+            reg_summary = eligible_df.groupby("region_id").agg(
+                holdings=("y_vol", "count"),
+                mean_vol=("y_vol", "mean"),
+                median_vol=("y_vol", "median"),
+                hyper_volatile_pct=("y_vol", lambda x: (x >= 1.5).mean() * 100.0)
+            ).reset_index().rename(columns={"region_id": "Region ID"})
+            reg_summary["Region Name"] = reg_summary["Region ID"].map(id_to_name)
+            merged_tab = pd.merge(tab4, reg_summary, on=["Region ID", "Region Name"], how="left")
+            merged_tab.to_csv(tab_path, index=False)
+        else:
+            merged_tab = pd.read_csv(tab_path)
 
-        # Panel (a): Regional Model R2 vs National Model Slice R2
+        merged = gdf.merge(merged_tab, left_on="reg_name", right_on="Region Name", how="left")
+
+        fig = plt.figure(figsize=(19.0, 7.2), dpi=300)
+        gs = gridspec.GridSpec(1, 3, width_ratios=[1, 1, 1], wspace=0.14, bottom=0.18, top=0.88, left=0.03, right=0.97)
+
+        # Panel a: Sample Density (N)
         ax0 = fig.add_subplot(gs[0])
-        sorted_df = clean_df.sort_values(by="Regional Model R2", ascending=True)
-        y_pos = np.arange(len(sorted_df))
-        h = 0.38
+        merged.plot(column="Holdings (N)", ax=ax0, cmap="YlGnBu", edgecolor="#222222", linewidth=0.5,
+                    missing_kwds={"color": "#f2f2f2", "hatch": "///", "edgecolor": "#bbbbbb"},
+                    legend=True,
+                    legend_kwds={"label": "Surveyed Bimodal Holdings (N)", "orientation": "horizontal", "shrink": 0.72, "pad": 0.05})
+        ax0.text(0.01, 1.05, "a", transform=ax0.transAxes, fontsize=13, fontweight="bold", va="bottom")
+        ax0.text(0.07, 1.05, "Bimodal Survey Coverage (N = 4,564)", transform=ax0.transAxes, fontsize=10.5, fontweight="bold", va="bottom")
+        ax0.axis("off")
 
-        ax0.barh(y_pos - h/2, sorted_df["Regional Model R2"], height=h, color="#2b5c8f", alpha=0.85, label=r"Regional Dedicated Model $R^2$")
-        ax0.barh(y_pos + h/2, sorted_df["National Model R2"], height=h, color="#e07a5f", alpha=0.85, label=r"Unified National Model Slice $R^2$")
-
-        for i, n_val in enumerate(sorted_df["Holdings (N)"]):
-            ax0.text(0.80, i, f"N={n_val}", va="center", fontsize=7.5, color="#444444", fontweight="bold")
-
-        ax0.axvline(0, color="black", linewidth=0.8, linestyle="--")
-        ax0.set_yticks(y_pos)
-        ax0.set_yticklabels(sorted_df["Region Name"], fontsize=8.5)
-        ax0.set_xlim(-0.35, 0.96)
-        ax0.set_title(r"(a) Regional Model $R^2$ vs Unified National Model Slice", fontweight="bold")
-        ax0.set_xlabel(r"Out-of-Fold $R^2$ Score")
-        ax0.legend(loc="upper left", bbox_to_anchor=(0.01, 0.98), frameon=True, facecolor="white", framealpha=0.92, fontsize=8)
-        ax0.grid(True, axis="x")
-
-        # Panel (b): Performance Delta (National Advantage)
+        # Panel b: Mean Yield Volatility
         ax1 = fig.add_subplot(gs[1])
-        delta_r2 = sorted_df["National Model R2"] - sorted_df["Regional Model R2"]
-        bar_colors = ["#5cb85c" if d >= 0 else "#d9534f" for d in delta_r2]
+        merged.plot(column="mean_vol", ax=ax1, cmap="YlOrRd", edgecolor="#222222", linewidth=0.5,
+                    missing_kwds={"color": "#f2f2f2", "hatch": "///", "edgecolor": "#bbbbbb"},
+                    legend=True,
+                    legend_kwds={"label": "Mean Yield Volatility Index (Y_vol)", "orientation": "horizontal", "shrink": 0.72, "pad": 0.05})
+        ax1.text(0.01, 1.05, "b", transform=ax1.transAxes, fontsize=13, fontweight="bold", va="bottom")
+        ax1.text(0.07, 1.05, "Sub-National Volatility Hotspots", transform=ax1.transAxes, fontsize=10.5, fontweight="bold", va="bottom")
+        ax1.axis("off")
 
-        ax1.barh(y_pos, delta_r2, color=bar_colors, alpha=0.85, height=0.7)
-        ax1.axvline(0, color="black", linewidth=0.8, linestyle="--")
-        ax1.set_yticks(y_pos)
-        ax1.set_yticklabels(["" for _ in y_pos])
-        ax1.set_title(r"(b) Transferability Advantage ($\Delta R^2$)", fontweight="bold")
-        ax1.set_xlabel(r"$\Delta R^2 = R^2_{\mathrm{National}} - R^2_{\mathrm{Regional}}$")
-        ax1.grid(True, axis="x")
+        callouts = [
+            ("Tanga", "Tanga\n(N=650, Y_vol=0.98)", (38.5, -5.2), (40.9, -4.6)),
+            ("Dodoma", "Dodoma Semi-Arid\n(Y_vol=1.48, 59% Collapse)", (35.7, -6.2), (32.0, -6.5)),
+            ("Kaskazini Pemba", "Zanzibar (Pemba/Unguja)\n(Y_vol=1.51, 67% Shock)", (39.7, -5.0), (41.1, -6.5)),
+            ("Kagera", "Kagera Lacustrine\n(R²=0.75, Resilient Buffer)", (31.5, -1.8), (29.2, -2.5)),
+        ]
+
+        for reg, label, (x_p, y_p), (x_t, y_t) in callouts:
+            ax1.annotate(
+                label, xy=(x_p, y_p), xytext=(x_t, y_t),
+                arrowprops=dict(facecolor="#222222", arrowstyle="->", lw=0.8),
+                fontsize=7.4, fontweight="bold", ha="center", va="center",
+                bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor="#666666", alpha=0.92)
+            )
+
+        # Panel c: National Model R2
+        ax2 = fig.add_subplot(gs[2])
+        merged["r2_clipped"] = merged["National Model R²"].clip(lower=0.0)
+        merged.plot(column="r2_clipped", ax=ax2, cmap="viridis", edgecolor="#222222", linewidth=0.5,
+                    missing_kwds={"color": "#f2f2f2", "hatch": "///", "edgecolor": "#bbbbbb"},
+                    legend=True,
+                    legend_kwds={"label": "Out-of-Fold Spatial Skill (R²)", "orientation": "horizontal", "shrink": 0.72, "pad": 0.05})
+        ax2.text(0.01, 1.05, "c", transform=ax2.transAxes, fontsize=13, fontweight="bold", va="bottom")
+        ax2.text(0.07, 1.05, "Spatial Machine Learning Skill (R²)", transform=ax2.transAxes, fontsize=10.5, fontweight="bold", va="bottom")
+        ax2.axis("off")
+
+        legend_elements = [
+            Patch(facecolor="#f2f2f2", hatch="///", edgecolor="#888888", label="Unimodal Agro-Ecological Strata (Single Season, Excluded from Bimodal Panel)")
+        ]
+        fig.legend(handles=legend_elements, loc="lower center", bbox_to_anchor=(0.5, 0.03), frameon=True, facecolor="white", edgecolor="#cccccc", fontsize=8.5)
 
         return self._save_fig(fig, "fig5_regional_heterogeneity_and_spatial_transferability.png")
 

@@ -507,21 +507,28 @@ Global exact TreeSHAP attributions (**Fig. 4a, b**) confirm both the magnitude a
 
 **Fig. 4** Global TreeSHAP feature attributions across the top 14 predictors of smallholder yield volatility: (a) directional beeswarm plot showing individual household SHAP values coloured by normalised feature magnitude (Low to High); (b) mean absolute SHAP magnitude ($|\\text{{SHAP}}|$) quantifying global predictive contribution (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
-### 3.4 Regional heterogeneity and spatial model transferability
+### 3.4 Regional heterogeneity, spatial vulnerability mapping, and model transferability
 
-A critical policy question for national statistical offices and early-warning agencies is whether machine learning models should be trained separately for each administrative region or pooled into a unified national model. **Table 4** and **Fig. 5** compare out-of-fold predictive performance between 27 dedicated **Regional Models** (each trained exclusively on holdings within region $r$) and regional slices of the **Unified National Weighted Ensemble**. Aggregated across all 27 surveyed regions, dedicated regional models achieve a pooled $R^2$ of only $0.348$ ($\text{{RMSE}} = 0.587$, $\text{{MAE}} = 0.467$), whereas the Unified National Model achieves $R^2 = 0.592$ ($\text{{RMSE}} = 0.464$, $\text{{MAE}} = 0.347$)—a net national variance-explained advantage of $+24.42$ percentage points.
+A critical policy question for national statistical offices and early-warning agencies is whether machine learning models should be trained separately for each administrative region or pooled into a unified national model. **Table 4** and **Fig. 5** evaluate this across all 27 surveyed administrative regions of Tanzania by combining regional model benchmark metrics with high-resolution regional choropleth maps derived from the official 2022 Population and Housing Census administrative boundaries. Aggregated across all 27 surveyed regions, dedicated regional models achieve a pooled $R^2$ of only $0.348$ ($\text{{RMSE}} = 0.587$, $\text{{MAE}} = 0.467$), whereas the Unified National Model achieves $R^2 = 0.592$ ($\text{{RMSE}} = 0.464$, $\text{{MAE}} = 0.347$)—a net national variance-explained advantage of $+24.42$ percentage points.
 
 **Table 4** Regional heterogeneity and out-of-fold performance breakdown across all 27 surveyed regions ($N = 4,564$)
 
 {t4_md}
 
-*Note:* $^{\\text{{a}}}$Regions ordered by bimodal sample size ($N$). $^{\\text{{b}}}$National Advantage defined as $\\Delta R^2 = R^2_{{\\text{{National}}}} - R^2_{{\\text{{Regional}}}}$ evaluated on identical out-of-fold Enumeration Area validation partitions.
+*Note:* $^{\text{{a}}}$Regions ordered by bimodal sample size ($N$). $^{\text{{b}}}$National Advantage defined as $\Delta R^2 = R^2_{{\text{{National}}}} - R^2_{{\\text{{Regional}}}}$ evaluated on identical out-of-fold Enumeration Area validation partitions.
 
-As shown in **Fig. 5b** and **Table 4**, the Unified National Ensemble outperforms isolated regional models ($\Delta R^2 > 0$) in **26 out of 27 regions** (96.3%). In large, agro-ecologically diverse bimodal regions such as **Tanga** ($N = 650$, $R^2_{{\\text{{National}}}} = 0.551$ vs. $R^2_{{\\text{{Regional}}}} = 0.202$, $\\Delta R^2 = +0.349$), **Mara** ($N = 476$, $R^2_{{\\text{{National}}}} = 0.649$ vs. $0.462$, $\\Delta R^2 = +0.187$), **Kilimanjaro** ($N = 375$, $R^2_{{\\text{{National}}}} = 0.624$ vs. $0.345$, $\\Delta R^2 = +0.278$), **Kagera** ($N = 296$, $R^2_{{\\text{{National}}}} = 0.748$ vs. $0.688$, $\\Delta R^2 = +0.060$), and **Pwani** ($N = 252$, $R^2_{{\\text{{National}}}} = 0.629$ vs. $0.271$, $\\Delta R^2 = +0.359$), pooling data nationally enables the tree ensemble to learn shared response surfaces across analogous agro-ecological strata. The transferability advantage becomes even more pronounced in medium- and small-sample regions such as **Kaskazini Pemba** ($N = 195$, $R^2_{{\\text{{National}}}} = 0.716$ vs. $0.353$, $\\Delta R^2 = +0.363$), **Kusini Pemba** ($N = 93$, $R^2_{{\\text{{National}}}} = 0.725$ vs. $0.314$, $\\Delta R^2 = +0.411$), **Dodoma** ($N = 27$, $R^2_{{\\text{{National}}}} = 0.654$ vs. $0.113$, $\\Delta R^2 = +0.541$), and **Iringa** ($N = 14$, $R^2_{{\\text{{National}}}} = 0.678$ vs. $0.051$, $\\Delta R^2 = +0.627$), where standalone regional models suffer severe small-sample variance and overfitting. Only **Singida** ($N = 11$ transitional bimodal holdings) exhibits negative R² under both specifications ($\Delta R^2 = -0.175$), reflecting extreme sample sparsity at the unimodal–bimodal boundary.
+Spatial visualization of survey sampling density (**Fig. 5a**) reveals that bimodal smallholder holdings are concentrated in the humid northeastern corridor (**Tanga**, $N = 650$; **Kilimanjaro**, $N = 375$; **Arusha**, $N = 215$), the Lake Victoria basin (**Mara**, $N = 476$; **Kagera**, $N = 296$; **Mwanza**, $N = 215$; **Simiyu**, $N = 202$; **Geita**, $N = 147$), the central eastern plains (**Morogoro**, $N = 257$; **Pwani**, $N = 252$), the southern highlands (**Mbeya**, $N = 227$), and the **Zanzibar Archipelago** ($N = 608$ combined across Pemba and Unguja), whereas purely unimodal zones in the central and southern interior cultivate only single annual cycles and are excluded from bimodal volatility tracking.
+
+Mapping regional mean yield volatility (**Fig. 5b**) uncovers acute sub-national vulnerability hotspots:
+1. **Semi-Arid Drought Hotspots:** In **Dodoma** ($\bar{{Y}}_{{\text{{vol}}}} = 1.483$), erratic rainfall leads to severe crop desiccation, with 59.3% of holdings suffering catastrophic uni-seasonal crop failure ($Y_{{\text{{vol}}}} \ge 1.50$).
+2. **Maritime Island Vulnerability:** In the **Zanzibar Archipelago**, particularly **Kusini Pemba** ($\bar{{Y}}_{{\text{{vol}}}} = 1.514$, 66.7% hyper-volatile) and **Kaskazini Pemba** ($\bar{{Y}}_{{\text{{vol}}}} = 1.502$, 64.1% hyper-volatile), extreme rainfall disparity between the *Masika* and *Vuli* seasons leaves island smallholders acutely exposed to seasonal food supply deficits.
+3. **Resilient Lacustrine and Highland Pockets:** Conversely, **Kagera** ($\bar{{Y}}_{{\text{{vol}}}} = 1.139$) and **Tanga** ($\bar{{Y}}_{{\text{{vol}}}} = 0.978$) benefit from agro-forestry systems, perennial banana–coffee canopies, and micro-climate buffering that dampen inter-seasonal harvest shocks.
+
+Crucially, mapping out-of-fold spatial predictive skill across regions (**Fig. 5c** and **Table 4**) demonstrates that the Unified National Ensemble delivers high predictive power across heterogeneous agro-ecological zones, reaching $R^2 = 0.748$ in **Kagera**, $R^2 = 0.754$ in **Mjini Magharibi**, $R^2 = 0.725$ in **Kusini Pemba**, $R^2 = 0.716$ in **Kaskazini Pemba**, $R^2 = 0.649$ in **Mara**, and $R^2 = 0.624$ in **Kilimanjaro**. Furthermore, as shown in **Table 4**, the Unified National Ensemble outperforms isolated regional models ($\Delta R^2 > 0$) in **26 out of 27 regions** (96.3%). By learning shared non-linear response surfaces across regional borders, national data pooling prevents small-sample overfitting and establishes robust spatial generalisability for operational food security monitoring.
 
 ![Fig. 5](file://{FIG_DIR.resolve()}/fig5_regional_heterogeneity_and_spatial_transferability.png)
 
-**Fig. 5** Regional heterogeneity and spatial transferability across 27 administrative regions of Tanzania: (a) comparison of out-of-fold $R^2$ between dedicated Regional Models and the Unified National Ensemble slice with regional sample sizes ($N$); (b) transferability advantage ($\Delta R^2 = R^2_{{\\text{{National}}}} - R^2_{{\\text{{Regional}}}}$) demonstrating positive national pooling gains in 26 of 27 regions (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 5** Sub-national spatial distribution of smallholder yield volatility and machine learning predictive skill across 27 administrative regions of Tanzania based on 2022 PHC administrative shapefiles: (a) spatial coverage and sample concentration of surveyed bimodal agricultural holdings ($N = 4,564$); (b) choropleth map of regional mean Yield Volatility Index ($Y_{{\text{{vol}}}}$) with annotations highlighting acute volatility hotspots in Dodoma semi-arid plains and Zanzibar (Pemba/Unguja) alongside resilient perennial production in Tanga and Kagera; (c) out-of-fold spatial machine learning predictive skill ($R^2$) achieved by the Unified National Weighted Ensemble across unseen Enumeration Areas (Hatched grey polygons represent unimodal agro-ecological strata cultivating single annual cycles; Graphics programme: Python 3.11 / Matplotlib 3.8 / GeoPandas)
 
 ### 3.5 Non-linear agronomic interactions, leakage audit, and household archetypes
 
@@ -794,7 +801,7 @@ Zimmerman, F. J., & Carter, M. R. (2003). Asset smoothing, consumption smoothing
 
 ## Author Biography
 
-**Kadeghe Goodluck Fue** is a Senior Lecturer in the Department of Agricultural Engineering, School of Engineering and Technology, at Sokoine University of Agriculture (SUA) in Morogoro, Tanzania, where he leads the Electronics and Precision Agriculture Lab (EPALab). He holds a Ph.D. in Engineering from the University of Georgia, an M.Sc. in Agricultural and Biological Engineering from the University of Florida, and a B.Sc. in Computer Engineering and Information Technology from the University of Dar es Salaam. His research focuses on precision agriculture, artificial intelligence, spatial machine learning, and climate-resilient smallholder farming systems, driven by a deep commitment to advancing food security across sub-Saharan Africa.
+**Kadeghe Goodluck Fue** is a Senior Lecturer in the Department of Agricultural Engineering, School of Engineering and Technology, at Sokoine University of Agriculture (SUA) in Morogoro, Tanzania, where he leads the Electronics and Precision Agriculture Lab (EPALab). He holds a Ph.D. in Engineering from the University of Georgia, an M.Sc. in Agricultural and Biological Engineering from the University of Florida, and a B.Sc. in Computer Engineering and Information Technology from the University of Dar es Salaam. His research focuses on precision agriculture, artificial intelligence, spatial machine learning, Agricultural Data Science, and climate-resilient smallholder farming systems, driven by a deep commitment to advancing food security across sub-Saharan Africa.
 """
     md = (
         md.replace("\x08ar", "\\bar")
@@ -1011,62 +1018,227 @@ def _get_display_equation_omml(eq_num: str) -> Optional[str]:
     return f'<m:oMathPara {nsdecls("m")}><m:oMath>{inner}</m:oMath></m:oMathPara>'
 
 
-def _add_formatted_runs(p, text: str, font_size: int = 10) -> None:
-    """Adds runs with bold, italic, and inline math formatting in 10-pt Times New Roman."""
-    # Clean markdown links [label](url) -> label
-    text = re.sub(r"\[([^\]]+)\]\([^\)]+\)", r"\1", text)
-    # Clean simple LaTeX tokens for readable inline Word runs
+def _convert_latex_to_omml(expr: str) -> Optional[str]:
+    """Converts an inline LaTeX or math expression into native MS Word OMML XML."""
+    raw = expr.strip()
+
+    def R(t: str, italic: bool = True) -> str:
+        sty = '<m:rPr><m:sty m:val="i"/></m:rPr>' if italic else '<m:rPr><m:sty m:val="p"/></m:rPr>'
+        return f'<m:r>{sty}<m:t>{t}</m:t></m:r>'
+
+    def SUB(b: str, s: str, bi: bool = True, si: bool = False) -> str:
+        return f'<m:sSub><m:sSubPr/><m:e>{R(b, bi)}</m:e><m:sub>{R(s, si)}</m:sub></m:sSub>'
+
+    def SUP(b: str, sp: str, bi: bool = True, spi: bool = False) -> str:
+        return f'<m:sSup><m:sSupPr/><m:e>{R(b, bi)}</m:e><m:sup>{R(sp, spi)}</m:sup></m:sSup>'
+
+    def SUBSUP(b: str, s: str, sp: str, bi: bool = True, si: bool = False, spi: bool = False) -> str:
+        return f'<m:sSubSup><m:sSubSupPr/><m:e>{R(b, bi)}</m:e><m:sub>{R(s, si)}</m:sub><m:sup>{R(sp, spi)}</m:sup></m:sSubSup>'
+
+    norm = raw.replace('\\text{', '').replace('\\mathrm{', '').replace('$', '').replace('{', '').replace('}', '').strip()
+
+    # Direct mappings for core study metrics
+    if norm in ['Y_vol', 'Y_vol,i', 'Yvol', 'Yvol,i']:
+        sub_txt = 'vol,i' if 'i' in norm else 'vol'
+        return f'<m:oMath {nsdecls("m")}>{SUB("Y", sub_txt)}</m:oMath>'
+    if norm in ['\\hat{Y}_vol', 'hat{Y}_vol', 'Ŷ_vol', 'Ŷvol']:
+        return f'<m:oMath {nsdecls("m")}>{SUB("Ŷ", "vol")}</m:oMath>'
+    if norm in ['\\bar{Y}_vol', 'bar{Y}_vol', 'Ȳ_vol', 'Ȳvol']:
+        return f'<m:oMath {nsdecls("m")}>{SUB("Ȳ", "vol")}</m:oMath>'
+    if norm in ['R^2', 'R2']:
+        return f'<m:oMath {nsdecls("m")}>{SUP("R", "2")}</m:oMath>'
+    if norm in ['\\Delta R^2', 'Delta R^2', 'ΔR^2', 'ΔR2']:
+        return f'<m:oMath {nsdecls("m")}>{R("Δ", False)}{SUP("R", "2")}</m:oMath>'
+    if 'R^2_National' in norm or 'R2_National' in norm:
+        return f'<m:oMath {nsdecls("m")}>{SUBSUP("R", "National", "2")}</m:oMath>'
+    if 'R^2_Regional' in norm or 'R2_Regional' in norm:
+        return f'<m:oMath {nsdecls("m")}>{SUBSUP("R", "Regional", "2")}</m:oMath>'
+    if norm in ['C_HHI', 'CHHI']:
+        return f'<m:oMath {nsdecls("m")}>{SUB("C", "HHI")}</m:oMath>'
+    if norm in ['D_BP', 'DBP']:
+        return f'<m:oMath {nsdecls("m")}>{SUB("D", "BP")}</m:oMath>'
+    if norm in ['CV_plot', 'CVplot']:
+        return f'<m:oMath {nsdecls("m")}>{SUB("CV", "plot", False, False)}</m:oMath>'
+    if norm in ["H'", 'H_masika', "H'_m", "H'm"]:
+        return f'<m:oMath {nsdecls("m")}>{SUB("H′", "m") if "m" in norm else R("H′", True)}</m:oMath>'
+    if norm in ["J'", "J'_m"]:
+        return f'<m:oMath {nsdecls("m")}>{R("J′", True)}</m:oMath>'
+    if norm in ['Q_3 - Q_1', 'Q3 - Q1']:
+        return f'<m:oMath {nsdecls("m")}>{SUB("Q", "3")}{R(" − ", False)}{SUB("Q", "1")}</m:oMath>'
+    if norm in ['Y_m, Y_v', 'Ym, Yv']:
+        return f'<m:oMath {nsdecls("m")}>{SUB("Y", "m")}{R(", ", False)}{SUB("Y", "v")}</m:oMath>'
+    if norm in ['J(C_m, C_v)']:
+        return f'<m:oMath {nsdecls("m")}>{R("J(", False)}{SUB("C", "m")}{R(", ", False)}{SUB("C", "v")}{R(")", False)}</m:oMath>'
+
+    # Comparisons with Y_vol
+        clean_rel = raw.replace('Y_{\\text{vol}}', 'Y_vol').replace('Y_{\\mathrm{vol}}', 'Y_vol')
+        clean_rel = clean_rel.replace('\\approx', '≈').replace('\\in', '∈').replace('\\ge', '≥').replace('\\le', '≤').replace('>=', '≥').replace('<=', '≤')
+        m_rel = re.search(r'Y_vol\s*([∈≥≤><=≈])\s*(.+)', clean_rel)
+        if m_rel:
+            op, val = m_rel.group(1), m_rel.group(2)
+            # Ensure XML escaping for operator and value
+            op_esc = '&lt;' if op == '<' else ('&gt;' if op == '>' else op)
+            val_esc = val.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+            return f'<m:oMath {nsdecls("m")}>{SUB("Y", "vol")}{R(" " + op_esc + " " + val_esc, False)}</m:oMath>'
+
+    # Clean Greek prefixes if any
+    norm = norm.replace('\\kappa', 'κ').replace('\\mu', 'μ').replace('\\sigma', 'σ').replace('\\boldsymbol', '').replace('\\mathbf', '')
+
+    # Superscript: Base^Sup
+    m_sup = re.match(r'^([a-zA-Z\Δ\ϕ\σ\μ\κ\η\α\λ\Ȳ\Ŷ\(\)\']+)\^([a-zA-Z0-9\+\-\(\)]+)$', norm)
+    if m_sup:
+        b, sp = m_sup.group(1), m_sup.group(2)
+        return f'<m:oMath {nsdecls("m")}>{SUP(b, sp)}</m:oMath>'
+
+    # Subscript: Base_Sub
+    m_sub = re.match(r'^([a-zA-Z\Δ\ϕ\σ\μ\κ\η\α\λ\Ȳ\Ŷ\(\)\']+)_([a-zA-Z0-9\,\.\-\+\(\)]+)$', norm)
+    if m_sub:
+        b, sb = m_sub.group(1), m_sub.group(2)
+        return f'<m:oMath {nsdecls("m")}>{SUB(b, sb)}</m:oMath>'
+
+    # SubSup: Base_Sub^Sup
+    m_subsup = re.match(r'^([a-zA-Z\Δ\ϕ\σ\μ\κ\η\α\λ\Ȳ\Ŷ\(\)\']+)_([a-zA-Z0-9\(\)]+)\^([a-zA-Z0-9\(\)]+)$', norm)
+    if m_subsup:
+        b, sb, sp = m_subsup.group(1), m_subsup.group(2), m_subsup.group(3)
+        return f'<m:oMath {nsdecls("m")}>{SUBSUP(b, sb, sp)}</m:oMath>'
+
+    return None
+
+
+def _clean_scientific_symbols(text: str) -> str:
+    """Replaces raw LaTeX and caret/underscore notations with proper Unicode scientific symbols."""
     replacements = [
-        (r"\$Y_\{\\text\{vol\},i\}\$", "Y_vol,i"),
-        (r"\$Y_\{\\text\{vol\}\}\$", "Y_vol"),
-        (r"\$\\hat\{Y\}_\{\\text\{vol\}\}\$", "Ŷ_vol"),
-        (r"\$\\bar\{Y\}_\{\\text\{vol\}\}\$", "Ȳ_vol"),
-        (r"\$R\^2_{{\\text\{National\}}}\$", "R²_National"),
-        (r"\$R\^2_{{\\text\{Regional\}}}\$", "R²_Regional"),
-        (r"\$R\^2\$", "R²"),
-        (r"\$\\Delta R\^2\$", "ΔR²"),
-        (r"\$\\pm\$", "±"),
-        (r"\$\\ge\$", "≥"),
-        (r"\$\\le\$", "≤"),
-        (r"\$\\approx\$", "≈"),
-        (r"\$\\times\$", "×"),
+        # Scientific units
+        (r"\$\\text\{kg ha\}\^\{-1\}\$", "kg ha⁻¹"),
         (r"\\text\{kg ha\}\^\{-1\}", "kg ha⁻¹"),
+        (r"\$\\text\{mm yr\}\^\{-1\}\$", "mm yr⁻¹"),
         (r"\\text\{mm yr\}\^\{-1\}", "mm yr⁻¹"),
+        (r"\$\\text\{km\}\^2\$", "km²"),
         (r"\\text\{km\}\^2", "km²"),
-        (r"\\text\{--\}|--", "–"),
-        (r"\\text\{([^}]+)\}", r"\1"),
-        (r"\\mathrm\{([^}]+)\}", r"\1"),
-        (r"\\Delta ", "Δ"),
+        (r"\$\\text\{TLU\}\$", "TLU"),
+        (r"\\text\{TLU\}", "TLU"),
+        (r"\\text\{RMSE\}", "RMSE"),
+        (r"\\text\{MAE\}", "MAE"),
+        # Subscripts & superscripts in prose
+        (r"\^2", "²"),
+        (r"\^3", "³"),
+        (r"\^\{-1\}", "⁻¹"),
+        (r"\^\{\\text\{reg\}\}", "ʳᵉᵍ"),
+        (r"\^\{reg\}", "ʳᵉᵍ"),
+        (r"\^\{\\text\{ens\}\}", "ᵉⁿˢ"),
+        (r"\^\{ens\}", "ᵉⁿˢ"),
+        (r"\^\{\\text\{a\}\}", "ᵃ"),
+        (r"\^\{a\}", "ᵃ"),
+        (r"\^\{\\text\{b\}\}", "ᵇ"),
+        (r"\^\{b\}", "ᵇ"),
+        (r"_\{vol,i\}", "ᵥₒₗ,ᵢ"),
+        (r"_\{vol\}", "ᵥₒₗ"),
+        (r"_\{plot,i\}", "ₚₗₒₜ,ᵢ"),
+        (r"_\{plot\}", "ₚₗₒₜ"),
+        (r"_\{HHI,i,s\}", "_{HHI,i,s}"),
+        (r"_\{HHI\}", "_{HHI}"),
+        (r"_\{BP\}", "_{BP}"),
+        (r"_\{National\}", "ₙₐₜᵢₒₙₐₗ"),
+        (r"_\{Regional\}", "ᵣₑ𝓰ᵢₒₙₐₗ"),
+        (r"_\{i,m\}", "ᵢ,ₘ"),
+        (r"_\{i,v\}", "ᵢ,ᵥ"),
+        (r"_\{i,s\}", "ᵢ,ₛ"),
+        (r"_m\b", "ₘ"),
+        (r"_v\b", "ᵥ"),
+        (r"_i\b", "ᵢ"),
+        (r"_s\b", "ₛ"),
+        (r"_1\b", "₁"),
+        (r"_2\b", "₂"),
+        (r"_3\b", "₃"),
+        (r"_4\b", "₄"),
+        (r"_5\b", "₅"),
+        # Greek and mathematical symbols
+        (r"\\Delta\s*R\^2", "ΔR²"),
+        (r"\\Delta\s*R²", "ΔR²"),
+        (r"\\Delta\s*M", "ΔM"),
+        (r"\\Delta", "Δ"),
         (r"\\phi", "ϕ"),
-        (r"\\varepsilon", "ε"),
         (r"\\sigma", "σ"),
         (r"\\mu", "μ"),
         (r"\\kappa", "κ"),
         (r"\\eta", "η"),
         (r"\\alpha", "α"),
         (r"\\lambda", "λ"),
+        (r"\\varepsilon", "ε"),
+        (r"\\ge\b", "≥"),
+        (r"\\le\b", "≤"),
+        (r"\\approx\b", "≈"),
+        (r"\\times\b", "×"),
+        (r"\\pm\b", "±"),
+        (r"\\in\b", "∈"),
+        (r"\\emptyset\b", "∅"),
+        (r"\\cap\b", "∩"),
+        (r"\\cup\b", "∪"),
+        (r"\\forall\b", "∀"),
+        (r"\\neq\b", "≠"),
+        (r"\\dots\b", "…"),
+        (r"\\circ\b", "°"),
+        (r"\\bar\{M\}", "M̄"),
+        (r"\\bar\{Y\}", "Ȳ"),
+        (r"\\bar\{X\}", "X̄"),
+        (r"\\hat\{Y\}", "Ŷ"),
+        (r"\\hat\{f\}", "f̂"),
+        (r"\\text\{--\}|--", "–"),
+        (r"\\text\{([^}]+)\}", r"\1"),
+        (r"\\mathrm\{([^}]+)\}", r"\1"),
+        (r"\\mathbf\{([^}]+)\}", r"\1"),
+        (r"\\mathcal\{([^}]+)\}", r"\1"),
     ]
     for pat, rep in replacements:
         text = re.sub(pat, rep, text)
-    text = text.replace("$", "")
-    text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", text)
+    return text
 
-    tokens = re.split(r"(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)", text)
-    for tok in tokens:
-        if not tok:
+
+def _add_formatted_runs(p, text: str, font_size: int = 10) -> None:
+    """Adds runs with native MS Word Equation (OMML) blocks and scientific symbols."""
+    # Clean markdown links [label](url) -> label
+    text = re.sub(r"\[([^\]]+)\]\([^\)]+\)", r"\1", text)
+
+    # First split by inline math $...$
+    math_parts = re.split(r'(\$[^\$\n]+\$)', text)
+    for mp in math_parts:
+        if not mp:
             continue
-        if tok.startswith("**") and tok.endswith("**"):
-            r = p.add_run(tok[2:-2])
-            r.bold = True
-        elif tok.startswith("*") and tok.endswith("*"):
-            r = p.add_run(tok[1:-1])
-            r.italic = True
-        elif tok.startswith("`") and tok.endswith("`"):
-            r = p.add_run(tok[1:-1])
+        if mp.startswith('$') and mp.endswith('$'):
+            math_expr = mp[1:-1].strip()
+            omml_xml = _convert_latex_to_omml(math_expr)
+            if omml_xml:
+                p._p.append(parse_xml(omml_xml))
+            else:
+                # Fallback to pristine Unicode scientific symbols without ^ or _
+                cleaned_math = _clean_scientific_symbols(math_expr)
+                cleaned_math = cleaned_math.replace("^", "").replace("_", "")
+                r = p.add_run(cleaned_math)
+                r.font.name = "Times New Roman"
+                r.font.size = Pt(font_size)
         else:
-            r = p.add_run(tok)
-        r.font.name = "Times New Roman"
-        r.font.size = Pt(font_size)
+            # Prose text: clean any stray caret/underscore or LaTeX macros
+            cleaned_prose = _clean_scientific_symbols(mp)
+            # Handle markdown bold (**...**), italic (*...*), code (`...`)
+            tokens = re.split(r"(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)", cleaned_prose)
+            for tok in tokens:
+                if not tok:
+                    continue
+                if tok.startswith("**") and tok.endswith("**"):
+                    inner = tok[2:-2]
+                    r = p.add_run(inner)
+                    r.bold = True
+                elif tok.startswith("*") and tok.endswith("*"):
+                    inner = tok[1:-1]
+                    r = p.add_run(inner)
+                    r.italic = True
+                elif tok.startswith("`") and tok.endswith("`"):
+                    inner = tok[1:-1]
+                    r = p.add_run(inner)
+                else:
+                    r = p.add_run(tok)
+                r.font.name = "Times New Roman"
+                r.font.size = Pt(font_size)
 
 
 def _render_md_table_to_docx(doc: Document, table_lines: List[str]) -> None:
@@ -1096,11 +1268,11 @@ def _render_md_table_to_docx(doc: Document, table_lines: List[str]) -> None:
             cp.paragraph_format.space_before = Pt(1)
             cp.paragraph_format.space_after = Pt(1)
             cp.alignment = WD_ALIGN_PARAGRAPH.LEFT if c_idx <= 1 else WD_ALIGN_PARAGRAPH.RIGHT
-            run = cp.add_run(row_vals[c_idx])
-            run.font.name = "Times New Roman"
-            run.font.size = Pt(8.5)
+            raw_cell_val = row_vals[c_idx]
+            _add_formatted_runs(cp, raw_cell_val, font_size=8.5)
             if r_idx == 0:
-                run.bold = True
+                for r in cp.runs:
+                    r.bold = True
 
 
 def generate_docx_manuscript(md_text: str) -> Path:
@@ -1265,7 +1437,7 @@ def generate_title_page_docx() -> Path:
 
     meta_items = [
         ("Running Page Title (<= 60 characters): ", f"{RUNNING_HEAD} (56 characters)"),
-        ("Author Full Name: ", "Dr. Eng. Kadeghe Goodluck Fue"),
+        ("Author Full Name: ", "Kadeghe Goodluck Fue"),
         ("Institutional Affiliation: ", "Department of Agricultural Engineering, School of Engineering and Technology, Sokoine University of Agriculture (SUA), P.O. Box 3003, Chuo Kikuu, Morogoro, Tanzania"),
         ("Corresponding Author Email: ", "kadefue@sua.ac.tz"),
         ("Verified ORCID iD: ", "https://orcid.org/0000-0001-6362-3174"),
@@ -1342,7 +1514,7 @@ def generate_title_page_docx() -> Path:
         "where he leads the Electronics and Precision Agriculture Lab (EPALab). He holds a Ph.D. in Engineering "
         "from the University of Georgia, an M.Sc. in Agricultural and Biological Engineering from the University "
         "of Florida, and a B.Sc. in Computer Engineering and Information Technology from the University of Dar es Salaam. "
-        "His research focuses on precision agriculture, artificial intelligence, spatial machine learning, and "
+        "His research focuses on precision agriculture, artificial intelligence, spatial machine learning, Agricultural Data Science, and "
         "climate-resilient smallholder farming systems, driven by a deep commitment to advancing food security across sub-Saharan Africa.",
         font_size=10
     )
@@ -1496,7 +1668,7 @@ Our Five-Pillar Spatial Leakage Isolation Protocol demonstrates that ensemble ma
 \\textbf{{Funding:}} No external funding was received. Institutional support was provided by Sokoine University of Agriculture (SUA).\\\\
 \\textbf{{Competing Interests:}} The author declares no competing interests.\\\\
 \\textbf{{Data Availability:}} Microdata are available from the Tanzania National Bureau of Statistics (\\url{{https://www.nbs.go.tz/}}) and FAO Microdata Catalogue. Online Resource 1 (\\texttt{{ESM\\_1.csv}}) accompanies this article.\\\\
-\\textbf{{Author Biography:}} \\textbf{{Kadeghe Goodluck Fue}} is a Senior Lecturer in the Department of Agricultural Engineering, School of Engineering and Technology, at Sokoine University of Agriculture (SUA) in Morogoro, Tanzania, where he leads the Electronics and Precision Agriculture Lab (EPALab). He holds a Ph.D. in Engineering from the University of Georgia, an M.Sc. in Agricultural and Biological Engineering from the University of Florida, and a B.Sc. in Computer Engineering and Information Technology from the University of Dar es Salaam. His research focuses on precision agriculture, artificial intelligence, spatial machine learning, and climate-resilient smallholder farming systems, driven by a deep commitment to advancing food security across sub-Saharan Africa.
+\\textbf{{Author Biography:}} \\textbf{{Kadeghe Goodluck Fue}} is a Senior Lecturer in the Department of Agricultural Engineering, School of Engineering and Technology, at Sokoine University of Agriculture (SUA) in Morogoro, Tanzania, where he leads the Electronics and Precision Agriculture Lab (EPALab). He holds a Ph.D. in Engineering from the University of Georgia, an M.Sc. in Agricultural and Biological Engineering from the University of Florida, and a B.Sc. in Computer Engineering and Information Technology from the University of Dar es Salaam. His research focuses on precision agriculture, artificial intelligence, spatial machine learning, Agricultural Data Science, and climate-resilient smallholder farming systems, driven by a deep commitment to advancing food security across sub-Saharan Africa.
 
 \\end{{document}}
 """
