@@ -54,7 +54,7 @@ Spatial cross-validation is enforced across $K = 5$ Enumeration Area folds (\tex
 \toprule
 \textbf{Variable Description} & \textbf{Domain Category} & \textbf{Observations (N)} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Q1 (25\%)} & \textbf{Median} & \textbf{Q3 (75\%)} & \textbf{Min} & \textbf{Max} \\
 \midrule
-Yield Volatility Index ($Y_{\mathrm{vol}$) & Target Variable & 4,564 & 1.084 & 0.727 & 0.400 & 1.014 & 2.000 & 0.000 & 2.000 \\
+Yield Volatility Index ($Y_{\mathrm{vol}}$) & Target Variable & 4,564 & 1.084 & 0.727 & 0.400 & 1.014 & 2.000 & 0.000 & 2.000 \\
 Masika Harvest Yield (kg/ha) & Crop Production & 4,564 & 930.13 & 2,057.96 & 123.79 & 396.95 & 990.10 & 0.000 & 64,126.85 \\
 Vuli Harvest Yield (kg/ha) & Crop Production & 4,564 & 900.80 & 1,952.16 & 123.58 & 414.34 & 998.04 & 0.000 & 59,394.25 \\
 Seasonal Yield Difference (kg/ha) & Crop Production & 4,564 & 883.52 & 2,170.16 & 133.50 & 353.58 & 872.51 & 0.000 & 62,855.23 \\
@@ -223,7 +223,7 @@ Random Forest & 0.477 & 0.368 & 0.569 & max\_depth=16, max\_features=sqrt & 0.51
 \textbf{Pillar} & \textbf{Audit Domain} & \textbf{Verification Criterion} & \textbf{Quantitative Empirical Result} & \textbf{Verification Status} \\
 \midrule
 1 & Spatial Group Disjointness & Verifies training and validation folds share zero Enumeration Areas (EAs) & Zero overlapping EAs across all 5 spatial cross-validation folds. & CERTIFIED PASS \\
-2 & Target Variable Isolation & Verifies target $Y_{\mathrm{vol}$ is strictly excluded from feature space and no trivial target proxies exist & Target variable completely isolated. Maximum absolute feature correlation: 0.4365. & CERTIFIED PASS \\
+2 & Target Variable Isolation & Verifies target $Y_{\mathrm{vol}}$ is strictly excluded from feature space and no trivial target proxies exist & Target variable completely isolated. Maximum absolute feature correlation: 0.4365. & CERTIFIED PASS \\
 3 & Scaler \& Imputation Isolation & Verifies preprocessing scalers and medians are strictly computed on training folds & Preprocessing scalers and imputers conform strictly to out-of-fold fit boundaries. & CERTIFIED PASS \\
 4 & Unsupervised Representation Isolation (KMeans \& PCA) & Verifies KMeans cluster centroids and PCA latent components are computed strictly on training data & Latent representations (KMeans agronomic clusters and PCA components) strictly isolated. & CERTIFIED PASS \\
 5 & Feature Selection \& Lookahead Integrity & Verifies feature selection ranking does not access validation target values or lookahead timestamps & Top-100 features selected using independent tree-gain importance; validation targets zero-masked. & CERTIFIED PASS \\
@@ -240,7 +240,7 @@ Random Forest & 0.477 & 0.368 & 0.569 & max\_depth=16, max\_features=sqrt & 0.51
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrrrrrrr}
 \toprule
-\textbf{Volatility Stratum} & \textbf{Holdings (N)} & \textbf{Mean Yield Volatility ($Y_{\mathrm{vol}$)} & \textbf{Mean Yield Gap (kg/ha)} & \textbf{Mean Crop Diversity (Shannon)} & \textbf{Complete Harvest Failure Rate (\%)} & \textbf{Fertiliser Intensity (kg)} & \textbf{Tropical Livestock Units (TLU)} & \textbf{Planting Month Difference (Months)} & \textbf{Plot Fragmentation (CV)} \\
+\textbf{Volatility Stratum} & \textbf{Holdings (N)} & \textbf{Mean Yield Volatility ($Y_{\mathrm{vol}}$)} & \textbf{Mean Yield Gap (kg/ha)} & \textbf{Mean Crop Diversity (Shannon)} & \textbf{Complete Harvest Failure Rate (\%)} & \textbf{Fertiliser Intensity (kg)} & \textbf{Tropical Livestock Units (TLU)} & \textbf{Planting Month Difference (Months)} & \textbf{Plot Fragmentation (CV)} \\
 \midrule
 Q1: Low Volatility (Resilient) & 1,141 & 0.176 & 174.32 & 0.243 & 80.308 & 400.68 & 5.196 & 6.014 & 0.285 \\
 Q2: Moderate-Low Volatility & 1,141 & 0.685 & 631.48 & 0.231 & 81.652 & 2,556.62 & 4.456 & 5.920 & 0.298 \\
@@ -259,7 +259,7 @@ Q4: Hyper-Volatile & 1,141 & 2.000 & 837.26 & 0.086 & 34.268 & 822.49 & 2.893 & 
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llllllll}
 \toprule
-\textbf{Case Scenario} & \textbf{Household Identifier} & \textbf{Archetype Classification} & \textbf{Observed Volatility ($Y_{\mathrm{vol}$)} & \textbf{Model Predicted Volatility} & \textbf{Prediction Error (Residual)} & \textbf{Key Structural Characteristics} & \textbf{Targeted Policy Intervention} \\
+\textbf{Case Scenario} & \textbf{Household Identifier} & \textbf{Archetype Classification} & \textbf{Observed Volatility ($Y_{\mathrm{vol}}$)} & \textbf{Model Predicted Volatility} & \textbf{Prediction Error (Residual)} & \textbf{Key Structural Characteristics} & \textbf{Targeted Policy Intervention} \\
 \midrule
 Case A: Resilient Diversified Agro-Pastoralist & 00-68-86-52 & Low Volatility Archetype & 0.183 & 0.346 & 0.163 & High crop diversity, substantial livestock TLU buffer, zero plot failure & Maintain mixed crop-livestock integration and agro-forestry buffers \\
 Case B: Moderate Input-Intensive Specialised Farm & 00-19-44-35 & Moderate Volatility Archetype & 1.007 & 0.563 & 0.444 & Synthetic fertiliser application, moderate planting delta, commercial focus & Introduce supplemental micro-irrigation and crop rotation to reduce seasonal yield swings \\

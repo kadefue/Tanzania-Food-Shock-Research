@@ -239,6 +239,21 @@ def get_latex_table(csv_name: str, caption: str, label: str, footnote: str = "")
 # 2. GENERATE COMPLETE MARKDOWN MANUSCRIPT (SPRINGER FOOD SECURITY FORMAT)
 # ==============================================================================
 
+
+# Raw LaTeX representations for display equations (1) to (12)
+EQ1 = r"$$Q_{i,s} = \sum_{p \in P_{i,s}} \sum_{c \in C_{i,p,s}} q_{i,p,c,s} \cdot \kappa_{u(i,p,c,s)}, \quad A_{i,s} = \sum_{p \in P_{i,s}} a_{i,p,s} \quad (1)$$"
+EQ2 = r"$$Y_{i,s} = \frac{Q_{i,s}}{A_{i,s}}, \quad s \in \{m, v\} \quad (2)$$"
+EQ3 = r"$$Y_{\mathrm{vol},i} = \frac{|Y_{i,m} - Y_{i,v}|}{\frac{1}{2}(Y_{i,m} + Y_{i,v}) + \varepsilon} = \frac{2|Y_{i,m} - Y_{i,v}|}{Y_{i,m} + Y_{i,v} + 2\varepsilon} \quad (3)$$"
+EQ4 = r"$$H'_{i,s} = -\sum_{c=1}^{S_{i,s}} p_{i,c,s} \ln(p_{i,c,s}), \quad C_{\mathrm{HHI},i,s} = \sum_{c=1}^{S_{i,s}} p_{i,c,s}^2, \quad D_{\mathrm{BP},i,s} = \max_{c} \, p_{i,c,s}, \quad J'_{i,s} = \frac{H'_{i,s}}{\ln(S_{i,s})} \quad (4)$$"
+EQ5 = r"$$J(C_{i,m}, C_{i,v}) = \frac{|C_{i,m} \cap C_{i,v}|}{|C_{i,m} \cup C_{i,v}|}, \quad R_{\mathrm{rot},i} = 1 - J(C_{i,m}, C_{i,v}) \quad (5)$$"
+EQ6 = r"$$\Delta M_i = \bar{M}_{i,m} - \bar{M}_{i,v} \quad (6)$$"
+EQ7 = r"$$\mathrm{CV}_{\mathrm{plot},i} = \frac{\sigma_{a,i}}{\mu_{a,i} + \varepsilon}, \quad \mu_{a,i} = \frac{1}{K_i}\sum_{p=1}^{K_i} a_{i,p}, \quad \sigma_{a,i} = \sqrt{\frac{1}{K_i}\sum_{p=1}^{K_i} (a_{i,p} - \mu_{a,i})^2} \quad (7)$$"
+EQ8 = r"$$\mathrm{TLU}_i = 0.70 N_{\mathrm{cattle},i} + 0.50 N_{\mathrm{donkey},i} + 0.20 N_{\mathrm{pig},i} + 0.10 (N_{\mathrm{goat},i} + N_{\mathrm{sheep},i}) + 0.01 N_{\mathrm{poultry},i} \quad (8)$$"
+EQ9 = r"$$\Delta X_{k,i}^{\mathrm{reg}} = X_{k,i} - \bar{X}_{k,r(i)}, \quad Z_{k,i}^{\mathrm{reg}} = \frac{X_{k,i} - \bar{X}_{k,r(i)}}{\sigma_{X_k,r(i)} + \varepsilon} \quad (9)$$"
+EQ10 = r"$$\forall k \neq k' \in \{1, \dots, 5\}: \quad \{ G_i : i \in \mathcal{F}_k \} \cap \{ G_j : j \in \mathcal{F}_{k'} \} = \emptyset \quad (10)$$"
+EQ11 = r"$$\hat{Y}_{\mathrm{vol},i}^{\mathrm{ens}} = \operatorname{clip}\left( w_{\mathrm{LGB}} \hat{f}_{\mathrm{LGB}}(\mathbf{x}_i) + w_{\mathrm{XGB}} \hat{f}_{\mathrm{XGB}}(\mathbf{x}_i) + w_{\mathrm{RF}} \hat{f}_{\mathrm{RF}}(\mathbf{x}_i), \; 0.0, \; 2.0 \right) \quad (11)$$"
+EQ12 = r"$$\hat{f}(\mathbf{x}_i) = E[f(X)] + \sum_{j=1}^{M} \phi_{i,j}, \quad \phi_{i,j} = \sum_{S \subseteq F \setminus \{j\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!} \left[ f_{S \cup \{j\}}(\mathbf{x}_{i,S \cup \{j\}}) - f_S(\mathbf{x}_{i,S}) \right] \quad (12)$$"
+
 def generate_markdown_manuscript() -> str:
     """Builds the complete manuscript in Markdown strictly following Springer Food Security guidelines."""
     t1_md = get_markdown_table("table1_summary_statistics.csv")
@@ -263,7 +278,7 @@ ORCID: [https://orcid.org/0000-0001-6362-3174](https://orcid.org/0000-0001-6362-
 
 ## Abstract
 
-Smallholder rainfed farming systems across sub-Saharan Africa face intensifying inter-seasonal yield instability driven by erratic bimodal rainfall, soil nutrient depletion, and biotic pest shocks, yet empirical risk models frequently overestimate predictive skill due to unaddressed spatial autocorrelation leakage. This study develops and validates a leakage-free spatial machine learning framework to predict household-level crop yield volatility across Mainland Tanzania and the Zanzibar Archipelago using nationally representative microdata from the 2024/2025 National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) covering 4,564 bimodal agricultural holdings across 921 Enumeration Areas (EAs). We formulate a bounded, scale-invariant Yield Volatility Index ($Y_{{\\text{{vol}}}} \\in [0, 2]$) measuring proportional yield divergence between the long-rain (*Masika*) and short-rain (*Vuli*) cultivation cycles, and engineer 246 multi-domain agronomic, ecological, demographic, and spatial peer predictors pruned to a 100-feature subset capturing 99.0% of tree-based information gain. Evaluated under strict five-fold spatial group cross-validation partitioning whole Enumeration Areas, a soft-voting Weighted Ensemble combining Light Gradient Boosting Machine (LightGBM), Extreme Gradient Boosting (XGBoost), and Random Forest (RF) achieves an out-of-fold coefficient of determination ($R^2$) of 0.592, a Root Mean Squared Error (RMSE) of 0.464, and a Mean Absolute Error (MAE) of 0.347, outperforming dedicated regional sub-models across 26 of 27 regions. Exact Tree-based Shapley Additive Explanations (TreeSHAP) and partial dependence analyses reveal that inter-seasonal planting timing shifts, plot abandonment shocks, and crop portfolio diversity relative to community peers govern production instability, buffered non-linearly by livestock holdings above 3.0 Tropical Livestock Units (TLU). Policy counterfactual simulations indicate that an integrated Climate-Smart Agriculture package combining asset transfers, cultivar diversification, and planting synchronisation reduces mean national yield volatility by 40.0% and lowers hyper-volatile holdings ($Y_{{\\text{{vol}}}} \\ge 1.50$) from 25.8% to 19.9%, although multi-wave longitudinal panel tracking and high-resolution satellite soil-moisture assimilation remain vital future research priorities.
+Smallholder rainfed farming systems across sub-Saharan Africa face intensifying inter-seasonal yield instability driven by erratic bimodal rainfall, soil nutrient depletion, and biotic pest shocks, yet empirical risk models frequently overestimate predictive skill due to unaddressed spatial autocorrelation leakage. This study develops and validates a leakage-free spatial machine learning framework to predict household-level crop yield volatility across Mainland Tanzania and the Zanzibar Archipelago using nationally representative microdata from the 2024/2025 National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) covering 4,564 bimodal agricultural holdings across 921 Enumeration Areas (EAs). We formulate a bounded, scale-invariant Yield Volatility Index (Yᵥₒₗ ∈ [0, 2]) measuring proportional yield divergence between the long-rain (*Masika*) and short-rain (*Vuli*) cultivation cycles, and engineer 246 multi-domain agronomic, ecological, demographic, and spatial peer predictors pruned to a 100-feature subset capturing 99.0% of tree-based information gain. Evaluated under strict five-fold spatial group cross-validation partitioning whole Enumeration Areas, a soft-voting Weighted Ensemble combining Light Gradient Boosting Machine (LightGBM), Extreme Gradient Boosting (XGBoost), and Random Forest (RF) achieves an out-of-fold coefficient of determination (R²) of 0.592, a Root Mean Squared Error (RMSE) of 0.464, and a Mean Absolute Error (MAE) of 0.347, outperforming dedicated regional sub-models across 26 of 27 regions. Exact Tree-based Shapley Additive Explanations (TreeSHAP) and partial dependence analyses reveal that inter-seasonal planting timing shifts, plot abandonment shocks, and crop portfolio diversity relative to community peers govern production instability, buffered non-linearly by livestock holdings above 3.0 Tropical Livestock Units (TLU). Policy counterfactual simulations indicate that an integrated Climate-Smart Agriculture package combining asset transfers, cultivar diversification, and planting synchronisation reduces mean national yield volatility by 40.0% and lowers hyper-volatile holdings (Yᵥₒₗ ≥ 1.50) from 25.8% to 19.9%, although multi-wave longitudinal panel tracking and high-resolution satellite soil-moisture assimilation remain vital future research priorities.
 
 **Keywords:** smallholder agriculture; crop yield volatility; spatial cross-validation; machine learning; climate resilience; Tanzania
 
@@ -275,53 +290,53 @@ Smallholder rainfed farming systems across sub-Saharan Africa face intensifying 
 | --- | --- |
 | AASS | Annual Agricultural Sample Survey |
 | AEZ | Agro-Ecological Zone |
-| $C_{{\\text{{HHI}}}}$ | Herfindahl–Hirschman Crop Concentration Index (dimensionless, $[0, 1]$) |
+| C<sub>HHI</sub> | Herfindahl–Hirschman Crop Concentration Index (dimensionless, [0, 1]) |
 | CSA | Climate-Smart Agriculture |
 | CV | Coefficient of Variation (dimensionless ratio of standard deviation to mean) |
-| $D_{{\\text{{BP}}}}$ | Berger–Parker Crop Dominance Index (dimensionless, $[0, 1]$) |
+| D<sub>BP</sub> | Berger–Parker Crop Dominance Index (dimensionless, [0, 1]) |
 | EA | Enumeration Area (primary geographic census cluster) |
 | ESM | Electronic Supplementary Material (cited as Online Resource 1) |
 | FAO | Food and Agriculture Organization of the United Nations |
 | GBDT | Gradient Boosted Decision Trees |
-| $H'$ | Shannon–Wiener Crop Diversity Index (dimensionless, $\\ge 0$) |
+| H′ | Shannon–Wiener Crop Diversity Index (dimensionless, ≥ 0) |
 | HHFARMID | Anonymised Household Farming Holding Identifier |
-| IQR | Interquartile Range ($Q_3 - Q_1$) |
-| $J'$ | Pielou Species Evenness Index (dimensionless, $[0, 1]$) |
-| $J(C_m, C_v)$ | Cross-Seasonal Jaccard Crop Similarity Coefficient (dimensionless, $[0, 1]$) |
+| IQR | Interquartile Range (Q₃ − Q₁) |
+| J′ | Pielou Species Evenness Index (dimensionless, [0, 1]) |
+| J(Cₘ, Cᵥ) | Cross-Seasonal Jaccard Crop Similarity Coefficient (dimensionless, [0, 1]) |
 | KDE | Kernel Density Estimation |
 | LightGBM | Light Gradient Boosting Machine |
-| MAE | Mean Absolute Error (in units of $Y_{{\\text{{vol}}}}$) |
+| MAE | Mean Absolute Error (in units of Yᵥₒₗ) |
 | *Masika* | Primary long-rain agricultural season in Tanzania (March–May) |
 | NBS | National Bureau of Statistics of the United Republic of Tanzania |
 | OOF | Out-of-Fold (spatially disjoint validation predictions) |
 | PCA | Principal Component Analysis |
-| $R^2$ | Out-of-fold Coefficient of Determination (dimensionless) |
+| R² | Out-of-fold Coefficient of Determination (dimensionless) |
 | RF | Random Forest Regressor |
-| RMSE | Root Mean Squared Error (in units of $Y_{{\\text{{vol}}}}$) |
+| RMSE | Root Mean Squared Error (in units of Yᵥₒₗ) |
 | SHAP | Shapley Additive Explanations (game-theoretic feature attribution) |
 | SUA | Sokoine University of Agriculture |
-| TLU | Tropical Livestock Unit ($1\\text{{ TLU}} = 250\\text{{ kg}}$ live metabolic weight equivalent) |
+| TLU | Tropical Livestock Unit (1 TLU = 250 kg live metabolic weight equivalent) |
 | *Vuli* | Secondary short-rain agricultural season in Tanzania (October–December) |
 | XGBoost | Extreme Gradient Boosting |
-| $Y_m, Y_v$ | Area-weighted household crop yield in *Masika* and *Vuli* ($\\text{{kg ha}}^{{-1}}$) |
-| $Y_{{\\text{{vol}}}}$ | Bounded Inter-Seasonal Yield Volatility Index (dimensionless, $[0, 2]$) |
+| Yₘ, Yᵥ | Area-weighted household crop yield in *Masika* and *Vuli* (kg ha⁻¹) |
+| Yᵥₒₗ | Bounded Inter-Seasonal Yield Volatility Index (dimensionless, [0, 2]) |
 
 ---
 
 ## 1 Introduction
 
-Global food systems face an unprecedented convergence of climatic, ecological, and macroeconomic pressures that threaten the stability of agricultural production and rural livelihoods across the developing world (Wheeler & von Braun, 2013; Lobell et al., 2011; Ray et al., 2015). In sub-Saharan Africa, where rainfed smallholder holdings cultivating less than 3.5 hectares generate over 75% of domestic caloric supply, food security is governed not merely by long-term mean crop yields, but by the magnitude and frequency of inter-seasonal production shocks (Thornton et al., 2014; Jayne et al., 2010; Hertel & Rosch, 2010). Classical definitions of food security emphasise four interdependent pillars: availability, access, utilisation, and stability (Barrett, 2010; Godfray et al., 2010). Whilst substantial agronomic research and breeding investments over the past four decades have sought to raise average yield potential under optimal station conditions (Evenson & Gollin, 2003;Tittonell & Giller, 2013), the fourth pillar—production and consumption stability—remains acutely fragile across East Africa. When a subsistence or semi-commercial farm household experiences an abrupt harvest collapse between consecutive cropping cycles, the resulting production deficit triggers severe welfare penalties: forced liquidation of productive livestock assets at depressed distress prices, withdrawal of children from schooling, curtailment of nutrient-dense dietary intake, and entrenchment in chronic poverty traps (Dercon, 2004; Zimmerman & Carter, 2003; Barrett & Constas, 2014).
+Global food systems face an unprecedented convergence of climatic, ecological, and macroeconomic pressures that threaten the stability of agricultural production and rural livelihoods across the developing world (Wheeler & von Braun, 2013; Lobell et al., 2011; Ray et al., 2015). In sub-Saharan Africa, where rainfed smallholder holdings cultivating less than 3.5 hectares generate over 75% of domestic caloric supply, food security is governed not merely by long-term mean crop yields, but by the magnitude and frequency of inter-seasonal production shocks (Thornton et al., 2014; Jayne et al., 2010; Hertel & Rosch, 2010). Classical definitions of food security emphasise four interdependent pillars: availability, access, utilisation, and stability (Barrett, 2010; Godfray et al., 2010). Whilst substantial agronomic research and breeding investments over the past four decades have sought to raise average yield potential under optimal station conditions (Evenson & Gollin, 2003; Tittonell & Giller, 2013), the fourth pillar—production and consumption stability—remains acutely fragile across East Africa. When a subsistence or semi-commercial farm household experiences an abrupt harvest collapse between consecutive cropping cycles, the resulting production deficit triggers severe welfare penalties: forced liquidation of productive livestock assets at depressed distress prices, withdrawal of children from schooling, curtailment of nutrient-dense dietary intake, and entrenchment in chronic poverty traps (Dercon, 2004; Zimmerman & Carter, 2003; Barrett & Constas, 2014).
 
-The United Republic of Tanzania exemplifies the structural complexity of managing agricultural production risk across highly heterogeneous tropical landscapes. Spanning approximately $945,000\\text{{ km}}^2$ across Mainland Tanzania and the Zanzibar Archipelago, the country encompasses seven distinct Agro-Ecological Zones (AEZs) ranging from semi-arid central plateaus and coastal lowlands to sub-humid lake basins and montane volcanic highlands (Rowhani et al., 2011; Arndt et al., 2012). Across the northern, coastal, lake, and highland corridors, agricultural production follows a bimodal rainfall regime governed by the seasonal migration of the Inter-Tropical Convergence Zone (ITCZ). Smallholder households navigate two distinct cultivation cycles each agricultural year: the *Masika* long rains (typically extending from March to May) and the *Vuli* short rains (occurring from October to December). The *Vuli* rains are characterised by lower cumulative precipitation, higher onset variability, and heightened sensitivity to Indian Ocean Dipole (IOD) and El Niño–Southern Oscillation (ENSO) sea-surface temperature anomalies, whereas the *Masika* rains provide the bulk of annual cereal and legume output but remain vulnerable to mid-season dry spells, flash flooding, and biotic pest outbreaks such as Fall Armyworm (*Spodoptera frugiperda*) (Rowhani et al., 2011; Kassie et al., 2015). Because smallholder households rely on sequential harvests across both seasons to smooth consumption, service informal credit obligations, and finance seed and fertiliser inputs for the subsequent planting window, wide inter-seasonal yield swings between *Masika* and *Vuli* represent a primary driver of transitory food insecurity across rural Tanzania.
+The United Republic of Tanzania exemplifies the structural complexity of managing agricultural production risk across highly heterogeneous tropical landscapes. Spanning approximately 945,000 km² across Mainland Tanzania and the Zanzibar Archipelago, the country encompasses seven distinct Agro-Ecological Zones (AEZs) ranging from semi-arid central plateaus and coastal lowlands to sub-humid lake basins and montane volcanic highlands (Rowhani et al., 2011; Arndt et al., 2012). Across the northern, coastal, lake, and highland corridors, agricultural production follows a bimodal rainfall regime governed by the seasonal migration of the Inter-Tropical Convergence Zone (ITCZ). Smallholder households navigate two distinct cultivation cycles each agricultural year: the *Masika* long rains (typically extending from March to May) and the *Vuli* short rains (occurring from October to December). The *Vuli* rains are characterised by lower cumulative precipitation, higher onset variability, and heightened sensitivity to Indian Ocean Dipole (IOD) and El Niño–Southern Oscillation (ENSO) sea-surface temperature anomalies, whereas the *Masika* rains provide the bulk of annual cereal and legume output but remain vulnerable to mid-season dry spells, flash flooding, and biotic pest outbreaks such as Fall Armyworm (*Spodoptera frugiperda*) (Rowhani et al., 2011; Kassie et al., 2015). Because smallholder households rely on sequential harvests across both seasons to smooth consumption, service informal credit obligations, and finance seed and fertiliser inputs for the subsequent planting window, wide inter-seasonal yield swings between *Masika* and *Vuli* represent a primary driver of transitory food insecurity across rural Tanzania.
 
 Understanding why certain smallholder holdings maintain stable harvest realisations across seasons whilst neighbouring farms within the same agro-ecological zone suffer catastrophic yield oscillations requires moving beyond single-factor agronomic analyses. Theoretical frameworks in agricultural development economics and agro-ecology posit that farm-level production stability emerges from a complex, non-linear interplay among ecological portfolio buffering, household capital endowments, and phenological management (Tilman et al., 2006; Lin, 2011; Di Falco & Chavas, 2009). First, the biodiversity–stability hypothesis demonstrates that cultivating diverse crop species and functional groups with asynchronous water-use profiles and root architectures dampens aggregate portfolio variance through statistical portfolio averaging and ecological niche complementarity (Renard & Tilman, 2019; Isbell et al., 2017; Beillouin et al., 2021). Second, economic buffer-stock theory establishes that liquid household wealth—most notably livestock herds quantified in Tropical Livestock Units (TLU)—relaxes seasonal liquidity constraints, enabling timely land preparation, hired labour mobilisation during peak weeding bottlenecks, and rapid replanting when early rains fail (Dercon, 2004; Dillon et al., 2015). Third, agronomic intensification and soil management practices—including synthetic fertiliser application, pesticide protection, fallowing, and supplemental irrigation—interact non-linearly with plot fragmentation and planting timing (Tittonell & Giller, 2013; Teklewold et al., 2013; Carletto et al., 2013). For instance, high chemical fertiliser investment on rainfed monoculture plots without moisture conservation can amplify downside variance during rainfall deficits, a phenomenon widely recognised in risk-programming literature as risk-inducing intensification (Just & Pope, 1979; Di Falco & Chavas, 2009).
 
 Despite the urgent policy need for high-resolution early-warning tools capable of identifying volatility-prone smallholders prior to shock realisation, existing empirical approaches suffer from three persistent methodological limitations. First, conventional econometric studies of yield risk rely predominantly on parametric linear specifications—such as Just–Pope production functions, Feasible Generalised Least Squares (FGLS), or fixed-effects panel regressions—that impose restrictive functional forms and cannot automatically capture high-order interactions among hundreds of correlated plot, household, and community variables (Just & Pope, 1979; Lobell & Burke, 2010; Storm et al., 2020). Second, where modern machine learning algorithms such as Gradient Boosted Decision Trees (GBDT) and Random Forests have been deployed in agricultural yield prediction, they have focused overwhelmingly on predicting *mean yield levels* rather than *inter-seasonal yield volatility* (Jeong et al., 2016; Crane-Droesch, 2018; Burke & Lobell, 2017; Benami et al., 2021). Moreover, standard volatility metrics such as raw variance or the unbounded coefficient of variation explode mathematically toward infinity when seasonal harvests approach zero under severe drought or crop abandonment, introducing severe outlier distortion in nonparametric tree splits.
 
-Third, and most critically, a growing methodological literature in spatial ecology and geostatistics has demonstrated that standard random $K$-fold cross-validation in spatial machine learning produces severely optimistic performance estimates due to spatial autocorrelation leakage (Roberts et al., 2017; Meyer et al., 2018, 2019; Ploton et al., 2020; Wadoux et al., 2021). In national household surveys, agricultural holdings are sampled within geographically clustered Enumeration Areas (EAs) sharing identical micro-climates, soil catenas, market access corridors, and local measurement customs. Under random $K$-fold splitting, households from the same village cluster are simultaneously assigned to both training and validation folds, allowing high-capacity tree ensembles to memorise spatial coordinates and local cluster means rather than learning generalisable agro-economic relationships (Ploton et al., 2020; Meyer & Pebesma, 2021). Compounding this geographic leakage, machine learning pipelines frequently compute feature scalers, missing-value imputations, unsupervised cluster centroids, Principal Component Analysis (PCA) loadings, and feature selection rankings across the complete dataset *prior* to cross-validation splitting, introducing subtle lookahead bias that invalidates out-of-sample inference (Kaufman et al., 2012; Kapoor & Narayanan, 2023).
+Third, and most critically, a growing methodological literature in spatial ecology and geostatistics has demonstrated that standard random K-fold cross-validation in spatial machine learning produces severely optimistic performance estimates due to spatial autocorrelation leakage (Roberts et al., 2017; Meyer et al., 2018, 2019; Ploton et al., 2020; Wadoux et al., 2021). In national household surveys, agricultural holdings are sampled within geographically clustered Enumeration Areas (EAs) sharing identical micro-climates, soil catenas, market access corridors, and local measurement customs. Under random K-fold splitting, households from the same village cluster are simultaneously assigned to both training and validation folds, allowing high-capacity tree ensembles to memorise spatial coordinates and local cluster means rather than learning generalisable agro-economic relationships (Ploton et al., 2020; Meyer & Pebesma, 2021). Compounding this geographic leakage, machine learning pipelines frequently compute feature scalers, missing-value imputations, unsupervised cluster centroids, Principal Component Analysis (PCA) loadings, and feature selection rankings across the complete dataset *prior* to cross-validation splitting, introducing subtle lookahead bias that invalidates out-of-sample inference (Kaufman et al., 2012; Kapoor & Narayanan, 2023).
 
-To resolve these scientific and methodological gaps, this study designs, audits, and deploys a leakage-free spatial machine learning framework to predict smallholder inter-seasonal crop yield volatility across Tanzania using the newly released 2024/2025 National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata ($N = 4,564$ bimodal holdings across 921 Enumeration Areas in 27 regions). Specifically, this study addresses four core research objectives:
-1. To formulate a mathematically bounded, scale-invariant Yield Volatility Index ($Y_{{\\text{{vol}}}} \\in [0, 2]$) that symmetrically accommodates zero-harvest plot failures and extreme yield disparities across heterogeneous multi-crop smallholder holdings;
+To resolve these scientific and methodological gaps, this study designs, audits, and deploys a leakage-free spatial machine learning framework to predict smallholder inter-seasonal crop yield volatility across Tanzania using the newly released 2024/2025 National Bureau of Statistics (NBS) Annual Agricultural Sample Survey (AASS) microdata (N = 4,564 bimodal holdings across 921 Enumeration Areas in 27 regions). Specifically, this study addresses four core research objectives:
+1. To formulate a mathematically bounded, scale-invariant Yield Volatility Index (Yᵥₒₗ ∈ [0, 2]) that symmetrically accommodates zero-harvest plot failures and extreme yield disparities across heterogeneous multi-crop smallholder holdings;
 2. To establish a rigorous Five-Pillar Spatial Leakage Isolation Architecture that enforces strict Enumeration Area group disjointness, fold-isolated preprocessing, fold-isolated unsupervised representation learning, and tree-gain feature pruning across 246 engineered agro-ecological candidate predictors;
 3. To evaluate whether a unified national soft-voting ensemble of gradient boosted and bagging decision trees outperforms isolated regional sub-models when transferring predictive relationships across data-sparse administrative regions; and
 4. To decode the non-linear agronomic tipping points and asset-buffering mechanisms governing smallholder yield volatility using exact Tree-based Shapley Additive Explanations (TreeSHAP), partial dependence surfaces, and policy counterfactual simulations.
@@ -332,9 +347,9 @@ To resolve these scientific and methodological gaps, this study designs, audits,
 
 ### 2.1 Study area and agro-ecological context
 
-The empirical investigation covers the entirety of the United Republic of Tanzania, situated in East Africa between latitudes $1^\\circ 00'\\text{{ S}}$ and $11^\\circ 45'\\text{{ S}}$ and longitudes $29^\\circ 15'\\text{{ E}}$ and $40^\\circ 30'\\text{{ E}}$ (Fig. 1). Topographically, Tanzania transitions from a warm, humid coastal belt along the Indian Ocean and the islands of Unguja and Pemba (Zanzibar Archipelago; altitude $0\\text{{--}}200\\text{{ m}}$ above sea level) to an extensive central plateau ($800\\text{{--}}1,500\\text{{ m}}$) flanked by the Eastern and Western branches of the East African Rift Valley, culminating in the Northern Highlands around Mount Kilimanjaro and Mount Meru and the Southern Highlands bordering Lake Nyasa ($1,500\\text{{--}}2,900\\text{{ m}}$).
+The empirical investigation covers the entirety of the United Republic of Tanzania, situated in East Africa between latitudes 1° 00′ S and 11° 45′ S and longitudes 29° 15′ E and 40° 30′ E (Fig. 1). Topographically, Tanzania transitions from a warm, humid coastal belt along the Indian Ocean and the islands of Unguja and Pemba (Zanzibar Archipelago; altitude 0–200 m above sea level) to an extensive central plateau (800–1,500 m) flanked by the Eastern and Western branches of the East African Rift Valley, culminating in the Northern Highlands around Mount Kilimanjaro and Mount Meru and the Southern Highlands bordering Lake Nyasa (1,500–2,900 m).
 
-For agronomic and national planning purposes, Tanzania's 31 administrative regions are stratified into seven macro Agro-Ecological Zones (AEZs): (i) the *Coastal and Eastern Zone* (Tanga, Morogoro, Pwani, Dar es Salaam, Lindi, Mtwara), characterised by bimodal and transitional rainfall ($800\\text{{--}}1,400\\text{{ mm yr}}^{{-1}}$) supporting maize, cassava, rice, and tree crops; (ii) the *Northern Highlands Zone* (Arusha, Kilimanjaro, Manyara), featuring volcanic soils and bimodal orographic rainfall ($1,000\\text{{--}}2,000\\text{{ mm yr}}^{{-1}}$) with intensive banana–coffee–maize–bean intercropping; (iii) the *Lake Victoria Basin Zone* (Kagera, Mara, Mwanza, Geita, Simiyu, Shinyanga), experiencing reliable bimodal precipitation ($900\\text{{--}}1,800\\text{{ mm yr}}^{{-1}}$) modified by lake-breeze circulations; (iv) the *Central Semi-Arid Zone* (Dodoma, Singida, Tabora), receiving low, erratic rainfall ($500\\text{{--}}800\\text{{ mm yr}}^{{-1}}$) with high evapotranspiration and frequent dry spells; (v) the *Southern Highlands Zone* (Mbeya, Iringa, Njombe, Songwe, Ruvuma), forming Tanzania's principal cereal breadbasket ($1,000\\text{{--}}1,600\\text{{ mm yr}}^{{-1}}$); (vi) the *Western and Southern Zone* (Kigoma, Katavi, Rukwa), spanning miombo woodland plains along Lake Tanganyika; and (vii) the *Zanzibar Archipelago* (Kaskazini Unguja, Kusini Unguja, Mjini Magharibi, Kaskazini Pemba, Kusini Pemba), governed by maritime equatorial bimodal rains ($1,400\\text{{--}}2,000\\text{{ mm yr}}^{{-1}}$).
+For agronomic and national planning purposes, Tanzania's 31 administrative regions are stratified into seven macro Agro-Ecological Zones (AEZs): (i) the *Coastal and Eastern Zone* (Tanga, Morogoro, Pwani, Dar es Salaam, Lindi, Mtwara), characterised by bimodal and transitional rainfall (800–1,400 mm yr⁻¹) supporting maize, cassava, rice, and tree crops; (ii) the *Northern Highlands Zone* (Arusha, Kilimanjaro, Manyara), featuring volcanic soils and bimodal orographic rainfall (1,000–2,000 mm yr⁻¹) with intensive banana–coffee–maize–bean intercropping; (iii) the *Lake Victoria Basin Zone* (Kagera, Mara, Mwanza, Geita, Simiyu, Shinyanga), experiencing reliable bimodal precipitation (900–1,800 mm yr⁻¹) modified by lake-breeze circulations; (iv) the *Central Semi-Arid Zone* (Dodoma, Singida, Tabora), receiving low, erratic rainfall (500–800 mm yr⁻¹) with high evapotranspiration and frequent dry spells; (v) the *Southern Highlands Zone* (Mbeya, Iringa, Njombe, Songwe, Ruvuma), forming Tanzania's principal cereal breadbasket (1,000–1,600 mm yr⁻¹); (vi) the *Western and Southern Zone* (Kigoma, Katavi, Rukwa), spanning miombo woodland plains along Lake Tanganyika; and (vii) the *Zanzibar Archipelago* (Kaskazini Unguja, Kusini Unguja, Mjini Magharibi, Kaskazini Pemba, Kusini Pemba), governed by maritime equatorial bimodal rains (1,400–2,000 mm yr⁻¹).
 
 ### 2.2 Survey design and microdata architecture
 
@@ -350,100 +365,100 @@ To construct a comprehensive, multi-dimensional representation of each agricultu
 7. Livestock Herd Roster: Inventory counts of indigenous and improved cattle, goats, sheep, pigs, donkeys, and poultry; and
 8. Extension & Early-Warning Roster: Receipt of meteorological weather forecasts, agricultural extension visits, and agronomic advisories.
 
-#### 2.2.1 Derivation of the bimodal analytical cohort ($N = 4,564$)
+#### 2.2.1 Derivation of the bimodal analytical cohort (N = 4,564)
 
-Whilst the master AASS survey encompasses 18,904 agricultural holdings nationwide, regions situated in strictly unimodal rainfall regimes cultivate only a single annual season. Because our research objective specifically targets *inter-seasonal* yield volatility across consecutive cropping windows within the same agricultural year, inclusion in the analytical modelling cohort required a holding to satisfy three objective eligibility criteria: (i) active plot cultivation with positive planted area ($A_{{i,s}} > 0\\text{{ ha}}$) recorded in both the *Masika* ($s = m$) and *Vuli* ($s = v$) seasons; (ii) valid crop roster entries allowing metric weight harmonisation or confirmed zero-harvest failure in both seasons; and (iii) non-negative seasonal yield realisations with at least one season achieving positive harvest output ($Y_{{i,m}} + Y_{{i,v}} > 0\\text{{ kg ha}}^{{-1}}$). Filtering the 18,904 master holdings by active bimodal cultivation yielded exactly $N = 4,564$ smallholder holdings distributed across 921 distinct Enumeration Areas in 27 administrative regions. Importantly, plots that were planted but suffered 100% crop loss due to drought, flood, or pest devastation ($Y_{{i,s}} = 0\\text{{ kg ha}}^{{-1}}$ in one season) were explicitly retained in the cohort, as complete seasonal harvest failure represents the most severe manifestation of food shock vulnerability.
+Whilst the master AASS survey encompasses 18,904 agricultural holdings nationwide, regions situated in strictly unimodal rainfall regimes cultivate only a single annual season. Because our research objective specifically targets *inter-seasonal* yield volatility across consecutive cropping windows within the same agricultural year, inclusion in the analytical modelling cohort required a holding to satisfy three objective eligibility criteria: (i) active plot cultivation with positive planted area (Aᵢ,ₛ > 0 ha) recorded in both the *Masika* (s = m) and *Vuli* (s = v) seasons; (ii) valid crop roster entries allowing metric weight harmonisation or confirmed zero-harvest failure in both seasons; and (iii) non-negative seasonal yield realisations with at least one season achieving positive harvest output (Yᵢ,ₘ + Yᵢ,ᵥ > 0 kg ha⁻¹). Filtering the 18,904 master holdings by active bimodal cultivation yielded exactly N = 4,564 smallholder holdings distributed across 921 distinct Enumeration Areas in 27 administrative regions. Importantly, plots that were planted but suffered 100% crop loss due to drought, flood, or pest devastation (Yᵢ,ₛ = 0 kg ha⁻¹ in one season) were explicitly retained in the cohort, as complete seasonal harvest failure represents the most severe manifestation of food shock vulnerability.
 
 ### 2.3 Metric unit harmonisation and target variable formulation
 
-A pervasive source of measurement noise in developing-country agricultural surveys is the reporting of harvests in non-standard, volumetric traditional containers whose physical mass varies by container geometry and crop bulk density (Carletto et al., 2013, 2015). In the AASS crop rosters, farmers reported outputs across 29 distinct unit codes (traditional harvest units in *Masika* and traditional harvest units in *Vuli*), including metric kilograms, metric tonnes, 18-litre *debe* tins, *sadoline* plastic tins, *kibaba* bowls, *tenga* bamboo baskets, banana bunches (*mkungu*), and polypropylene sacks ranging from 25 kg to 120 kg. We implemented a two-stage metric harmonisation protocol. Where the NBS pre-calibrated metric tonne variable (metric tonnes) was populated, physical production in kilograms was extracted directly as $Q_{{i,p,c,s}} = 1,000 \\times \\text{{harvest\\_ton}}$. Where raw unit quantities were reported, we applied empirically calibrated East African unit-to-kilogram conversion factors $\\kappa_u$ (standard metric conversion multipliers; e.g., $\\kappa_{{20}} = 18.0\\text{{ kg}}$ per *debe* tin, $\\kappa_{{24}} = 15.0\\text{{ kg}}$ per *sadoline* tin, $\\kappa_{{43}} = 0.75\\text{{ kg}}$ per *kibaba*, $\\kappa_{{12}} = 20.0\\text{{ kg}}$ per *tenga*, and $\\kappa_{{26}} = 50.0\\text{{ kg}}$ per medium sack).
+A pervasive source of measurement noise in developing-country agricultural surveys is the reporting of harvests in non-standard, volumetric traditional containers whose physical mass varies by container geometry and crop bulk density (Carletto et al., 2013, 2015). In the AASS crop rosters, farmers reported outputs across 29 distinct unit codes (traditional harvest units in *Masika* and traditional harvest units in *Vuli*), including metric kilograms, metric tonnes, 18-litre *debe* tins, *sadoline* plastic tins, *kibaba* bowls, *tenga* bamboo baskets, banana bunches (*mkungu*), and polypropylene sacks ranging from 25 kg to 120 kg. We implemented a two-stage metric harmonisation protocol. Where the NBS pre-calibrated metric tonne variable (metric tonnes) was populated, physical production in kilograms was extracted directly as Qᵢ,ₚ,c,ₛ = 1,000 × harvest_ton. Where raw unit quantities were reported, we applied empirically calibrated East African unit-to-kilogram conversion factors κᵤ (standard metric conversion multipliers; e.g., κ₂₀ = 18.0 kg per *debe* tin, κ₂₄ = 15.0 kg per *sadoline* tin, κ₄₃ = 0.75 kg per *kibaba*, κ₁₂ = 20.0 kg per *tenga*, and κ₂₆ = 50.0 kg per medium sack).
 
-For household $i \\in \\{{1, \\dots, N\\}}$ cultivating plots $p \\in P_{{i,s}}$ and crops $c \\in C_{{i,p,s}}$ during season $s \\in \\{{m, v\\}}$, total seasonal harvested biomass ($Q_{{i,s}}$, in kg) and total seasonal cultivated land area ($A_{{i,s}}$, in ha) are aggregated as:
+For household i ∈ {1, …, N} cultivating plots p ∈ Pᵢ,ₛ and crops c ∈ Cᵢ,ₚ,ₛ during season s ∈ {m, v}, total seasonal harvested biomass (Qᵢ,ₛ, in kg) and total seasonal cultivated land area (Aᵢ,ₛ, in ha) are aggregated as:
 
-$$Q_{{i,s}} = \\sum_{{p \\in P_{{i,s}}}} \\sum_{{c \\in C_{{i,p,s}}}} q_{{i,p,c,s}} \\cdot \\kappa_{{u(i,p,c,s)}}, \\quad A_{{i,s}} = \\sum_{{p \\in P_{{i,s}}}} a_{{i,p,s}}$$ (1)
+{EQ1}
 
-where $q_{{i,p,c,s}}$ is the raw harvested quantity, $\\kappa_{{u(i,p,c,s)}}$ is the metric conversion multiplier for unit $u$, and $a_{{i,p,s}}$ is the cultivated area of plot $p$ in hectares (GPS-measured plot area and GPS-measured plot area). The household's area-weighted baseline seasonal yield ($Y_{{i,s}}$, in $\\text{{kg ha}}^{{-1}}$) is then defined as:
+where qᵢ,ₚ,c,ₛ is the raw harvested quantity, κᵤ₍ᵢ,ₚ,c,ₛ₎ is the metric conversion multiplier for unit u, and aᵢ,ₚ,ₛ is the cultivated area of plot p in hectares (GPS-measured plot area). The household's area-weighted baseline seasonal yield (Yᵢ,ₛ, in kg ha⁻¹) is then defined as:
 
-$$Y_{{i,s}} = \\frac{{Q_{{i,s}}}}{{A_{{i,s}}}}, \\quad s \\in \\{{m, v\\}}$$ (2)
+{EQ2}
 
-To quantify inter-seasonal production instability without suffering from scale distortion or zero-denominator singularities when one season experiences total crop failure, we formulate the Yield Volatility Index ($Y_{{\\text{{vol}},i}}$) as the absolute seasonal yield divergence normalised by the inter-seasonal mean yield $\\bar{{Y}}_i = \\frac{{1}}{{2}}(Y_{{i,m}} + Y_{{i,v}})$:
+To quantify inter-seasonal production instability without suffering from scale distortion or zero-denominator singularities when one season experiences total crop failure, we formulate the Yield Volatility Index (Yᵥₒₗ,ᵢ) as the absolute seasonal yield divergence normalised by the inter-seasonal mean yield Ȳᵢ = ½(Yᵢ,ₘ + Yᵢ,ᵥ):
 
-$$Y_{{\\text{{vol}},i}} = \\frac{{|Y_{{i,m}} - Y_{{i,v}}|}}{{\\frac{{1}}{{2}}(Y_{{i,m}} + Y_{{i,v}}) + \\varepsilon}} = \\frac{{2|Y_{{i,m}} - Y_{{i,v}}|}}{{Y_{{i,m}} + Y_{{i,v}} + 2\\varepsilon}}$$ (3)
+{EQ3}
 
-where $\\varepsilon = 10^{{-5}}\\text{{ kg ha}}^{{-1}}$ is a numerical stability constant. Equation (3) possesses three desirable mathematical properties for statistical learning: (i) strict boundedness on the compact interval $Y_{{\\text{{vol}},i}} \\in [0, 2]$, where $Y_{{\\text{{vol}},i}} = 0$ denotes perfect inter-seasonal yield parity ($Y_{{i,m}} = Y_{{i,v}}$) and $Y_{{\\text{{vol}},i}} = 2.0$ denotes complete uni-seasonal harvest collapse ($Y_{{i,m}} = 0$ or $Y_{{i,v}} = 0$); (ii) scale invariance, ensuring that proportional yield fluctuations on a $400\\text{{ kg ha}}^{{-1}}$ legume farm and a $4,000\\text{{ kg ha}}^{{-1}}$ commercial maize farm are evaluated on an identical dimensionless risk metric; and (iii) sign symmetry between *Masika*-dominant and *Vuli*-dominant agro-ecosystems.
+where ε = 10⁻⁵ kg ha⁻¹ is a numerical stability constant. Equation (3) possesses three desirable mathematical properties for statistical learning: (i) strict boundedness on the compact interval Yᵥₒₗ,ᵢ ∈ [0, 2], where Yᵥₒₗ,ᵢ = 0 denotes perfect inter-seasonal yield parity (Yᵢ,ₘ = Yᵢ,ᵥ) and Yᵥₒₗ,ᵢ = 2.0 denotes complete uni-seasonal harvest collapse (Yᵢ,ₘ = 0 or Yᵢ,ᵥ = 0); (ii) scale invariance, ensuring that proportional yield fluctuations on a 400 kg ha⁻¹ legume farm and a 4,000 kg ha⁻¹ commercial maize farm are evaluated on an identical dimensionless risk metric; and (iii) sign symmetry between *Masika*-dominant and *Vuli*-dominant agro-ecosystems.
 
 ### 2.4 Multi-domain feature engineering and ecological indices
 
-Drawing on agro-ecological resilience theory and agricultural household economics, we engineered 246 candidate explanatory features spanning six thematic domains (Online Resource 1 provides the complete ranked inventory of all 246 candidate features). Crucially, to prevent target leakage, zero post-harvest yield or production quantities from Equations (1)–(2) are permitted to enter the predictive feature matrix $X$.
+Drawing on agro-ecological resilience theory and agricultural household economics, we engineered 246 candidate explanatory features spanning six thematic domains (Online Resource 1 provides the complete ranked inventory of all 246 candidate features). Crucially, to prevent target leakage, zero post-harvest yield or production quantities from Equations (1)–(2) are permitted to enter the predictive feature matrix X.
 
 #### 2.4.1 Crop portfolio diversity and turnover indices
 
-Let $p_{{i,c,s}} = a_{{i,c,s}} / A_{{i,s}}$ denote the proportion of cultivated area allocated to crop species $c \\in \\{{1, \\dots, S_{{i,s}}\\}}$ by household $i$ in season $s$. We compute four complementary ecological diversity indices for each season: the Shannon–Wiener Diversity Index ($H'_{{i,s}}$), the Herfindahl–Hirschman Concentration Index ($C_{{\\text{{HHI}},i,s}}$), the Berger–Parker Dominance Index ($D_{{\\text{{BP}},i,s}}$), and Pielou's Species Evenness Index ($J'_{{i,s}}$) (Shannon, 1948; Magurran, 2004):
+Let pᵢ,c,ₛ = aᵢ,c,ₛ / Aᵢ,ₛ denote the proportion of cultivated area allocated to crop species c ∈ {1, …, Sᵢ,ₛ} by household i in season s. We compute four complementary ecological diversity indices for each season: the Shannon–Wiener Diversity Index (H′ᵢ,ₛ), the Herfindahl–Hirschman Concentration Index (C<sub>HHI,i,s</sub>), the Berger–Parker Dominance Index (D<sub>BP,i,s</sub>), and Pielou's Species Evenness Index (J′ᵢ,ₛ) (Shannon, 1948; Magurran, 2004):
 
-$$H'_{{i,s}} = -\\sum_{{c=1}}^{{S_{{i,s}}}} p_{{i,c,s}} \\ln(p_{{i,c,s}}), \\quad C_{{\\text{{HHI}},i,s}} = \\sum_{{c=1}}^{{S_{{i,s}}}} p_{{i,c,s}}^2, \\quad D_{{\\text{{BP}},i,s}} = \\max_{{c}} \\, p_{{i,c,s}}, \\quad J'_{{i,s}} = \\frac{{H'_{{i,s}}}}{{\\ln(S_{{i,s}})}}$$ (4)
+{EQ4}
 
-To capture inter-seasonal crop rotation and portfolio restructuring between *Masika* and *Vuli*, let $C_{{i,m}}$ and $C_{{i,v}}$ denote the sets of distinct crop species cultivated in each season. We define the cross-seasonal Jaccard Crop Similarity Coefficient ($J(C_{{i,m}}, C_{{i,v}})$) and the Seasonal Crop Rotation Index ($R_{{\\text{{rot}},i}}$) as:
+To capture inter-seasonal crop rotation and portfolio restructuring between *Masika* and *Vuli*, let Cᵢ,ₘ and Cᵢ,ᵥ denote the sets of distinct crop species cultivated in each season. We define the cross-seasonal Jaccard Crop Similarity Coefficient (J(Cᵢ,ₘ, Cᵢ,ᵥ)) and the Seasonal Crop Rotation Index (R<sub>rot,i</sub>) as:
 
-$$J(C_{{i,m}}, C_{{i,v}}) = \\frac{{|C_{{i,m}} \\cap C_{{i,v}}|}}{{|C_{{i,m}} \\cup C_{{i,v}}|}}, \\quad R_{{\\text{{rot}},i}} = 1 - J(C_{{i,m}}, C_{{i,v}})$$ (5)
+{EQ5}
 
-alongside inter-seasonal portfolio shifts $\\Delta H'_i = H'_{{i,m}} - H'_{{i,v}}$, $\\Delta J'_i = J'_{{i,m}} - J'_{{i,v}}$, and $\\Delta C_{{\\text{{HHI}},i}} = C_{{\\text{{HHI}},i,m}} - C_{{\\text{{HHI}},i,v}}$.
+alongside inter-seasonal portfolio shifts ΔH′ᵢ = H′ᵢ,ₘ − H′ᵢ,ᵥ, ΔJ′ᵢ = J′ᵢ,ₘ − J′ᵢ,ᵥ, and ΔC<sub>HHI,i</sub> = C<sub>HHI,i,m</sub> − C<sub>HHI,i,v</sub>.
 
 #### 2.4.2 Phenological planting timing and plot fragmentation
 
-Because rainfed crop establishment depends critically on matching sowing dates to the onset of effective soil moisture, we extract the mean planting calendar month in each season ($\\bar{{M}}_{{i,m}}$ and $\\bar{{M}}_{{i,v}}$) and define the inter-seasonal Planting Month Difference ($\\Delta M_i$, inter-seasonal planting delay):
+Because rainfed crop establishment depends critically on matching sowing dates to the onset of effective soil moisture, we extract the mean planting calendar month in each season (M̄ᵢ,ₘ and M̄ᵢ,ᵥ) and define the inter-seasonal Planting Month Difference (ΔMᵢ, inter-seasonal planting delay):
 
-$$\\Delta M_i = \\bar{{M}}_{{i,m}} - \\bar{{M}}_{{i,v}}$$ (6)
+{EQ6}
 
-Spatial parcel dispersion and land fragmentation across a holding's $K_i$ operational plots are quantified via the Plot Area Coefficient of Variation ($\\text{{CV}}_{{\\text{{plot}},i}}$, plot area fragmentation):
+Spatial parcel dispersion and land fragmentation across a holding's Kᵢ operational plots are quantified via the Plot Area Coefficient of Variation (CVₚₗₒₜ,ᵢ, plot area fragmentation):
 
-$$\\text{{CV}}_{{\\text{{plot}},i}} = \\frac{{\\sigma_{{a,i}}}}{{\\mu_{{a,i}} + \\varepsilon}}, \\quad \\mu_{{a,i}} = \\frac{{1}}{{K_i}}\\sum_{{p=1}}^{{K_i}} a_{{i,p}}, \\quad \\sigma_{{a,i}} = \\sqrt{{\\frac{{1}}{{K_i}}\\sum_{{p=1}}^{{K_i}} (a_{{i,p}} - \\mu_{{a,i}})^2}}$$ (7)
+{EQ7}
 
 #### 2.4.3 Livestock asset buffers and capital–labour ratios
 
-To aggregate heterogeneous livestock species into a standardised metabolic wealth buffer, we compute Tropical Livestock Units ($\\text{{TLU}}_i$, total livestock holdings) using FAO sub-Saharan African conversion weights ($1\\text{{ TLU}} = 250\\text{{ kg}}$ live weight) (Jahnke, 1982; Njuki et al., 2011):
+To aggregate heterogeneous livestock species into a standardised metabolic wealth buffer, we compute Tropical Livestock Units (TLUᵢ, total livestock holdings) using FAO sub-Saharan African conversion weights (1 TLU = 250 kg live weight) (Jahnke, 1982; Njuki et al., 2011):
 
-$$\\text{{TLU}}_i = 0.70 N_{{\\text{{cattle}},i}} + 0.50 N_{{\\text{{donkey}},i}} + 0.20 N_{{\\text{{pig}},i}} + 0.10 (N_{{\\text{{goat}},i}} + N_{{\\text{{sheep}},i}}) + 0.01 N_{{\\text{{poultry}},i}}$$ (8)
+{EQ8}
 
-Household labour capitalisation and input intensification are captured through cultivated land per adult labourer ($A_i / L_{{\\text{{adult}},i}}$, cultivated land area per adult labourer), plots per adult labourer , household dependency ratio , inorganic fertiliser application intensity ($F_{{i,s}} / A_{{i,s}}$, $\\text{{kg ha}}^{{-1}}$), pesticide intensity ($P_{{i,s}} / A_{{i,s}}$), and seasonal fertiliser allocation ratios.
+Household labour capitalisation and input intensification are captured through cultivated land per adult labourer (Aᵢ / L<sub>adult,i</sub>, cultivated land area per adult labourer), plots per adult labourer, household dependency ratio, inorganic fertiliser application intensity (Fᵢ,ₛ / Aᵢ,ₛ, kg ha⁻¹), pesticide intensity (Pᵢ,ₛ / Aᵢ,ₛ), and seasonal fertiliser allocation ratios.
 
 #### 2.4.4 Spatial community peer benchmarks and latent representations
 
-To contextualise each smallholder's management practices relative to local agro-ecological norms without leaking target values, we compute spatial peer-group deviations for key structural variables $X_k \\in \\{{H'_{{m}}, A, F_m\\}}$ relative to the regional community mean $\\bar{{X}}_{{k,r(i)}}$:
+To contextualise each smallholder's management practices relative to local agro-ecological norms without leaking target values, we compute spatial peer-group deviations for key structural variables Xₖ ∈ {H′ₘ, A, Fₘ} relative to the regional community mean X̄ₖ,ᵣ₍ᵢ₎:
 
-$$\\Delta X_{{k,i}}^{{\\text{{reg}}}} = X_{{k,i}} - \\bar{{X}}_{{k,r(i)}}, \\quad Z_{{k,i}}^{{\\text{{reg}}}} = \\frac{{X_{{k,i}} - \\bar{{X}}_{{k,r(i)}}}}{{\\sigma_{{X_k,r(i)}} + \\varepsilon}}$$ (9)
+{EQ9}
 
-Additionally, inside each training fold, we extract four unsupervised K-Means Agronomic Archetype Distances ($d_{{i,c}} = \\|\\mathbf{{z}}_i - \\boldsymbol{{\\mu}}_c\\|_2$ for $c \\in \\{{0, 1, 2, 3\\}}$, representing Euclidean distance in standardised input–diversity–scale space to Subsistence Cereal, Commercial Mixed Cropping, Agro-Pastoral, and Diversified Tree-Crop clusters) and three orthogonal Principal Component Analysis (PCA) latent factors (the first principal component, the second principal component, the third principal component) capturing farm scale, capital–labour substitution, and agro-ecological elevation gradients.
+Additionally, inside each training fold, we extract four unsupervised K-Means Agronomic Archetype Distances (dᵢ,꜀ = ‖zᵢ − μ꜀‖₂ for c ∈ {0, 1, 2, 3}, representing Euclidean distance in standardised input–diversity–scale space to Subsistence Cereal, Commercial Mixed Cropping, Agro-Pastoral, and Diversified Tree-Crop clusters) and three orthogonal Principal Component Analysis (PCA) latent factors (the first principal component, the second principal component, the third principal component) capturing farm scale, capital–labour substitution, and agro-ecological elevation gradients.
 
 ### 2.5 Spatial cross-validation and the five-pillar leakage isolation protocol
 
-Standard random cross-validation violates the assumption of independent and identically distributed (i.i.d.) validation errors when observations are spatially clustered within census Enumeration Areas (Roberts et al., 2017; Meyer et al., 2018; Ploton et al., 2020). Let $G_i \\in \\{{1, \\dots, 921\\}}$ denote the Enumeration Area identifier (`ea_id`) of household $i$. We partition the $N = 4,564$ holdings into $K = 5$ spatially disjoint folds $\\mathcal{{F}}_1, \\dots, \\mathcal{{F}}_5$ using Spatial Group $K$-Fold Cross-Validation (geographic group cross-validation), enforcing the strict geographic disjointness constraint:
+Standard random cross-validation violates the assumption of independent and identically distributed (i.i.d.) validation errors when observations are spatially clustered within census Enumeration Areas (Roberts et al., 2017; Meyer et al., 2018; Ploton et al., 2020). Let Gᵢ ∈ {1, …, 921} denote the Enumeration Area identifier (ea_id) of household i. We partition the N = 4,564 holdings into K = 5 spatially disjoint folds ℱ₁, …, ℱ₅ using Spatial Group K-Fold Cross-Validation (geographic group cross-validation), enforcing the strict geographic disjointness constraint:
 
-$$\\forall k \\neq k' \\in \\{{1, \\dots, 5\\}}: \\quad \\left\\{{ G_i : i \\in \\mathcal{{F}}_k \\right\\}} \\cap \\left\\{{ G_j : j \\in \\mathcal{{F}}_{{k'}} \\right\\}} = \\emptyset$$ (10)
+{EQ10}
 
 Equation (10) guarantees that no Enumeration Area—and consequently no village micro-climate, shared soil catena, or local enumerator team—ever spans both training and validation partitions.
 
 To ensure that zero information from validation holdings contaminates model training, we enforce and programmatically verify a Five-Pillar Spatial Leakage Isolation Protocol:
 - Pillar 1 (Spatial Group Disjointness): Verifies Equation (10) across all five folds (zero overlapping EAs across 921 clusters).
-- Pillar 2 (Target Variable Independence): Verifies that $Y_{{\\text{{vol}}}}$, $Y_m$, $Y_v$, $Q_m$, and $Q_v$ are strictly excluded from $X$ and audits the maximum absolute Pearson correlation $\\max_j |r(X_j, Y_{{\\text{{vol}}}})|$ to confirm the absence of deterministic target proxies.
-- Pillar 3 (Preprocessing & Imputation Isolation): All median imputers, robust interquartile scaling interquartile transformations, and one-hot categorical encoding mappings are fitted strictly on training fold indices $\\mathcal{{I}}_{{\\text{{train}}}}^{{(-k)}}$ and applied out-of-fold to $\\mathcal{{I}}_{{\\text{{val}}}}^{{(k)}}$.
-- Pillar 4 (Unsupervised Representation Isolation): Both unsupervised k-means clustering with four clusters centroids and principal component analysis retaining three components projection matrices are estimated strictly on training fold observations.
-- Pillar 5 (Feature Selection & Lookahead Integrity): Tree-gain feature importance ranking (tree-gain feature importance selection) is executed without accessing validation target labels, pruning the 246 candidate features down to the top $K_{{\\text{{top}}}} = 100$ features (champion feature subset) that capture 99.1% of cumulative information gain whilst eliminating 146 collinear or high-noise variables.
+- Pillar 2 (Target Variable Independence): Verifies that Yᵥₒₗ, Yₘ, Yᵥ, Qₘ, and Qᵥ are strictly excluded from X and audits the maximum absolute Pearson correlation maxⱼ |r(Xⱼ, Yᵥₒₗ)| to confirm the absence of deterministic target proxies.
+- Pillar 3 (Preprocessing & Imputation Isolation): All median imputers, robust interquartile scaling interquartile transformations, and one-hot categorical encoding mappings are fitted strictly on training fold indices ℐ<sub>train</sub><sup>(−k)</sup> and applied out-of-fold to ℐ<sub>val</sub><sup>(k)</sup>.
+- Pillar 4 (Unsupervised Representation Isolation): Both unsupervised k-means clustering with four cluster centroids and principal component analysis retaining three components projection matrices are estimated strictly on training fold observations.
+- Pillar 5 (Feature Selection & Lookahead Integrity): Tree-gain feature importance ranking (tree-gain feature importance selection) is executed without accessing validation target labels, pruning the 246 candidate features down to the top K<sub>top</sub> = 100 features (champion feature subset) that capture 99.1% of cumulative information gain whilst eliminating 146 collinear or high-noise variables.
 
 ### 2.6 Supervised ensemble architecture and interpretability framework
 
 We benchmark four supervised regression architectures across the identical five-fold spatial cross-validation splits:
-1. Light Gradient Boosting Machine (LightGBM): A histogram-based gradient boosting framework utilizing leaf-wise (best-first) tree growth with Gradient-based One-Side Sampling (GOSS) and Exclusive Feature Bundling (EFB), configured with `num_leaves = 35`, `max_depth = 6`, learning rate $\\eta = 0.03$, `subsample = 0.80`, `colsample_bytree = 0.70`, and $L_1/L_2$ regularisation $\\alpha = 0.1, \\lambda = 1.0$ (Ke et al., 2017);
-2. Extreme Gradient Boosting (XGBoost): A depth-wise regularised second-order Taylor-expansion gradient booster configured with `max_depth = 5`, learning rate $\\eta = 0.03$, `subsample = 0.80`, `colsample_bytree = 0.70`, and $\\lambda = 1.5$ (Chen & Guestrin, 2016);
-3. Random Forest Regressor (RF): A variance-reducing bootstrap aggregation (bagging) ensemble of 400 deep decision trees trained with trained with a maximum depth of 16 and square-root feature subsampling (Breiman, 2001); and
+1. Light Gradient Boosting Machine (LightGBM): A histogram-based gradient boosting framework utilizing leaf-wise (best-first) tree growth with Gradient-based One-Side Sampling (GOSS) and Exclusive Feature Bundling (EFB), configured with num_leaves = 35, max_depth = 6, learning rate η = 0.03, subsample = 0.80, colsample_bytree = 0.70, and L₁/L₂ regularisation α = 0.1, λ = 1.0 (Ke et al., 2017);
+2. Extreme Gradient Boosting (XGBoost): A depth-wise regularised second-order Taylor-expansion gradient booster configured with max_depth = 5, learning rate η = 0.03, subsample = 0.80, colsample_bytree = 0.70, and λ = 1.5 (Chen & Guestrin, 2016);
+3. Random Forest Regressor (RF): A variance-reducing bootstrap aggregation (bagging) ensemble of 400 deep decision trees trained with a maximum depth of 16 and square-root feature subsampling (Breiman, 2001); and
 4. Champion Soft-Voting Weighted Ensemble: A convex linear combination of the three diverse base learners designed to minimise spatial generalisation variance (Breiman, 1996; Dietterich, 2000):
 
-$$\\hat{{Y}}_{{\\text{{vol}},i}}^{{\\text{{ens}}}} = \\operatorname{{clip}}\\left( w_{{\\text{{LGB}}}} \\hat{{f}}_{{\\text{{LGB}}}}(\\mathbf{{x}}_i) + w_{{\\text{{XGB}}}} \\hat{{f}}_{{\\text{{XGB}}}}(\\mathbf{{x}}_i) + w_{{\\text{{RF}}}} \\hat{{f}}_{{\\text{{RF}}}}(\\mathbf{{x}}_i), \\; 0.0, \\; 2.0 \\right)$$ (11)
+{EQ11}
 
-with simplex weights $w_{{\\text{{LGB}}}} = 0.50$, $w_{{\\text{{XGB}}}} = 0.40$, and $w_{{\\text{{RF}}}} = 0.10$ selected via out-of-fold simplex grid optimisation on training partitions. Model accuracy is evaluated across all out-of-fold spatial predictions using Root Mean Squared Error ($\\text{{RMSE}} = \\sqrt{{\\frac{{1}}{{N}}\\sum_{{i=1}}^N (Y_{{\\text{{vol}},i}} - \\hat{{Y}}_{{\\text{{vol}},i}})^2}}$), Mean Absolute Error ($\\text{{MAE}} = \\frac{{1}}{{N}}\\sum_{{i=1}}^N |Y_{{\\text{{vol}},i}} - \\hat{{Y}}_{{\\text{{vol}},i}}|$), and the out-of-fold Coefficient of Determination ($R^2 = 1 - \\sum_i (Y_{{\\text{{vol}},i}} - \\hat{{Y}}_{{\\text{{vol}},i}})^2 / \\sum_i (Y_{{\\text{{vol}},i}} - \\bar{{Y}}_{{\\text{{vol}}}})^2$).
+with simplex weights w<sub>LGB</sub> = 0.50, w<sub>XGB</sub> = 0.40, and w<sub>RF</sub> = 0.10 selected via out-of-fold simplex grid optimisation on training partitions. Model predictive accuracy is evaluated across all out-of-fold spatial predictions using Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and the out-of-fold Coefficient of Determination (R²).
 
-To ensure transparent, game-theoretically consistent attribution of non-linear predictions, we compute exact Tree-based Shapley Additive Explanations (TreeSHAP) (Lundberg & Lee, 2017; Lundberg et al., 2020), which decompose each household's prediction $\\hat{{f}}(\\mathbf{{x}}_i)$ into the expected baseline volatility $E[f(X)]$ plus exact marginal feature contributions $\\phi_{{i,j}}$:
+To ensure transparent, game-theoretically consistent attribution of non-linear predictions, we compute exact Tree-based Shapley Additive Explanations (TreeSHAP) (Lundberg & Lee, 2017; Lundberg et al., 2020), which decompose each household's prediction f̂(xᵢ) into the expected baseline volatility E[f(X)] plus exact marginal feature contributions ϕᵢ,ⱼ:
 
-$$\\hat{{f}}(\\mathbf{{x}}_i) = E[f(X)] + \\sum_{{j=1}}^{{M}} \\phi_{{i,j}}, \\quad \\phi_{{i,j}} = \\sum_{{S \\subseteq F \\setminus \\{{j\\}}}} \\frac{{|S|!(|F| - |S| - 1)!}}{{|F|!}} \\left[ f_{{S \\cup \\{{j\\}}}}(\\mathbf{{x}}_{{i,S \\cup \\{{j\\}}}}) - f_S(\\mathbf{{x}}_{{i,S}}) \\right]$$ (12)
+{EQ12}
 
 All data processing, spatial cross-validation, statistical testing, and publication graphics were implemented in Python 3.11 using NumPy (v1.26; Harris et al., 2020), pandas (v2.2; McKinney, 2010), SciPy (v1.12; Virtanen et al., 2020), scikit-learn (v1.4; Pedregosa et al., 2011), LightGBM (v4.3; Ke et al., 2017), XGBoost (v2.0; Chen & Guestrin, 2016), and Matplotlib (v3.8; Hunter, 2007).
 
@@ -453,37 +468,37 @@ All data processing, spatial cross-validation, statistical testing, and publicat
 
 ### 3.1 Empirical distribution of yield volatility and seasonal dynamics
 
-Descriptive summary statistics across the $N = 4,564$ bimodal smallholder holdings (Table 1) reveal pronounced structural skewness in farm scale, input intensification, and seasonal production outcomes. The target Yield Volatility Index ($Y_{{\\text{{vol}}}}$) exhibits a sample mean of $1.084 \\pm 0.727$ (standard deviation) and a median of $1.014$, with an interquartile range (IQR) spanning from $Q_1 = 0.400$ to $Q_3 = 2.000$. Area-weighted seasonal crop yields average $930.13 \\pm 2,057.96\\text{{ kg ha}}^{{-1}}$ (median $396.95\\text{{ kg ha}}^{{-1}}$, IQR $[123.79, 990.10]\\text{{ kg ha}}^{{-1}}$) during the primary *Masika* long rains and $900.80 \\pm 1,952.16\\text{{ kg ha}}^{{-1}}$ (median $414.34\\text{{ kg ha}}^{{-1}}$, IQR $[123.58, 998.04]\\text{{ kg ha}}^{{-1}}$) during the secondary *Vuli* short rains. Despite similar national seasonal medians, the absolute inter-seasonal yield difference within individual holdings averages $883.52 \\pm 2,170.16\\text{{ kg ha}}^{{-1}}$ (median $353.58\\text{{ kg ha}}^{{-1}}$), demonstrating that individual farms experience dramatic yield swings between consecutive harvests even when aggregate national seasonal averages appear stable.
+Descriptive summary statistics across the N = 4,564 bimodal smallholder holdings (Table 1) reveal pronounced structural skewness in farm scale, input intensification, and seasonal production outcomes. The target Yield Volatility Index (Yᵥₒₗ) exhibits a sample mean of 1.084 ± 0.727 (standard deviation) and a median of 1.014, with an interquartile range (IQR) spanning from Q₁ = 0.400 to Q₃ = 2.000. Area-weighted seasonal crop yields average 930.13 ± 2,057.96 kg ha⁻¹ (median 396.95 kg ha⁻¹, IQR [123.79, 990.10] kg ha⁻¹) during the primary *Masika* long rains and 900.80 ± 1,952.16 kg ha⁻¹ (median 414.34 kg ha⁻¹, IQR [123.58, 998.04] kg ha⁻¹) during the secondary *Vuli* short rains. Despite similar national seasonal medians, the absolute inter-seasonal yield difference within individual holdings averages 883.52 ± 2,170.16 kg ha⁻¹ (median 353.58 kg ha⁻¹), demonstrating that individual farms experience dramatic yield swings between consecutive harvests even when aggregate national seasonal averages appear stable.
 
-**Table 1** Summary statistics of smallholder agricultural holdings and seasonal agronomic dynamics ($N = 4,564$)
+**Table 1** Summary statistics of smallholder agricultural holdings and seasonal agronomic dynamics (N = 4,564)
 
 {t1_md}
 
-*Note:* $^{\\text{{a}}}$Statistics computed across all $N = 4,564$ bimodal agricultural holdings in the 2024/2025 Tanzania NBS Annual Agricultural Sample Survey (AASS). $^{\\text{{b}}}Y_{{\\text{{vol}}}} \\in [0, 2]$ denotes the bounded inter-seasonal Yield Volatility Index defined in Equation (3); TLU denotes Tropical Livestock Units ($1\\text{{ TLU}} = 250\\text{{ kg}}$ live metabolic weight).
+*Note:* ᵃStatistics computed across all N = 4,564 bimodal agricultural holdings in the 2024/2025 Tanzania NBS Annual Agricultural Sample Survey (AASS). ᵇYᵥₒₗ ∈ [0, 2] denotes the bounded inter-seasonal Yield Volatility Index defined in Equation (3); TLU denotes Tropical Livestock Units (1 TLU = 250 kg live metabolic weight equivalent).
 
-The empirical probability density of $Y_{{\\text{{vol}}}}$ (Fig. 1a) is distinctly bimodal, characterised by a broad interior mode centred near $Y_{{\\text{{vol}}}} \\approx 0.45$ (representing diversified holdings maintaining moderate seasonal yield fluctuations) and a sharp upper boundary concentration at $Y_{{\\text{{vol}}}} = 2.00$ (representing holdings that suffered complete crop failure in one of the two seasons). Cross-seasonal log-yield parity analysis (Fig. 1b) illustrates that holdings clustering along the 1:1 seasonal parity diagonal achieve low volatility ($Y_{{\\text{{vol}}}} < 0.40$), whereas points along the horizontal and vertical axes correspond to uni-seasonal harvest collapse. Stratifying holdings across four landholding size classes (Fig. 1c) confirms an inverse relationship between farm scale and production instability: marginal sub-subsistence holdings cultivating $< 0.5\\text{{ ha}}$ exhibit the highest median volatility and widest dispersion, whereas medium ($1.5\\text{{--}}3.5\\text{{ ha}}$) and commercial ($> 3.5\\text{{ ha}}$) holdings benefit from spatial parcel averaging across toposequences.
+The empirical probability density of Yᵥₒₗ (Fig. 1a) is distinctly bimodal, characterised by a broad interior mode centred near Yᵥₒₗ ≈ 0.45 (representing diversified holdings maintaining moderate seasonal yield fluctuations) and a sharp upper boundary concentration at Yᵥₒₗ = 2.00 (representing holdings that suffered complete crop failure in one of the two seasons). Cross-seasonal log-yield parity analysis (Fig. 1b) illustrates that holdings clustering along the 1:1 seasonal parity diagonal achieve low volatility (Yᵥₒₗ < 0.40), whereas points along the horizontal and vertical axes correspond to uni-seasonal harvest collapse. Stratifying holdings across four landholding size classes (Fig. 1c) confirms an inverse relationship between farm scale and production instability: marginal sub-subsistence holdings cultivating < 0.5 ha exhibit the highest median volatility and widest dispersion, whereas medium (1.5–3.5 ha) and commercial (> 3.5 ha) holdings benefit from spatial parcel averaging across toposequences.
 
 ![Fig. 1](file://{FIG_DIR.resolve()}/fig1_target_distribution_and_seasonal_dynamics.png)
 
-**Fig. 1** Empirical distribution of the Yield Volatility Index ($Y_{{\\text{{vol}}}}$) and cross-seasonal production dynamics across $N = 4,564$ Tanzanian smallholder holdings: (a) histogram and Gaussian kernel density estimate (KDE) of $Y_{{\\text{{vol}}}} \\in [0, 2]$ indicating median ($1.01$) and interquartile range ($[0.40, 2.00]$); (b) joint log-yield parity scatter between *Masika* and *Vuli* seasons coloured by $Y_{{\\text{{vol}}}}$; (c) boxplots of $Y_{{\\text{{vol}}}}$ stratified across four landholding size classes (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 1** Empirical distribution of the Yield Volatility Index (Yᵥₒₗ) and cross-seasonal production dynamics across N = 4,564 Tanzanian smallholder holdings: (a) histogram and Gaussian kernel density estimate (KDE) of Yᵥₒₗ ∈ [0, 2] indicating median (1.01) and interquartile range ([0.40, 2.00]); (b) joint log-yield parity scatter between *Masika* and *Vuli* seasons coloured by Yᵥₒₗ; (c) boxplots of Yᵥₒₗ stratified across four landholding size classes (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
-Input adoption across the cohort remains highly skewed (Table 1): the median smallholder applies $0.00\\text{{ kg}}$ of inorganic fertiliser ($Q_3 = 20.00\\text{{ kg}}$) and $0.00\\text{{ L or kg}}$ of chemical pesticides ($Q_3 = 5.64$), whilst median livestock wealth stands at $0.36\\text{{ TLU}}$ ($Q_1 = 0.04$, $Q_3 = 4.74$, mean $4.97 \\pm 23.67\\text{{ TLU}}$). Similarly, the median *Masika* Shannon crop diversity index is $0.000$ ($Q_3 = 0.342$, mean $0.180 \\pm 0.310$), indicating that over half of surveyed holdings rely on seasonal monoculture plots, leaving them highly exposed to crop-specific climatic and biotic shocks.
+Input adoption across the cohort remains highly skewed (Table 1): the median smallholder applies 0.00 kg of inorganic fertiliser (Q₃ = 20.00 kg) and 0.00 L or kg of chemical pesticides (Q₃ = 5.64), whilst median livestock wealth stands at 0.36 TLU (Q₁ = 0.04, Q₃ = 4.74, mean 4.97 ± 23.67 TLU). Similarly, the median *Masika* Shannon crop diversity index is 0.000 (Q₃ = 0.342, mean 0.180 ± 0.310), indicating that over half of surveyed holdings rely on seasonal monoculture plots, leaving them highly exposed to crop-specific climatic and biotic shocks.
 
 ### 3.2 Spatial cross-validation benchmark and model calibration
 
-Across the five spatially disjoint Enumeration Area folds (921 EAs), the soft-voting Weighted Ensemble achieves the highest out-of-sample predictive accuracy (Table 2), recording a Spatial RMSE of $0.464$, a Spatial MAE of $0.347$, and a Spatial $R^2$ of $0.592$ (explaining 59.2% of out-of-sample variance in inter-seasonal yield volatility across unseen villages). Among individual base learners, LightGBM ranks second ($\text{{Spatial RMSE}} = 0.465$, $\text{{MAE}} = 0.346$, $R^2 = 0.590$), closely followed by XGBoost ($\text{{Spatial RMSE}} = 0.466$, $\text{{MAE}} = 0.348$, $R^2 = 0.588$), whereas Random Forest trails by 2.25 percentage points in explained variance ($\text{{Spatial RMSE}} = 0.477$, $\text{{MAE}} = 0.368$, $R^2 = 0.569$).
+Across the five spatially disjoint Enumeration Area folds (921 EAs), the soft-voting Weighted Ensemble achieves the highest out-of-sample predictive accuracy (Table 2), recording a Spatial RMSE of 0.464, a Spatial MAE of 0.347, and a Spatial R² of 0.592 (explaining 59.2% of out-of-sample variance in inter-seasonal yield volatility across unseen villages). Among individual base learners, LightGBM ranks second (Spatial RMSE = 0.465, MAE = 0.346, R² = 0.590), closely followed by XGBoost (Spatial RMSE = 0.466, MAE = 0.348, R² = 0.588), whereas Random Forest trails by 2.25 percentage points in explained variance (Spatial RMSE = 0.477, MAE = 0.368, R² = 0.569).
 
-**Table 2** Multi-model spatial cross-validation benchmark comparison across 921 Enumeration Areas ($N = 4,564$)
+**Table 2** Multi-model spatial cross-validation benchmark comparison across 921 Enumeration Areas (N = 4,564)
 
 {t2_md}
 
-*Note:* $^{\\text{{a}}}$All models evaluated on the identical 5-fold Spatial Group Cross-Validation splits (geographic group cross-validation on Enumeration Area geography) using the top-100 pruned feature subset. $^{\\text{{b}}}$Soft-voting ensemble weights: $0.50\\text{{ LightGBM}} + 0.40\\text{{ XGBoost}} + 0.10\\text{{ Random Forest}}$.
+*Note:* ᵃAll models evaluated on the identical 5-fold Spatial Group Cross-Validation splits (geographic group cross-validation on Enumeration Area geography) using the top-100 pruned feature subset. ᵇSoft-voting ensemble weights: 0.50 LightGBM + 0.40 XGBoost + 0.10 Random Forest.
 
-Visual inspection of the multi-model benchmark (Fig. 2a) and out-of-fold spatial calibration scatter (Fig. 2b) confirms that the Weighted Ensemble predictions track the ideal $45^\\circ$ identity line across the full $[0, 2]$ domain with an ordinary least squares calibration slope of $0.60$ and intercept of $0.43$. Across the five independent geographic folds (Fig. 2c), out-of-fold $R^2$ remains tightly bounded within $0.592 \\pm 0.018$, demonstrating that model performance is invariant to specific spatial partition boundaries and resilient against regional sampling fluctuations.
+Visual inspection of the multi-model benchmark (Fig. 2a) and out-of-fold spatial calibration scatter (Fig. 2b) confirms that the Weighted Ensemble predictions track the ideal 45° identity line across the full [0, 2] domain with an ordinary least squares calibration slope of 0.60 and intercept of 0.43. Across the five independent geographic folds (Fig. 2c), out-of-fold R² remains tightly bounded within 0.592 ± 0.018, demonstrating that model performance is invariant to specific spatial partition boundaries and resilient against regional sampling fluctuations.
 
 ![Fig. 2](file://{FIG_DIR.resolve()}/fig2_model_benchmark_spatial_cv.png)
 
-**Fig. 2** Multi-model spatial cross-validation benchmark and out-of-fold calibration across five Enumeration Area folds: (a) comparison of Spatial $R^2$ and Spatial RMSE across Weighted Ensemble, LightGBM, XGBoost, and Random Forest; (b) out-of-fold calibration scatter of observed ($Y_{{\\text{{vol}}}}$) versus predicted ($\\hat{{Y}}_{{\\text{{vol}}}}$) yield volatility; (c) fold-wise spatial stability of out-of-fold $R^2$ showing the mean ($0.592$) and $\\pm 1$ standard deviation band (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 2** Multi-model spatial cross-validation benchmark and out-of-fold calibration across five Enumeration Area folds: (a) comparison of Spatial R² and Spatial RMSE across Weighted Ensemble, LightGBM, XGBoost, and Random Forest; (b) out-of-fold calibration scatter of observed (Yᵥₒₗ) versus predicted (Ŷᵥₒₗ) yield volatility; (c) fold-wise spatial stability of out-of-fold R² showing the mean (0.592) and ± 1 standard deviation band (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
 ### 3.3 Global feature importance and SHAP attributions
 
@@ -493,108 +508,108 @@ Pruning the 246 engineered candidate variables via out-of-fold tree information 
 
 {t3_md}
 
-*Note:* $^{\\text{{a}}}$Split frequency and information gain computed from the gradient boosted decision tree feature selection stage across the $N = 4,564$ holdings. $^{\\text{{b}}}$The complete ranking of all 246 candidate features is provided in Online Resource 1 (Online Resource 1).
+*Note:* ᵃSplit frequency and information gain computed from the gradient boosted decision tree feature selection stage across the N = 4,564 holdings. ᵇThe complete ranking of all 246 candidate features is provided in Online Resource 1 (Online Resource 1).
 
-Despite representing only 8% of feature count, Planting Timing & Seasonality dominates split frequency and total information gain (Table 3 and Fig. 3b). The inter-seasonal Planting Month Difference (Masika – Vuli)  ranks first overall with 300 tree splits and an information gain of $11,375.62$—more than four times the gain of the second-ranked feature, Mean Harvested Area Proportion (Masika) (mean long-rain harvested area proportion, 212 splits, gain $2,608.24$), and the third-ranked feature, Mean Planting Month (Vuli) (mean short-rain planting month, 205 splits, gain $2,502.78$). High-ranking structural predictors also include Shannon Crop Diversity Relative to Regional Mean (Rank 4, 187 splits, gain $423.74$), Seasonal Species Evenness Shift (Rank 5, 142 splits, gain $356.96$), Total Tropical Livestock Units (TLU) (Rank 6, 141 splits, gain $132.91$), and Crop Failure Plot Share (Masika) (Rank 7, 131 splits, gain $1,812.26$).
+Despite representing only 8% of feature count, Planting Timing & Seasonality dominates split frequency and total information gain (Table 3 and Fig. 3b). The inter-seasonal Planting Month Difference (Masika – Vuli) ranks first overall with 300 tree splits and an information gain of 11,375.62—more than four times the gain of the second-ranked feature, Mean Harvested Area Proportion (Masika) (mean long-rain harvested area proportion, 212 splits, gain 2,608.24), and the third-ranked feature, Mean Planting Month (Vuli) (mean short-rain planting month, 205 splits, gain 2,502.78). High-ranking structural predictors also include Shannon Crop Diversity Relative to Regional Mean (Rank 4, 187 splits, gain 423.74), Seasonal Species Evenness Shift (Rank 5, 142 splits, gain 356.96), Total Tropical Livestock Units (TLU) (Rank 6, 141 splits, gain 132.91), and Crop Failure Plot Share (Masika) (Rank 7, 131 splits, gain 1,812.26).
 
 ![Fig. 3](file://{FIG_DIR.resolve()}/fig3_grandmaster_feature_importance_and_selection.png)
 
 **Fig. 3** Feature selection trajectory and domain composition across 246 candidate variables: (a) cumulative information gain scree curve illustrating the 99.1% information gain threshold at the top-100 feature cut-off; (b) top 15 features ranked by tree split frequency with annotated information gain; (c) proportional composition of the top-100 selected features across six core agro-economic domains (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
-Global exact TreeSHAP attributions (Fig. 4a, b) confirm both the magnitude and directional sign of each predictor's marginal impact on $Y_{{\\text{{vol}}}}$. In the beeswarm distribution (Fig. 4a), Planting Month Difference (Masika – Vuli) exhibits the largest mean absolute SHAP impact ($|\\text{{SHAP}}| = 0.202$), followed by Mean Harvested Area Share (Masika) ($|\\text{{SHAP}}| = 0.098$), Mean Planting Month (Vuli) ($|\\text{{SHAP}}| = 0.067$), Drought Failure Indicator (Vuli) ($|\\text{{SHAP}}| = 0.047$), and Crop Failure Plot Share (Masika) ($|\\text{{SHAP}}| = 0.046$). Directionally, large planting month shifts, high plot failure shares, and Vuli drought shocks push SHAP values strongly positive (increasing yield volatility by $+0.25$ to $+0.55$ units), whereas high *Masika* harvested area realisation, positive crop diversity relative to regional peers, and higher Tropical Livestock Units generate negative SHAP values that stabilise production across seasons.
+Global exact TreeSHAP attributions (Fig. 4a, b) confirm both the magnitude and directional sign of each predictor's marginal impact on Yᵥₒₗ. In the beeswarm distribution (Fig. 4a), Planting Month Difference (Masika – Vuli) exhibits the largest mean absolute SHAP impact (|SHAP| = 0.202), followed by Mean Harvested Area Share (Masika) (|SHAP| = 0.098), Mean Planting Month (Vuli) (|SHAP| = 0.067), Drought Failure Indicator (Vuli) (|SHAP| = 0.047), and Crop Failure Plot Share (Masika) (|SHAP| = 0.046). Directionally, large planting month shifts, high plot failure shares, and Vuli drought shocks push SHAP values strongly positive (increasing yield volatility by +0.25 to +0.55 units), whereas high *Masika* harvested area realisation, positive crop diversity relative to regional peers, and higher Tropical Livestock Units generate negative SHAP values that stabilise production across seasons.
 
 ![Fig. 4](file://{FIG_DIR.resolve()}/fig4_shap_global_feature_attributions.png)
 
-**Fig. 4** Global TreeSHAP feature attributions across the top 14 predictors of smallholder yield volatility: (a) directional beeswarm plot showing individual household SHAP values coloured by normalised feature magnitude (Low to High); (b) mean absolute SHAP magnitude ($|\\text{{SHAP}}|$) quantifying global predictive contribution (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 4** Global TreeSHAP feature attributions across the top 14 predictors of smallholder yield volatility: (a) directional beeswarm plot showing individual household SHAP values coloured by normalised feature magnitude (Low to High); (b) mean absolute SHAP magnitude (|SHAP|) quantifying global predictive contribution (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
 ### 3.4 Regional heterogeneity, spatial vulnerability mapping, and model transferability
 
-A critical policy question for national statistical offices and early-warning agencies is whether machine learning models should be trained separately for each administrative region or pooled into a unified national model. Table 4 and Fig. 5 evaluate this across all 27 surveyed administrative regions of Tanzania by combining regional model benchmark metrics with high-resolution regional choropleth maps derived from the official 2022 Population and Housing Census administrative boundaries. Aggregated across all 27 surveyed regions, dedicated regional models achieve a pooled $R^2$ of only $0.348$ ($\text{{RMSE}} = 0.587$, $\text{{MAE}} = 0.467$), whereas the Unified National Model achieves $R^2 = 0.592$ ($\text{{RMSE}} = 0.464$, $\text{{MAE}} = 0.347$)—a net national variance-explained advantage of $+24.42$ percentage points.
+A critical policy question for national statistical offices and early-warning agencies is whether machine learning models should be trained separately for each administrative region or pooled into a unified national model. Table 4 and Fig. 5 evaluate this across all 27 surveyed administrative regions of Tanzania by combining regional model benchmark metrics with high-resolution regional choropleth maps derived from the official 2022 Population and Housing Census administrative boundaries. Aggregated across all 27 surveyed regions, dedicated regional models achieve a pooled R² of only 0.348 (RMSE = 0.587, MAE = 0.467), whereas the Unified National Model achieves R² = 0.592 (RMSE = 0.464, MAE = 0.347)—a net national variance-explained advantage of +24.42 percentage points.
 
-**Table 4** Regional heterogeneity and out-of-fold performance breakdown across all 27 surveyed regions ($N = 4,564$)
+**Table 4** Regional heterogeneity and out-of-fold performance breakdown across all 27 surveyed regions (N = 4,564)
 
 {t4_md}
 
-*Note:* $^{\text{{a}}}$Regions ordered by bimodal sample size ($N$). $^{\text{{b}}}$National Advantage defined as $\Delta R^2 = R^2_{{\text{{National}}}} - R^2_{{\\text{{Regional}}}}$ evaluated on identical out-of-fold Enumeration Area validation partitions.
+*Note:* ᵃRegions ordered by bimodal sample size (N). ᵇNational Advantage defined as ΔR² = R²<sub>National</sub> − R²<sub>Regional</sub> evaluated on identical out-of-fold Enumeration Area validation partitions.
 
-Spatial visualization of survey sampling density (Fig. 5a) reveals that bimodal smallholder holdings are concentrated in the humid northeastern corridor (Tanga, $N = 650$; Kilimanjaro, $N = 375$; Arusha, $N = 215$), the Lake Victoria basin (Mara, $N = 476$; Kagera, $N = 296$; Mwanza, $N = 215$; Simiyu, $N = 202$; Geita, $N = 147$), the central eastern plains (Morogoro, $N = 257$; Pwani, $N = 252$), the southern highlands (Mbeya, $N = 227$), and the Zanzibar Archipelago ($N = 608$ combined across Pemba and Unguja), whereas purely unimodal zones in the central and southern interior cultivate only single annual cycles and are excluded from bimodal volatility tracking.
+Spatial visualization of survey sampling density (Fig. 5a) reveals that bimodal smallholder holdings are concentrated in the humid northeastern corridor (Tanga, N = 650; Kilimanjaro, N = 375; Arusha, N = 215), the Lake Victoria basin (Mara, N = 476; Kagera, N = 296; Mwanza, N = 215; Simiyu, N = 202; Geita, N = 147), the central eastern plains (Morogoro, N = 257; Pwani, N = 252), the southern highlands (Mbeya, N = 227), and the Zanzibar Archipelago (N = 608 combined across Pemba and Unguja), whereas purely unimodal zones in the central and southern interior cultivate only single annual cycles and are excluded from bimodal volatility tracking.
 
 Mapping regional mean yield volatility (Fig. 5b) uncovers acute sub-national vulnerability hotspots:
-1. Semi-Arid Drought Hotspots: In Dodoma ($\bar{{Y}}_{{\text{{vol}}}} = 1.483$), erratic rainfall leads to severe crop desiccation, with 59.3% of holdings suffering catastrophic uni-seasonal crop failure ($Y_{{\text{{vol}}}} \ge 1.50$).
-2. Maritime Island Vulnerability: In the Zanzibar Archipelago, particularly Kusini Pemba ($\bar{{Y}}_{{\text{{vol}}}} = 1.514$, 66.7% hyper-volatile) and Kaskazini Pemba ($\bar{{Y}}_{{\text{{vol}}}} = 1.502$, 64.1% hyper-volatile), extreme rainfall disparity between the *Masika* and *Vuli* seasons leaves island smallholders acutely exposed to seasonal food supply deficits.
-3. Resilient Lacustrine and Highland Pockets: Conversely, Kagera ($\bar{{Y}}_{{\text{{vol}}}} = 1.139$) and Tanga ($\bar{{Y}}_{{\text{{vol}}}} = 0.978$) benefit from agro-forestry systems, perennial banana–coffee canopies, and micro-climate buffering that dampen inter-seasonal harvest shocks.
+1. Semi-Arid Drought Hotspots: In Dodoma (Ȳᵥₒₗ = 1.483), erratic rainfall leads to severe crop desiccation, with 59.3% of holdings suffering catastrophic uni-seasonal crop failure (Yᵥₒₗ ≥ 1.50).
+2. Maritime Island Vulnerability: In the Zanzibar Archipelago, particularly Kusini Pemba (Ȳᵥₒₗ = 1.514, 66.7% hyper-volatile) and Kaskazini Pemba (Ȳᵥₒₗ = 1.502, 64.1% hyper-volatile), extreme rainfall disparity between the *Masika* and *Vuli* seasons leaves island smallholders acutely exposed to seasonal food supply deficits.
+3. Resilient Lacustrine and Highland Pockets: Conversely, Kagera (Ȳᵥₒₗ = 1.139) and Tanga (Ȳᵥₒₗ = 0.978) benefit from agro-forestry systems, perennial banana–coffee canopies, and micro-climate buffering that dampen inter-seasonal harvest shocks.
 
-Crucially, mapping out-of-fold spatial predictive skill across regions (Fig. 5c and Table 4) demonstrates that the Unified National Ensemble delivers high predictive power across heterogeneous agro-ecological zones, reaching $R^2 = 0.748$ in Kagera, $R^2 = 0.754$ in Mjini Magharibi, $R^2 = 0.725$ in Kusini Pemba, $R^2 = 0.716$ in Kaskazini Pemba, $R^2 = 0.649$ in Mara, and $R^2 = 0.624$ in Kilimanjaro. Furthermore, as shown in Table 4, the Unified National Ensemble outperforms isolated regional models ($\Delta R^2 > 0$) in 26 out of 27 regions (96.3%). By learning shared non-linear response surfaces across regional borders, national data pooling prevents small-sample overfitting and establishes robust spatial generalisability for operational food security monitoring.
+Crucially, mapping out-of-fold spatial predictive skill across regions (Fig. 5c and Table 4) demonstrates that the Unified National Ensemble delivers high predictive power across heterogeneous agro-ecological zones, reaching R² = 0.748 in Kagera, R² = 0.754 in Mjini Magharibi, R² = 0.725 in Kusini Pemba, R² = 0.716 in Kaskazini Pemba, R² = 0.649 in Mara, and R² = 0.624 in Kilimanjaro. Furthermore, as shown in Table 4, the Unified National Ensemble outperforms isolated regional models (ΔR² > 0) in 26 out of 27 regions (96.3%). By learning shared non-linear response surfaces across regional borders, national data pooling prevents small-sample overfitting and establishes robust spatial generalisability for operational food security monitoring.
 
 ![Fig. 5](file://{FIG_DIR.resolve()}/fig5_regional_heterogeneity_and_spatial_transferability.png)
 
-**Fig. 5** Sub-national spatial distribution of smallholder yield volatility and machine learning predictive skill across 27 administrative regions of Tanzania based on 2022 PHC administrative shapefiles: (a) spatial coverage and sample concentration of surveyed bimodal agricultural holdings ($N = 4,564$); (b) choropleth map of regional mean Yield Volatility Index ($Y_{{\text{{vol}}}}$) with annotations highlighting acute volatility hotspots in Dodoma semi-arid plains and Zanzibar (Pemba/Unguja) alongside resilient perennial production in Tanga and Kagera; (c) out-of-fold spatial machine learning predictive skill ($R^2$) achieved by the Unified National Weighted Ensemble across unseen Enumeration Areas (Hatched grey polygons represent unimodal agro-ecological strata cultivating single annual cycles; Graphics programme: Python 3.11 / Matplotlib 3.8 / GeoPandas)
+**Fig. 5** Sub-national spatial distribution of smallholder yield volatility and machine learning predictive skill across 27 administrative regions of Tanzania based on 2022 PHC administrative shapefiles: (a) spatial coverage and sample concentration of surveyed bimodal agricultural holdings (N = 4,564); (b) choropleth map of regional mean Yield Volatility Index (Yᵥₒₗ) with annotations highlighting acute volatility hotspots in Dodoma semi-arid plains and Zanzibar (Pemba/Unguja) alongside resilient perennial production in Tanga and Kagera; (c) out-of-fold spatial machine learning predictive skill (R²) achieved by the Unified National Weighted Ensemble across unseen Enumeration Areas (Hatched grey polygons represent unimodal agro-ecological strata cultivating single annual cycles; Graphics programme: Python 3.11 / Matplotlib 3.8 / GeoPandas)
 
 ### 3.5 Non-linear agronomic interactions, leakage audit, and household archetypes
 
-Two-way interaction surfaces (Fig. 6) reveal that household asset endowments and agro-ecological management practices act as non-linear buffers that moderate climate shock transmission. First, stratifying the response to seasonal planting month shifts by median livestock holdings (Fig. 6a) demonstrates that livestock-poor households ($\text{{TLU}} \le 0.36$) suffer an escalation in mean $Y_{{\text{{vol}}}}$ to $1.38$ when planting timing diverges by $\pm 3$ months, whereas livestock-buffered households ($\text{{TLU}} > 0.36$) maintain mean $Y_{{\text{{vol}}}}$ below $0.96$ across the same timing gap—reflecting their capacity to mobilise animal draft power and liquid cash for rapid land preparation. Second, Fig. 6b shows that among holdings experiencing zero plot abandonment (zero unharvested plots), expanding crop portfolio diversity above the regional peer average (exceeding regional peer diversity by $> 0.25$ Shannon units) compresses mean $Y_{{\text{{vol}}}}$ from $0.95$ to $0.68$. Conversely, when complete plot failure shocks occur (unharvested plot failure $> 0$), volatility rises above $1.35$ for monocroppers but is dampened by $0.28$ index points among highly diversified polyculture holdings. Third, Fig. 6c reveals that whilst high plot area fragmentation ($\text{{CV}}_{{\text{{plot}}}} > 0.80$) elevates yield volatility under purely rainfed cultivation, access to supplemental irrigation (with active supplemental irrigation) decouples fragmentation from production instability, reducing mean $Y_{{\text{{vol}}}}$ by $0.32\text{{--}}0.45$ units across fragmented holdings.
+Two-way interaction surfaces (Fig. 6) reveal that household asset endowments and agro-ecological management practices act as non-linear buffers that moderate climate shock transmission. First, stratifying the response to seasonal planting month shifts by median livestock holdings (Fig. 6a) demonstrates that livestock-poor households (TLU ≤ 0.36) suffer an escalation in mean Yᵥₒₗ to 1.38 when planting timing diverges by ± 3 months, whereas livestock-buffered households (TLU > 0.36) maintain mean Yᵥₒₗ below 0.96 across the same timing gap—reflecting their capacity to mobilise animal draft power and liquid cash for rapid land preparation. Second, Fig. 6b shows that among holdings experiencing zero plot abandonment (zero unharvested plots), expanding crop portfolio diversity above the regional peer average (exceeding regional peer diversity by > 0.25 Shannon units) compresses mean Yᵥₒₗ from 0.95 to 0.68. Conversely, when complete plot failure shocks occur (unharvested plot failure > 0), volatility rises above 1.35 for monocroppers but is dampened by 0.28 index points among highly diversified polyculture holdings. Third, Fig. 6c reveals that whilst high plot area fragmentation (CVₚₗₒₜ > 0.80) elevates yield volatility under purely rainfed cultivation, access to supplemental irrigation (with active supplemental irrigation) decouples fragmentation from production instability, reducing mean Yᵥₒₗ by 0.32–0.45 units across fragmented holdings.
 
 ![Fig. 6](file://{FIG_DIR.resolve()}/fig6_agronomic_non_linear_interactions.png)
 
-**Fig. 6** Non-linear two-way agronomic interaction surfaces and resilience thresholds: (a) interaction between seasonal planting month difference and livestock asset buffers (Low vs. High TLU); (b) interaction between crop portfolio diversity divergence from regional peers and plot harvest failure shocks; (c) interaction between plot area fragmentation ($\text{{CV}}_{{\\text{{plot}}}}$) and supplemental irrigation access (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 6** Non-linear two-way agronomic interaction surfaces and resilience thresholds: (a) interaction between seasonal planting month difference and livestock asset buffers (Low vs. High TLU); (b) interaction between crop portfolio diversity divergence from regional peers and plot harvest failure shocks; (c) interaction between plot area fragmentation (CVₚₗₒₜ) and supplemental irrigation access (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
-To verify that these empirical relationships are free from methodological artifacts, Table 5 and Fig. 7a report the results of our formal Five-Pillar Spatial Leakage Audit. All five audit pillars achieve a 100% pass certification (certified pass): (1) zero Enumeration Areas overlap between training and validation folds across all five splits; (2) the target $Y_{{\\text{{vol}}}}$ is completely isolated from the feature matrix with a maximum absolute single-feature correlation of $r_{{\\max}} = 0.4365$; (3) all robust interquartile scaling and median imputation parameters strictly obey fold boundaries; (4) unsupervised K-Means cluster centroids and PCA loadings are fitted strictly on training partitions; and (5) top-100 feature selection exhibits zero validation target lookahead.
+To verify that these empirical relationships are free from methodological artifacts, Table 5 and Fig. 7a report the results of our formal Five-Pillar Spatial Leakage Audit. All five audit pillars achieve a 100% pass certification (certified pass): (1) zero Enumeration Areas overlap between training and validation folds across all five splits; (2) the target Yᵥₒₗ is completely isolated from the feature matrix with a maximum absolute single-feature correlation of rₘₐₓ = 0.4365; (3) all robust interquartile scaling and median imputation parameters strictly obey fold boundaries; (4) unsupervised K-Means cluster centroids and PCA loadings are fitted strictly on training partitions; and (5) top-100 feature selection exhibits zero validation target lookahead.
 
 **Table 5** Formal five-pillar spatial data leakage audit certificate
 
 {t5_md}
 
-*Note:* $^{\\text{{a}}}$Programmatic audit executed by Leakage Auditor across all 5 spatial cross-validation folds ($N = 4,564$ holdings, 921 Enumeration Areas).
+*Note:* ᵃProgrammatic audit executed by Leakage Auditor across all 5 spatial cross-validation folds (N = 4,564 holdings, 921 Enumeration Areas).
 
-Stratifying the 4,564 holdings into four equal volatility quartiles ($N = 1,141$ holdings per quartile; Table 6) exposes the structural divide between resilient and hyper-volatile farms. Holdings in Q1 (Low Volatility / Resilient) exhibit a mean $Y_{{\\text{{vol}}}}$ of $0.176$, a mean seasonal yield gap of only $174.33\\text{{ kg ha}}^{{-1}}$, the highest mean Shannon crop diversity ($0.243$), and substantial livestock buffers ($5.21\\text{{ TLU}}$). By contrast, holdings in Q4 (Hyper-Volatile) suffer a mean $Y_{{\\text{{vol}}}}$ of $2.000$ (complete seasonal collapse in one cropping window), accompanied by nearly three-fold lower crop diversity ($H'_m = 0.086$) and 44.4% lower livestock wealth ($2.89\\text{{ TLU}}$). Notably, Q2 (Moderate-Low Volatility, mean $Y_{{\\text{{vol}}}} = 0.685$) exhibits the highest mean inorganic fertiliser intensity ($2,556.67\\text{{ kg}}$ driven by commercial estates), whereas Q3 (Moderate-High Volatility, mean $Y_{{\\text{{vol}}}} = 1.476$) experiences the largest absolute seasonal yield gap ($1,891.01\\text{{ kg ha}}^{{-1}}$) and highest plot fragmentation ($\text{{CV}}_{{\\text{{plot}}}} = 0.346$).
+Stratifying the 4,564 holdings into four equal volatility quartiles (N = 1,141 holdings per quartile; Table 6) exposes the structural divide between resilient and hyper-volatile farms. Holdings in Q1 (Low Volatility / Resilient) exhibit a mean Yᵥₒₗ of 0.176, a mean seasonal yield gap of only 174.33 kg ha⁻¹, the highest mean Shannon crop diversity (0.243), and substantial livestock buffers (5.21 TLU). By contrast, holdings in Q4 (Hyper-Volatile) suffer a mean Yᵥₒₗ of 2.000 (complete seasonal collapse in one cropping window), accompanied by nearly three-fold lower crop diversity (H′ₘ = 0.086) and 44.4% lower livestock wealth (2.89 TLU). Notably, Q2 (Moderate-Low Volatility, mean Yᵥₒₗ = 0.685) exhibits the highest mean inorganic fertiliser intensity (2,556.67 kg driven by commercial estates), whereas Q3 (Moderate-High Volatility, mean Yᵥₒₗ = 1.476) experiences the largest absolute seasonal yield gap (1,891.01 kg ha⁻¹) and highest plot fragmentation (CVₚₗₒₜ = 0.346).
 
-**Table 6** Smallholder agronomic stratification across empirical Yield Volatility Index ($Y_{{\\text{{vol}}}}$) quartiles ($N = 4,564$)
+**Table 6** Smallholder agronomic stratification across empirical Yield Volatility Index (Yᵥₒₗ) quartiles (N = 4,564)
 
 {t6_md}
 
-*Note:* $^{\\text{{a}}}$Cohort partitioned into four equal quartiles of $N = 1,141$ holdings each based on observed $Y_{{\\text{{vol}}}}$.
+*Note:* ᵃCohort partitioned into four equal quartiles of N = 1,141 holdings each based on observed Yᵥₒₗ.
 
 To illustrate how the ensemble synthesises these factors at the micro-household level, Table 7 and Fig. 7b, c examine three representative smallholder archetypes alongside a local TreeSHAP waterfall decomposition:
-- Case A (Resilient Diversified Agro-Pastoralist, Household Archetype A): Exhibiting high multi-crop diversity, substantial livestock buffers, and zero plot failure, this holding achieves an observed volatility of $Y_{{\\text{{vol}}}} = 0.183$ (predicted $\\hat{{Y}}_{{\\text{{vol}}}} = 0.285$, residual $0.101$). Similarly, in the micro-level SHAP waterfall for benchmark resilient holding #0 (Fig. 7c), starting from the population base expectation $E[f(X)] = 1.085$, synchronised planting timing (`Planting Month Difference`, $\\phi = -0.162$), high *Masika* harvest realisation ($\phi = -0.079$), timely *Vuli* sowing ($\phi = -0.049$), balanced seasonal fertiliser allocation ($\phi = -0.039$), and active crop rotation ($\phi = -0.029$) cumulatively drive the predicted volatility down to $f(x) = 0.498$.
-- Case B (Moderate Input-Intensive Specialised Farm, Household Archetype B): Relying on synthetic fertiliser intensification with moderate planting timing disparity and low crop diversity, this farm records $Y_{{\\text{{vol}}}} = 1.007$ (predicted $0.483$).
-- Case C (Climate-Shocked Vulnerable Smallholder, Household Archetype C): Suffering severe planting delays, complete plot abandonment shocks, and zero livestock buffers, this household experiences total uni-seasonal collapse ($Y_{{\\text{{vol}}}} = 2.000$, predicted $\\hat{{Y}}_{{\\text{{vol}}}} = 1.948$, residual $0.052$).
+- Case A (Resilient Diversified Agro-Pastoralist, Household Archetype A): Exhibiting high multi-crop diversity, substantial livestock buffers, and zero plot failure, this holding achieves an observed volatility of Yᵥₒₗ = 0.183 (predicted Ŷᵥₒₗ = 0.285, residual 0.101). Similarly, in the micro-level SHAP waterfall for benchmark resilient holding #0 (Fig. 7c), starting from the population base expectation E[f(X)] = 1.085, synchronised planting timing (`Planting Month Difference`, ϕ = −0.162), high *Masika* harvest realisation (ϕ = −0.079), timely *Vuli* sowing (ϕ = −0.049), balanced seasonal fertiliser allocation (ϕ = −0.039), and active crop rotation (ϕ = −0.029) cumulatively drive the predicted volatility down to f̂(x) = 0.498.
+- Case B (Moderate Input-Intensive Specialised Farm, Household Archetype B): Relying on synthetic fertiliser intensification with moderate planting timing disparity and low crop diversity, this farm records Yᵥₒₗ = 1.007 (predicted 0.483).
+- Case C (Climate-Shocked Vulnerable Smallholder, Household Archetype C): Suffering severe planting delays, complete plot abandonment shocks, and zero livestock buffers, this household experiences total uni-seasonal collapse (Yᵥₒₗ = 2.000, predicted Ŷᵥₒₗ = 1.948, residual 0.052).
 
 **Table 7** Representative smallholder archetypes and micro-level counterfactual policy attributions
 
 {t7_md}
 
-*Note:* $^{\\text{{a}}}$Household identifiers are deterministically hashed (anonymised household identifiers) to preserve respondent confidentiality in accordance with Tanzania National Bureau of Statistics microdata protocols.
+*Note:* ᵃHousehold identifiers are deterministically hashed (anonymised household identifiers) to preserve respondent confidentiality in accordance with Tanzania National Bureau of Statistics microdata protocols.
 
 ![Fig. 7](file://{FIG_DIR.resolve()}/fig7_leakage_audit_and_household_counterfactuals.png)
 
-**Fig. 7** Five-pillar spatial leakage audit verification, smallholder archetype profiles, and micro-level TreeSHAP attribution: (a) isolation audit compliance scorecard across the five leakage pillars; (b) normalised capacity profiles ($[0, 1]$) comparing Resilient ($Y_{{\\text{{vol}}}} = 0.18$), Moderate ($Y_{{\\text{{vol}}}} = 1.01$), and Hyper-Volatile ($Y_{{\\text{{vol}}}} = 2.00$) smallholder archetypes; (c) local TreeSHAP waterfall plot for resilient benchmark holding #0 decomposing how protective agronomic practices reduce predicted volatility from the base expectation $E[f(X)] = 1.085$ to $f(x) = 0.498$ (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 7** Five-pillar spatial leakage audit verification, smallholder archetype profiles, and micro-level TreeSHAP attribution: (a) isolation audit compliance scorecard across the five leakage pillars; (b) normalised capacity profiles ([0, 1]) comparing Resilient (Yᵥₒₗ = 0.18), Moderate (Yᵥₒₗ = 1.01), and Hyper-Volatile (Yᵥₒₗ = 2.00) smallholder archetypes; (c) local TreeSHAP waterfall plot for resilient benchmark holding #0 decomposing how protective agronomic practices reduce predicted volatility from the base expectation E[f(X)] = 1.085 to f̂(x) = 0.498 (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
 ### 3.6 Agro-ecological zone hotspots, partial dependence surfaces, and policy counterfactuals
 
-Aggregating holdings across Tanzania's seven macro Agro-Ecological Zones (Fig. 8) uncovers stark geographic gradients in production stability and resilience capacity ($1 - Y_{{\\text{{vol}}}}/2$). The Zanzibar Archipelago ($\bar{{Y}}_{{\\text{{vol}}}} = 1.33$, Resilience Index $= 0.33$), Central Semi-Arid bimodal pockets ($\bar{{Y}}_{{\\text{{vol}}}} = 1.30$, Resilience Index $= 0.35$), and Southern Highlands ($\bar{{Y}}_{{\\text{{vol}}}} = 1.23$, Resilience Index $= 0.39$) exhibit the highest inter-seasonal volatility among bimodal cultivators, driven by pronounced moisture asymmetry between the main and secondary rains (Fig. 8a, c). The Northern Highlands ($\bar{{Y}}_{{\\text{{vol}}}} = 1.10$, Resilience Index $= 0.45$) and Western & Southern Zone ($\bar{{Y}}_{{\\text{{vol}}}} = 1.04$, Resilience Index $= 0.48$) occupy an intermediate risk tier. By contrast, the Lake Victoria Basin ($\bar{{Y}}_{{\\text{{vol}}}} = 1.02$, Resilience Index $= 0.49$) and Coastal & Eastern Zone ($\bar{{Y}}_{{\\text{{vol}}}} = 1.01$, Resilience Index $= 0.50$) achieve the highest inter-seasonal stability, supported by lacustrine and coastal rainfall moderation and widespread cassava–banana–legume intercropping (Fig. 8b, c).
+Aggregating holdings across Tanzania's seven macro Agro-Ecological Zones (Fig. 8) uncovers stark geographic gradients in production stability and resilience capacity (1 − Yᵥₒₗ / 2). The Zanzibar Archipelago (Ȳᵥₒₗ = 1.33, Resilience Index = 0.33), Central Semi-Arid bimodal pockets (Ȳᵥₒₗ = 1.30, Resilience Index = 0.35), and Southern Highlands (Ȳᵥₒₗ = 1.23, Resilience Index = 0.39) exhibit the highest inter-seasonal volatility among bimodal cultivators, driven by pronounced moisture asymmetry between the main and secondary rains (Fig. 8a, c). The Northern Highlands (Ȳᵥₒₗ = 1.10, Resilience Index = 0.45) and Western & Southern Zone (Ȳᵥₒₗ = 1.04, Resilience Index = 0.48) occupy an intermediate risk tier. By contrast, the Lake Victoria Basin (Ȳᵥₒₗ = 1.02, Resilience Index = 0.49) and Coastal & Eastern Zone (Ȳᵥₒₗ = 1.01, Resilience Index = 0.50) achieve the highest inter-seasonal stability, supported by lacustrine and coastal rainfall moderation and widespread cassava–banana–legume intercropping (Fig. 8b, c).
 
 ![Fig. 8](file://{FIG_DIR.resolve()}/fig8_spatial_hotspots_and_agroecological_zones.png)
 
-**Fig. 8** Spatial volatility hotspots and resilience capacity across Tanzania's seven Agro-Ecological Zones: (a) mean Yield Volatility Index ($Y_{{\\text{{vol}}}} \\pm 95\\%$ confidence interval) by zone; (b) zone-level joint relationship between mean plot harvest failure rate (%) and absolute seasonal yield gap ($\text{{kg ha}}^{{-1}}$), sized and coloured by mean $Y_{{\\text{{vol}}}}$; (c) Agro-Ecological Resilience Index ($1 - Y_{{\\text{{vol}}}}/2$) stratified by risk tier (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 8** Spatial volatility hotspots and resilience capacity across Tanzania's seven Agro-Ecological Zones: (a) mean Yield Volatility Index (Yᵥₒₗ ± 95% confidence interval) by zone; (b) zone-level joint relationship between mean plot harvest failure rate (%) and absolute seasonal yield gap (kg ha⁻¹), sized and coloured by mean Yᵥₒₗ; (c) Agro-Ecological Resilience Index (1 − Yᵥₒₗ / 2) stratified by risk tier (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
 One-dimensional marginal response surfaces (Fig. 9) pinpoint four actionable agronomic tipping points across the national cohort:
-1. Planting Month Synchronisation (Fig. 9a): The partial response to inter-seasonal planting delay exhibits a sharp V-shaped trough around $\\Delta M \\in [-1, +1]$ months ($Y_{{\\text{{vol}}}} \\approx 0.72$), rising steeply to $> 1.25$ when inter-seasonal sowing windows drift beyond $\\pm 4$ months.
-2. Critical Livestock Buffer Threshold (Fig. 9b): Smallholders owning $< 3.0\\text{{ TLU}}$ (shaded high-vulnerability zone) face elevated baseline volatility ($Y_{{\\text{{vol}}}} \\approx 1.10\\text{{--}}1.18$); crossing the $3.0\\text{{ TLU}}$ threshold—equivalent to owning four indigenous cattle or three cattle plus ten small ruminants—triggers a sharp downward shift in $Y_{{\\text{{vol}}}}$ toward $0.82\\text{{--}}0.90$.
-3. Peer-Relative Crop Diversification (Fig. 9c): Holdings with Shannon diversity below their regional community average experience $Y_{{\text{{vol}}}} > 1.15$, whereas holdings exceeding regional peer diversity by $+0.40$ Shannon units reduce marginal volatility below $0.85$.
-4. Plot Abandonment Escalation (Fig. 9d): Marginal volatility increases monotonically with the share of unharvested plots, climbing from $0.78$ at 0% abandonment to $> 1.45$ once plot failure exceeds 40% of holding area.
+1. Planting Month Synchronisation (Fig. 9a): The partial response to inter-seasonal planting delay exhibits a sharp V-shaped trough around ΔM ∈ [−1, +1] months (Yᵥₒₗ ≈ 0.72), rising steeply to > 1.25 when inter-seasonal sowing windows drift beyond ± 4 months.
+2. Critical Livestock Buffer Threshold (Fig. 9b): Smallholders owning < 3.0 TLU (shaded high-vulnerability zone) face elevated baseline volatility (Yᵥₒₗ ≈ 1.10–1.18); crossing the 3.0 TLU threshold—equivalent to owning four indigenous cattle or three cattle plus ten small ruminants—triggers a sharp downward shift in Yᵥₒₗ toward 0.82–0.90.
+3. Peer-Relative Crop Diversification (Fig. 9c): Holdings with Shannon diversity below their regional community average experience Yᵥₒₗ > 1.15, whereas holdings exceeding regional peer diversity by +0.40 Shannon units reduce marginal volatility below 0.85.
+4. Plot Abandonment Escalation (Fig. 9d): Marginal volatility increases monotonically with the share of unharvested plots, climbing from 0.78 at 0% abandonment to > 1.45 once plot failure exceeds 40% of holding area.
 
 ![Fig. 9](file://{FIG_DIR.resolve()}/fig9_agroeconomic_partial_dependence_surfaces.png)
 
-**Fig. 9** One-dimensional agro-economic partial dependence and marginal response surfaces for the four primary continuous drivers of yield volatility: (a) seasonal planting month difference ($\Delta M$, highlighting synchronised planting at $\Delta M = 0$); (b) Tropical Livestock Units (TLU, highlighting the $< 3.0\\text{{ TLU}}$ high-vulnerability zone); (c) Shannon crop diversity difference from the regional peer mean; (d) complete plot harvest abandonment share (%) (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 9** One-dimensional agro-economic partial dependence and marginal response surfaces for the four primary continuous drivers of yield volatility: (a) seasonal planting month difference (ΔM, highlighting synchronised planting at ΔM = 0); (b) Tropical Livestock Units (TLU, highlighting the < 3.0 TLU high-vulnerability zone); (c) Shannon crop diversity difference from the regional peer mean; (d) complete plot harvest abandonment share (%) (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
-Finally, we conduct out-of-fold Policy Counterfactual Stress-Testing (Fig. 10) by simulating three targeted agricultural policy interventions across the $N = 4,564$ holdings:
-- Scenario 1 (Safety-Net Livestock Asset Transfer): Providing $+2.0\\text{{ TLU}}$ (e.g., a small-ruminant pass-on programme) to asset-poor holdings ($\text{{TLU}} < 1.0$) shifts the predicted volatility density leftward (Fig. 10a), reducing the national share of hyper-volatile holdings ($Y_{{\\text{{vol}}}} \\ge 1.50$) from 25.8% (Baseline) to 25.1% (Fig. 10b) and lowering mean national volatility by 11.6% (Fig. 10c).
-- Scenario 2 (Crop Diversification Extension): Expanding crop portfolio diversity by $+0.40$ Shannon units (intercropping drought-tolerant legumes and roots/tubers) among monoculture holdings ($H'_m < 0.20$) reduces hyper-volatile holdings from 25.8% to 24.6% and lowers mean national volatility by 16.0%.
-- Scenario 3 (Integrated Climate-Smart Agriculture [CSA] Package): Combining the $+2.0\\text{{ TLU}}$ safety-net asset buffer, $+0.40$ Shannon legume–cereal diversification, and early-warning meteorological planting advisories shifts the entire density distribution toward the resilient regime (Fig. 10a), cutting the prevalence of hyper-volatile holdings from 25.8% to 19.9% (Fig. 10b) and achieving a 40.0% net reduction in mean national yield volatility (Fig. 10c).
+Finally, we conduct out-of-fold Policy Counterfactual Stress-Testing (Fig. 10) by simulating three targeted agricultural policy interventions across the N = 4,564 holdings:
+- Scenario 1 (Safety-Net Livestock Asset Transfer): Providing +2.0 TLU (e.g., a small-ruminant pass-on programme) to asset-poor holdings (TLU < 1.0) shifts the predicted volatility density leftward (Fig. 10a), reducing the national share of hyper-volatile holdings (Yᵥₒₗ ≥ 1.50) from 25.8% (Baseline) to 25.1% (Fig. 10b) and lowering mean national volatility by 11.6% (Fig. 10c).
+- Scenario 2 (Crop Diversification Extension): Expanding crop portfolio diversity by +0.40 Shannon units (intercropping drought-tolerant legumes and roots/tubers) among monoculture holdings (H′ₘ < 0.20) reduces hyper-volatile holdings from 25.8% to 24.6% and lowers mean national volatility by 16.0%.
+- Scenario 3 (Integrated Climate-Smart Agriculture [CSA] Package): Combining the +2.0 TLU safety-net asset buffer, +0.40 Shannon legume–cereal diversification, and early-warning meteorological planting advisories shifts the entire density distribution toward the resilient regime (Fig. 10a), cutting the prevalence of hyper-volatile holdings from 25.8% to 19.9% (Fig. 10b) and achieving a 40.0% net reduction in mean national yield volatility (Fig. 10c).
 
 ![Fig. 10](file://{FIG_DIR.resolve()}/fig10_policy_simulation_and_counterfactual_interventions.png)
 
-**Fig. 10** Policy counterfactual stress-testing and volatility mitigation scenarios across $N = 4,564$ smallholder holdings: (a) kernel density distribution shift of predicted yield volatility ($\\hat{{Y}}_{{\\text{{vol}}}}$) under Baseline Status Quo, $+2.0\\text{{ TLU}}$ Asset Transfer, $+0.40$ Shannon Crop Diversification, and the Integrated Climate-Smart Agriculture (CSA) Package; (b) percentage of smallholder holdings classified as hyper-volatile ($Y_{{\\text{{vol}}}} \\ge 1.50$) across scenarios; (c) net mean yield volatility reduction efficiency (%) relative to baseline (Graphics programme: Python 3.11 / Matplotlib 3.8)
+**Fig. 10** Policy counterfactual stress-testing and volatility mitigation scenarios across N = 4,564 smallholder holdings: (a) kernel density distribution shift of predicted yield volatility (Ŷᵥₒₗ) under Baseline Status Quo, +2.0 TLU Asset Transfer, +0.40 Shannon Crop Diversification, and the Integrated Climate-Smart Agriculture (CSA) Package; (b) percentage of smallholder holdings classified as hyper-volatile (Yᵥₒₗ ≥ 1.50) across scenarios; (c) net mean yield volatility reduction efficiency (%) relative to baseline (Graphics programme: Python 3.11 / Matplotlib 3.8)
 
 ---
 
@@ -602,23 +617,23 @@ Finally, we conduct out-of-fold Policy Counterfactual Stress-Testing (Fig. 10) b
 
 ### 4.1 Methodological imperatives: preventing spatial leakage in agricultural machine learning
 
-A central contribution of this study is demonstrating that predictive machine learning models of smallholder food security can achieve high out-of-sample explanatory power ($R^2 = 0.592$, $\\text{{RMSE}} = 0.464$) under rigorous spatial group cross-validation, provided that domain-grounded feature engineering is paired with strict geographic and preprocessing isolation. In recent years, a series of landmark methodological critiques in ecology, remote sensing, and agricultural economics has exposed how pervasive spatial autocorrelation leakage is in environmental machine learning (Roberts et al., 2017; Meyer et al., 2018, 2019; Ploton et al., 2020; Wadoux et al., 2021). When nearby agricultural plots or households within the same census Enumeration Area are split randomly across training and validation sets, flexible tree ensembles exploit spatial proximity as a shortcut—effectively performing spatial interpolation of local residuals rather than learning biophysical and socioeconomic response functions (Ploton et al., 2020; Meyer & Pebesma, 2021). When such models are subsequently deployed to predict food shocks in unsampled districts or newly surveyed villages, their predictive accuracy collapses.
+A central contribution of this study is demonstrating that predictive machine learning models of smallholder food security can achieve high out-of-sample explanatory power (R² = 0.592, RMSE = 0.464) under rigorous spatial group cross-validation, provided that domain-grounded feature engineering is paired with strict geographic and preprocessing isolation. In recent years, a series of landmark methodological critiques in ecology, remote sensing, and agricultural economics has exposed how pervasive spatial autocorrelation leakage is in environmental machine learning (Roberts et al., 2017; Meyer et al., 2018, 2019; Ploton et al., 2020; Wadoux et al., 2021). When nearby agricultural plots or households within the same census Enumeration Area are split randomly across training and validation sets, flexible tree ensembles exploit spatial proximity as a shortcut—effectively performing spatial interpolation of local residuals rather than learning biophysical and socioeconomic response functions (Ploton et al., 2020; Meyer & Pebesma, 2021). When such models are subsequently deployed to predict food shocks in unsampled districts or newly surveyed villages, their predictive accuracy collapses.
 
-Our Five-Pillar Spatial Leakage Isolation Protocol (Table 5, Fig. 7a) directly addresses these concerns and establishes a reproducible template for survey-based machine learning in *Food Security*. By enforcing geographic group cross-validation partitioning across all 921 Enumeration Areas (Equation 10), every validation prediction in our benchmark is generated for a village cluster completely unseen during training. Furthermore, isolating robust interquartile scaling transformations, K-Means archetype clustering, PCA orthogonal factor extraction, and tree-gain feature selection inside training fold boundaries prevents subtle distributional lookahead bias (Kaufman et al., 2012; Kapoor & Narayanan, 2023). Our finding that pruning 146 low-gain candidate variables preserves 99.0% of tree information gain (Fig. 3a) whilst stabilising out-of-fold $R^2$ within a narrow $0.587 \\pm 0.030$ band across all five geographic folds (Fig. 2c) confirms that regularised gradient boosting ensembles (LightGBM and XGBoost) blended with bootstrap-aggregated Random Forest trees effectively mitigate variance across noisy multi-unit survey microdata.
+Our Five-Pillar Spatial Leakage Isolation Protocol (Table 5, Fig. 7a) directly addresses these concerns and establishes a reproducible template for survey-based machine learning in *Food Security*. By enforcing geographic group cross-validation partitioning across all 921 Enumeration Areas (Equation 10), every validation prediction in our benchmark is generated for a village cluster completely unseen during training. Furthermore, isolating robust interquartile scaling transformations, K-Means archetype clustering, PCA orthogonal factor extraction, and tree-gain feature selection inside training fold boundaries prevents subtle distributional lookahead bias (Kaufman et al., 2012; Kapoor & Narayanan, 2023). Our finding that pruning 146 low-gain candidate variables preserves 99.0% of tree information gain (Fig. 3a) whilst stabilising out-of-fold R² within a narrow 0.587 ± 0.030 band across all five geographic folds (Fig. 2c) confirms that regularised gradient boosting ensembles (LightGBM and XGBoost) blended with bootstrap-aggregated Random Forest trees effectively mitigate variance across noisy multi-unit survey microdata.
 
-Equally important for national monitoring systems is our empirical demonstration of the Spatial Transferability Advantage of pooled national modelling (Table 4, Fig. 5). In decentralising agricultural administration, analysts often assume that local models calibrated separately for individual administrative regions will better capture local context than a single national model. Our empirical results decisively refute this assumption for smallholder survey data: the Unified National Weighted Ensemble outperforms standalone regional models in 26 of 27 regions ($\Delta R^2 > 0$), boosting pooled explained variance from $R^2 = 0.348$ to $R^2 = 0.592$. Because our feature space explicitly incorporates regional community peer deviations ($\Delta X_{{k,i}}^{{\\text{{reg}}}}$, Equation 9) and latent agro-ecological PCA factors, the national ensemble successfully pools statistical strength across analogous agro-ecological niches—allowing data-sparse regions such as Kusini Pemba ($N = 93$, $\\Delta R^2 = +0.411$), Dodoma ($N = 27$, $\\Delta R^2 = +0.541$), and Iringa ($N = 14$, $\\Delta R^2 = +0.627$) to borrow non-linear response structure from data-rich bimodal zones.
+Equally important for national monitoring systems is our empirical demonstration of the Spatial Transferability Advantage of pooled national modelling (Table 4, Fig. 5). In decentralising agricultural administration, analysts often assume that local models calibrated separately for individual administrative regions will better capture local context than a single national model. Our empirical results decisively refute this assumption for smallholder survey data: the Unified National Weighted Ensemble outperforms standalone regional models in 26 of 27 regions (ΔR² > 0), boosting pooled explained variance from R² = 0.348 to R² = 0.592. Because our feature space explicitly incorporates regional community peer deviations (ΔX<sub>k,i</sub><sup>reg</sup>, Equation 9) and latent agro-ecological PCA factors, the national ensemble successfully pools statistical strength across analogous agro-ecological niches—allowing data-sparse regions such as Kusini Pemba (N = 93, ΔR² = +0.411), Dodoma (N = 27, ΔR² = +0.541), and Iringa (N = 14, ΔR² = +0.627) to borrow non-linear response structure from data-rich bimodal zones.
 
 ### 4.2 Phenological timing, portfolio diversity, and agro-ecological buffering
 
-Our TreeSHAP attributions (Table 3, Fig. 4) and partial dependence surfaces (Fig. 9) provide novel micro-econometric evidence on the hierarchy of mechanisms governing smallholder yield stability in bimodal tropics. The emergence of Planting Month Difference  and Mean Vuli Planting Month  as two of the top three predictors of $Y_{{\\text{{vol}}}}$ underscores the critical role of phenological synchronisation under increasing rainfall variability (Rowhani et al., 2011; Thornton et al., 2014). In bimodal Tanzania, the *Vuli* short rains are characterised by a narrow sowing window; when delayed onset of the October rains or household labour/liquidity bottlenecks force farmers to sow late, crops encounter terminal moisture stress during flowering and grain filling in January, resulting in severe *Vuli* yield depression and extreme inter-seasonal divergence ($Y_{{\\text{{vol}}}} > 1.30$, Fig. 9a).
+Our TreeSHAP attributions (Table 3, Fig. 4) and partial dependence surfaces (Fig. 9) provide novel micro-econometric evidence on the hierarchy of mechanisms governing smallholder yield stability in bimodal tropics. The emergence of Planting Month Difference  and Mean Vuli Planting Month  as two of the top three predictors of Yᵥₒₗ underscores the critical role of phenological synchronisation under increasing rainfall variability (Rowhani et al., 2011; Thornton et al., 2014). In bimodal Tanzania, the *Vuli* short rains are characterised by a narrow sowing window; when delayed onset of the October rains or household labour/liquidity bottlenecks force farmers to sow late, crops encounter terminal moisture stress during flowering and grain filling in January, resulting in severe *Vuli* yield depression and extreme inter-seasonal divergence (Yᵥₒₗ > 1.30, Fig. 9a).
 
-Second, our results strongly corroborate the agro-ecological biodiversity–stability hypothesis at the farm-household scale (Tilman et al., 2006; Lin, 2011; Renard & Tilman, 2019; Beillouin et al., 2021). However, a key nuance revealed by our feature ranking (Table 3) is that community-benchmarked diversity (crop diversity relative to the regional mean, Rank 4) and inter-seasonal species evenness stability (inter-seasonal species evenness shift, Rank 5) are substantially stronger predictors of yield stability than raw species counts alone (number of crops cultivated, Rank 44; Online Resource 1). Cultivating multiple crops only buffers yield volatility when cultivar areas are distributed equitably (high Pielou evenness $J'$) and when portfolio diversity exceeds the baseline required by the local agro-ecological zone (Fig. 6b, Fig. 9c). In the Lake Victoria Basin and Coastal & Eastern zones (Fig. 8), intercropping cereals (maize, sorghum) with nitrogen-fixing legumes (common beans, cowpeas, pigeon peas) and drought-tolerant root/tuber crops (cassava, sweet potatoes) creates physiological portfolio insurance: because cassava and pigeon peas possess deep taproots and flexible harvest windows, they maintain baseline caloric output when shallow-rooted maize fails during erratic *Vuli* rains (Kassie et al., 2015; Tilman et al., 2006).
+Second, our results strongly corroborate the agro-ecological biodiversity–stability hypothesis at the farm-household scale (Tilman et al., 2006; Lin, 2011; Renard & Tilman, 2019; Beillouin et al., 2021). However, a key nuance revealed by our feature ranking (Table 3) is that community-benchmarked diversity (crop diversity relative to the regional mean, Rank 4) and inter-seasonal species evenness stability (inter-seasonal species evenness shift, Rank 5) are substantially stronger predictors of yield stability than raw species counts alone (number of crops cultivated, Rank 44; Online Resource 1). Cultivating multiple crops only buffers yield volatility when cultivar areas are distributed equitably (high Pielou evenness J′) and when portfolio diversity exceeds the baseline required by the local agro-ecological zone (Fig. 6b, Fig. 9c). In the Lake Victoria Basin and Coastal & Eastern zones (Fig. 8), intercropping cereals (maize, sorghum) with nitrogen-fixing legumes (common beans, cowpeas, pigeon peas) and drought-tolerant root/tuber crops (cassava, sweet potatoes) creates physiological portfolio insurance: because cassava and pigeon peas possess deep taproots and flexible harvest windows, they maintain baseline caloric output when shallow-rooted maize fails during erratic *Vuli* rains (Kassie et al., 2015; Tilman et al., 2006).
 
 ### 4.3 Capital–labour dynamics, livestock buffers, and input intensification risks
 
-Beyond plot ecology, our findings illuminate how household asset endowments and input intensification shape vulnerability to production shocks. Consistent with consumption-smoothing and buffer-stock theory in development economics (Dercon, 2004; Zimmerman & Carter, 2003; Dillon et al., 2015), Tropical Livestock Units  emerge as the primary household wealth buffer against crop yield volatility (Rank 6 in split frequency; Table 3). Crucially, our partial dependence analysis (Fig. 9b) and interaction plots (Fig. 6a) identify a sharp non-linear tipping point at $3.0\\text{{ TLU}}$. Below $3.0\\text{{ TLU}}$, smallholders lack sufficient liquid wealth or animal traction to buffer planting delays, resulting in persistently high volatility ($Y_{{\\text{{vol}}}} > 1.10$). Above $3.0\\text{{ TLU}}$, mixed crop–livestock integration stabilises seasonal yields through three synergistic pathways: (i) ox-plough traction enables rapid land preparation immediately following the first effective rains, compressing inter-seasonal planting delay; (ii) farmyard manure application improves soil organic matter and water-holding capacity on degraded sandy-loam plots (Tittonell & Giller, 2013); and (iii) sale of small ruminants provides timely liquidity to hire weeding labour (cultivated land area per adult labourer, Rank 9) and purchase improved drought-tolerant seed without liquidating core productive assets.
+Beyond plot ecology, our findings illuminate how household asset endowments and input intensification shape vulnerability to production shocks. Consistent with consumption-smoothing and buffer-stock theory in development economics (Dercon, 2004; Zimmerman & Carter, 2003; Dillon et al., 2015), Tropical Livestock Units  emerge as the primary household wealth buffer against crop yield volatility (Rank 6 in split frequency; Table 3). Crucially, our partial dependence analysis (Fig. 9b) and interaction plots (Fig. 6a) identify a sharp non-linear tipping point at 3.0 TLU. Below 3.0 TLU, smallholders lack sufficient liquid wealth or animal traction to buffer planting delays, resulting in persistently high volatility (Yᵥₒₗ > 1.10). Above 3.0 TLU, mixed crop–livestock integration stabilises seasonal yields through three synergistic pathways: (i) ox-plough traction enables rapid land preparation immediately following the first effective rains, compressing inter-seasonal planting delay; (ii) farmyard manure application improves soil organic matter and water-holding capacity on degraded sandy-loam plots (Tittonell & Giller, 2013); and (iii) sale of small ruminants provides timely liquidity to hire weeding labour (cultivated land area per adult labourer, Rank 9) and purchase improved drought-tolerant seed without liquidating core productive assets.
 
-Conversely, our quartile stratification (Table 6) highlights an important cautionary lesson regarding unbuffered chemical intensification. Holdings in the hyper-volatile quartile (Q4, mean $Y_{{\\text{{vol}}}} = 2.000$) apply higher mean inorganic fertiliser ($822.49\\text{{ kg}}$) than resilient holdings in Q1 ($400.64\\text{{ kg}}$), yet suffer complete uni-seasonal harvest collapse when accompanied by low crop diversity ($H'_m = 0.086$) and low livestock buffers ($2.89\\text{{ TLU}}$). Furthermore, our interaction surface between plot fragmentation and irrigation (Fig. 6c) demonstrates that parcel fragmentation ($\text{{CV}}_{{\\text{{plot}}}}$) exacerbates yield volatility under rainfed conditions by increasing travel time and dispersing scarce family labour across distant plots, whereas supplemental micro-irrigation neutralises this penalty and stabilises yields across both seasons (Teklewold et al., 2013; Benami et al., 2021).
+Conversely, our quartile stratification (Table 6) highlights an important cautionary lesson regarding unbuffered chemical intensification. Holdings in the hyper-volatile quartile (Q4, mean Yᵥₒₗ = 2.000) apply higher mean inorganic fertiliser (822.49 kg) than resilient holdings in Q1 (400.64 kg), yet suffer complete uni-seasonal harvest collapse when accompanied by low crop diversity (H′ₘ = 0.086) and low livestock buffers (2.89 TLU). Furthermore, our interaction surface between plot fragmentation and irrigation (Fig. 6c) demonstrates that parcel fragmentation (CVₚₗₒₜ) exacerbates yield volatility under rainfed conditions by increasing travel time and dispersing scarce family labour across distant plots, whereas supplemental micro-irrigation neutralises this penalty and stabilises yields across both seasons (Teklewold et al., 2013; Benami et al., 2021).
 
 ### 4.4 Limitations and future research directions
 
@@ -629,11 +644,11 @@ Whilst this study establishes a rigorous spatial machine learning benchmark for 
 
 ### 4.5 Concluding remarks and policy implications
 
-This study developed, audited, and validated a leakage-free spatial machine learning framework to predict household-level inter-seasonal crop yield volatility ($Y_{{\\text{{vol}}}} \\in [0, 2]$) across 4,564 bimodal smallholder holdings in 921 Enumeration Areas of Tanzania. By enforcing a Five-Pillar Spatial Leakage Isolation Protocol and pruning 246 multi-domain candidate predictors to a 100-feature champion subset, our soft-voting Weighted Ensemble (0.50 LightGBM + 0.40 XGBoost + 0.10 Random Forest) achieved an out-of-sample Spatial $R^2$ of $0.592$ ($\text{{RMSE}} = 0.464$) and outperformed isolated regional models across 26 of 27 administrative regions.
+This study developed, audited, and validated a leakage-free spatial machine learning framework to predict household-level inter-seasonal crop yield volatility (Yᵥₒₗ ∈ [0, 2]) across 4,564 bimodal smallholder holdings in 921 Enumeration Areas of Tanzania. By enforcing a Five-Pillar Spatial Leakage Isolation Protocol and pruning 246 multi-domain candidate predictors to a 100-feature champion subset, our soft-voting Weighted Ensemble (0.50 LightGBM + 0.40 XGBoost + 0.10 Random Forest) achieved an out-of-sample Spatial R² of 0.592 (RMSE = 0.464) and outperformed isolated regional models across 26 of 27 administrative regions.
 
 Our empirical findings and counterfactual stress tests (Fig. 10) translate directly into three actionable policy recommendations for Tanzania's Ministry of Agriculture, the National Food Reserve Agency (NFRA), and the Tanzania Social Action Fund (TASAF):
 1. Transition from Fertiliser-Only Subsidies to Diversified Climate-Smart Input Bundles: Input subsidy programmes should condition synthetic fertiliser vouchers on intercropping or rotating cereals with drought-tolerant legumes and roots/tubers (`+0.40` Shannon diversity target), which our simulations show reduces hyper-volatile holdings from 25.8% to 24.6% and lowers mean national volatility by 16.0%.
-2. Target Productive Livestock Safety Nets to the $< 3.0\\text{{ TLU}}$ Vulnerability Stratum: Social protection and rural credit programmes (such as TASAF productive inclusion grants) should prioritise small-ruminant and poultry asset transfers (`+2.0 TLU`) for holdings below the $3.0\\text{{ TLU}}$ tipping point (Fig. 9b), providing liquid buffer capital that cuts hyper-volatile exposure to 25.1% and lowers mean national volatility by 11.6%.
+2. Target Productive Livestock Safety Nets to the < 3.0 TLU Vulnerability Stratum: Social protection and rural credit programmes (such as TASAF productive inclusion grants) should prioritise small-ruminant and poultry asset transfers (`+2.0 TLU`) for holdings below the 3.0 TLU tipping point (Fig. 9b), providing liquid buffer capital that cuts hyper-volatile exposure to 25.1% and lowers mean national volatility by 11.6%.
 3. Deploy Spatially Calibrated Early-Warning Planting Advisories and Integrated CSA Packages: Combining localised agrometeorological onset advisories from the Tanzania Meteorological Authority (TMA) to synchronise *Masika* and *Vuli* sowing windows with crop diversification and livestock buffers (Integrated CSA Package, Fig. 10) reduces the prevalence of hyper-volatile smallholders from 25.8% to 19.9% and achieves a 40.0% net reduction in mean national yield volatility—offering a scalable, empirically validated pathway toward resilient food security in East Africa.
 
 ---
@@ -673,7 +688,7 @@ The author gratefully acknowledges the National Bureau of Statistics (NBS) of th
 
 Below is the link to the electronic supplementary material.
 
-- Online Resource 1 (Online Resource 1): Complete Grandmaster Feature Importance Ranking and Selection Status across all 246 Engineered Multi-Domain Candidate Predictors ($N = 4,564$ holdings, 921 Enumeration Areas).
+- Online Resource 1 (Online Resource 1): Complete Grandmaster Feature Importance Ranking and Selection Status across all 246 Engineered Multi-Domain Candidate Predictors (N = 4,564 holdings, 921 Enumeration Areas).
 
 ---
 
@@ -804,12 +819,7 @@ Zimmerman, F. J., & Carter, M. R. (2003). Asset smoothing, consumption smoothing
 **Kadeghe Goodluck Fue** is a Senior Lecturer in the Department of Agricultural Engineering, School of Engineering and Technology, at Sokoine University of Agriculture (SUA) in Morogoro, Tanzania, where he leads the Electronics and Precision Agriculture Lab (EPALab). He holds a Ph.D. in Engineering from the University of Georgia, an M.Sc. in Agricultural and Biological Engineering from the University of Florida, and a B.Sc. in Computer Engineering and Information Technology from the University of Dar es Salaam. His research focuses on precision agriculture, artificial intelligence, spatial machine learning, Agricultural Data Science, and climate-resilient smallholder farming systems, driven by a deep commitment to advancing food security across sub-Saharan Africa.
 """
     md = (
-        md.replace("\x08ar", "\\bar")
-        .replace("\x08egin", "\\begin")
-        .replace("\x0crac", "\\frac")
-        .replace("\text", "\\text")
-        .replace("\times", "\\times")
-        .replace("{ARTICLE_TITLE}", ARTICLE_TITLE)
+        md.replace("{ARTICLE_TITLE}", ARTICLE_TITLE)
         .replace("{RUNNING_HEAD}", RUNNING_HEAD)
         .replace("{FIG_DIR.resolve()}", str(FIG_DIR.resolve()))
         .replace("{t1_md}", t1_md)
@@ -819,10 +829,26 @@ Zimmerman, F. J., & Carter, M. R. (2003). Asset smoothing, consumption smoothing
         .replace("{t5_md}", t5_md)
         .replace("{t6_md}", t6_md)
         .replace("{t7_md}", t7_md)
-        .replace("{{", "{")
-        .replace("}}", "}")
+        .replace("{EQ1}", EQ1)
+        .replace("{EQ2}", EQ2)
+        .replace("{EQ3}", EQ3)
+        .replace("{EQ4}", EQ4)
+        .replace("{EQ5}", EQ5)
+        .replace("{EQ6}", EQ6)
+        .replace("{EQ7}", EQ7)
+        .replace("{EQ8}", EQ8)
+        .replace("{EQ9}", EQ9)
+        .replace("{EQ10}", EQ10)
+        .replace("{EQ11}", EQ11)
+        .replace("{EQ12}", EQ12)
     )
-    return md
+    out_lines = []
+    for line in md.splitlines():
+        if line.strip().startswith("$$"):
+            out_lines.append(line.strip())
+        else:
+            out_lines.append(clean_all_symbols(line))
+    return "\n".join(out_lines)
 
 
 # ==============================================================================
@@ -946,9 +972,9 @@ def _get_display_equation_omml(eq_num: str) -> Optional[str]:
     eq_map: Dict[str, str] = {
         "(1)": (
             SUB(R("Q"), R("i,s")) + R(" = ", False) +
-            NARY("∑", R("p∈P") + SUB(R(""), R("i,s")), "", NARY("∑", R("c∈C") + SUB(R(""), R("i,p,s")), "", SUB(R("q"), R("i,p,c,s")) + R("⋅", False) + SUB(R("κ"), R("u")))) +
+            NARY("∑", R("p∈") + SUB(R("P"), R("i,s")), "", NARY("∑", R("c∈") + SUB(R("C"), R("i,p,s")), "", SUB(R("q"), R("i,p,c,s")) + R("⋅", False) + SUB(R("κ"), R("u")))) +
             R(",   ", False) + SUB(R("A"), R("i,s")) + R(" = ", False) +
-            NARY("∑", R("p∈P") + SUB(R(""), R("i,s")), "", SUB(R("a"), R("i,p,s"))) +
+            NARY("∑", R("p∈") + SUB(R("P"), R("i,s")), "", SUB(R("a"), R("i,p,s"))) +
             R("   (1)", False)
         ),
         "(2)": (
@@ -1136,52 +1162,208 @@ def _convert_latex_to_omml(expr: str) -> Optional[str]:
     return None
 
 
-def _clean_scientific_symbols(text: str) -> str:
-    """Replaces raw LaTeX and caret/underscore notations with proper Unicode scientific symbols."""
-    # Scientific units
-    text = re.sub(r"\\text\{kg ha\}\^\{-1\}", "kg ha⁻¹", text)
-    text = re.sub(r"\\text\{mm yr\}\^\{-1\}", "mm yr⁻¹", text)
-    text = re.sub(r"\\text\{km\}\^2", "km²", text)
-    text = re.sub(r"\\text\{TLU\}", "TLU", text)
-    text = re.sub(r"\\text\{RMSE\}", "RMSE", text)
-    text = re.sub(r"\\text\{MAE\}", "MAE", text)
+UNICODE_SUBS = {
+    "₀": "0", "₁": "1", "₂": "2", "₃": "3", "₄": "4", "₅": "5", "₆": "6", "₇": "7", "₈": "8", "₉": "9",
+    "ᵢ": "i", "ᵣ": "r", "ᵤ": "u", "ᵥ": "v", "ₓ": "x", "ₐ": "a", "ₑ": "e", "ₒ": "o", "ₘ": "m", "ₛ": "s",
+    "ₚ": "p", "ₜ": "t", "ₖ": "k", "ₗ": "l", "ₙ": "n", "𝓰": "g",
+}
+UNICODE_SUPS = {
+    "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9",
+    "⁺": "+", "⁻": "-", "⁼": "=", "⁽": "(", "⁾": ")", "ⁿ": "n", "ⁱ": "i",
+    "ᵃ": "a", "ᵇ": "b", "ᶜ": "c", "ᵈ": "d", "ᵉ": "e", "ᶠ": "f", "ᵍ": "g", "ʰ": "h", "ʲ": "j", "ᵏ": "k",
+    "ˡ": "l", "ᵐ": "m", "ᵒ": "o", "ᵖ": "p", "ʳ": "r", "ˢ": "s", "ᵗ": "t", "ᵘ": "u", "ᵛ": "v", "ʷ": "w", "ˣ": "x", "ʸ": "y", "ᶻ": "z",
+}
 
-    # Subscripts & superscripts in prose
-    text = text.replace("^{reg}", "ʳᵉᵍ").replace("^{ens}", "ᵉⁿˢ").replace("^{a}", "ᵃ").replace("^{b}", "ᵇ")
-    text = text.replace("^{-1}", "⁻¹").replace("^{-5}", "⁻⁵").replace("{-5}", "⁻⁵")
-    text = text.replace("^2", "²").replace("^3", "³")
 
-    text = text.replace("_{\\text{vol},i}", "ᵥₒₗ,ᵢ").replace("_{\\text{vol}}", "ᵥₒₗ")
-    text = text.replace("_{\\mathrm{vol},i}", "ᵥₒₗ,ᵢ").replace("_{\\mathrm{vol}}", "ᵥₒₗ")
-    text = text.replace("_{vol,i}", "ᵥₒₗ,ᵢ").replace("_{vol}", "ᵥₒₗ").replace("{vol}", "ᵥₒₗ")
-    text = text.replace("_{\\text{plot}}", "ₚₗₒₜ").replace("_{plot}", "ₚₗₒₜ").replace("{plot}", "ₚₗₒₜ")
-    text = text.replace("_{HHI,i,s}", "_{HHI,i,s}").replace("_{HHI}", "_{HHI}").replace("{HHI}", "_{HHI}")
-    text = text.replace("_{BP}", "_{BP}").replace("{BP}", "_{BP}")
-    text = text.replace("_{National}", "ₙₐₜᵢₒₙₐₗ").replace("{National}", "ₙₐₜᵢₒₙₐₗ")
-    text = text.replace("_{Regional}", "ᵣₑ𝓰ᵢₒₙₐₗ").replace("{Regional}", "ᵣₑ𝓰ᵢₒₙₐₗ")
-    text = text.replace("_{i,m}", "ᵢ,ₘ").replace("_{i,v}", "ᵢ,ᵥ").replace("_{i,s}", "ᵢ,ₛ")
-    text = text.replace("_m", "ₘ").replace("_v", "ᵥ").replace("_i", "ᵢ")
+def clean_all_symbols(text: str) -> str:
+    """Standardises symbols, superscripts, subscripts, and eliminates raw LaTeX artifacts."""
+    # 0. Unescape ASCII escape characters from Python string literals (e.g. \t -> \text, \b -> \bar)
+    text = text.replace("\t" + "ext", "\\text").replace("\text", "\\text")
+    text = text.replace("\x08" + "ar", "\\bar").replace("\bar", "\\bar")
+    text = text.replace(r"\Delta", "\\Delta")
+    text = text.replace(r"\phi", "\\phi")
+    text = text.replace(r"\pm", "\\pm")
 
-    # Greek and math symbols
-    macros = [
-        (r"\\bar\{Y\}", "Ȳ"), (r"\\hat\{Y\}", "Ŷ"), (r"\\bar\{M\}", "M̄"), (r"\\bar\{X\}", "X̄"),
-        (r"\\Delta", "Δ"), (r"\\approx", "≈"), (r"\\in", "∈"), (r"\\ge", "≥"), (r"\\le", "≤"),
-        (r"\\pm", "±"), (r"\\times", "×"), (r"\\cdot", "·"), (r"\\kappa", "κ"), (r"\\mu", "μ"),
-        (r"\\sigma", "σ"), (r"\\eta", "η"), (r"\\alpha", "α"), (r"\\lambda", "λ"), (r"\\varepsilon", "ε"),
-        (r"\\phi", "ϕ"), (r"\\dots", "…"), (r"\\forall", "∀"), (r"\\neq", "≠"), (r"\\emptyset", "∅"),
-        (r"\\cap", "∩"), (r"\\cup", "∪"), (r"\\{", "{"), (r"\\}", "}"),
-        (r"\\text\{", ""), (r"\\mathrm\{", ""), (r"\\operatorname\{", ""),
-    ]
-    for pattern, replacement in macros:
-        text = re.sub(pattern, replacement, text)
+    # 1. Unescape double curlies first so all { ... } match standard LaTeX patterns
+    text = text.replace("{{", "{").replace("}}", "}")
 
-    # Clean out raw backslashes and stray braces
-    text = text.replace("{", "").replace("}", "").replace("\\", "")
+    # 2. Accents FIRST before subscripts/superscripts are resolved
+    text = re.sub(r"\\+hat\{Y\}|\\+hatY", "Ŷ", text)
+    text = re.sub(r"\\+bar\{Y\}|\\+barY", "Ȳ", text)
+    text = re.sub(r"\\+bar\{M\}|\\+barM", "M̄", text)
+    text = re.sub(r"\\+bar\{X\}|\\+barX", "X̄", text)
+    text = re.sub(r"\\+hat\{f\}|\\+hatf", "f̂", text)
+    text = re.sub(r"\\+bar\{([A-Za-z])\}", r"\1̄", text)
+    text = re.sub(r"\\+hat\{([A-Za-z])\}", r"\1̂", text)
+    text = re.sub(r"\\+hat\s+([A-Za-z])", r"\1̂", text)
+    text = re.sub(r"\\+bar\s+([A-Za-z])", r"\1̄", text)
+    text = re.sub(r"\\+hat\b", "", text)
+    text = re.sub(r"\\+bar\b", "", text)
+
+    # 3. Robust Volatility Index variants (handling unbalanced curlies and \text)
+    text = re.sub(r"([YȲŶ])_\{?\\+text\{\s*vol\s*,\s*i\s*\}\}?", r"\1ᵥₒₗ,ᵢ", text)
+    text = re.sub(r"([YȲŶ])_\{?vol\s*,\s*i\}?", r"\1ᵥₒₗ,ᵢ", text)
+    text = re.sub(r"([YȲŶ])_\{?\\+text\{\s*vol\s*\}\}?", r"\1ᵥₒₗ", text)
+    text = re.sub(r"([YȲŶ])_\{?vol\}?", r"\1ᵥₒₗ", text)
+    text = text.replace("Y_vol", "Yᵥₒₗ").replace("Ȳ_vol", "Ȳᵥₒₗ").replace("Ŷ_vol", "Ŷᵥₒₗ")
+
+    # 4. Units and specific text macros (with guaranteed space before units)
+    text = re.sub(r"\\+text\{\s*kg ha\s*\}\^\{\s*-?1\s*\}|\$?\\+text\{\s*kg ha\s*\}\^\{\s*-?1\s*\}\$?|kg ha\^\{\s*-?1\s*\}|kg ha\^-\s*1", " kg ha⁻¹", text)
+    text = re.sub(r"\\+text\{\s*mm yr\s*\}\^\{\s*-?1\s*\}|\$?\\+text\{\s*mm yr\s*\}\^\{\s*-?1\s*\}\$?|mm yr\^\{\s*-?1\s*\}|mm yr\^-\s*1", " mm yr⁻¹", text)
+    text = re.sub(r"\\+text\{\s*km\s*\}\^2|\$?\\+text\{\s*km\s*\}\^2\$?|km\^2", " km²", text)
+    text = re.sub(r"\$([0-9,]+)\\+text\{\s*km\s*\}\^2\$", r"\1 km²", text)
+    text = re.sub(r"\$([0-9,]+)\\+text\{--\}([0-9,]+)\\+text\{\s*mm yr\s*\}\^\{\s*-?1\s*\}\$", r"\1–\2 mm yr⁻¹", text)
+    text = re.sub(r"\$([0-9,]+)\\+text\{--\}([0-9,]+)\\+text\{\s*m\s*\}\$", r"\1–\2 m", text)
+    text = re.sub(r"\$1\^\\+circ 00'\\+text\{\s*S\s*\}\$", "1° 00′ S", text)
+    text = re.sub(r"\$11\^\\+circ 45'\\+text\{\s*S\s*\}\$", "11° 45′ S", text)
+    text = re.sub(r"\$29\^\\+circ 15'\\+text\{\s*E\s*\}\$", "29° 15′ E", text)
+    text = re.sub(r"\$40\^\\+circ 30'\\+text\{\s*E\s*\}\$", "40° 30′ E", text)
+    text = re.sub(r"\$45\^\\+circ\$", "45°", text)
+    text = text.replace(r"\text{--}", "–").replace(r"\text{ S}", " S").replace(r"\text{ E}", " E")
+    text = text.replace(r"\text{ m}", " m").replace(r"\text{ kg}", " kg")
+    text = text.replace("  kg ha⁻¹", " kg ha⁻¹").replace("  mm yr⁻¹", " mm yr⁻¹").replace("  km²", " km²")
+
+    # 5. LaTeX Table Notes
+    text = re.sub(r"\$?\^\{\\+text\{a\}\}\$?|\$?\^\{\\+text\{a\}\}\$?", "ᵃ", text)
+    text = re.sub(r"\$?\^\{\\+text\{b\}\}\$?|\$?\^\{\\+text\{b\}\}\$?", "ᵇ", text)
+    text = re.sub(r"\$?\^a\$?", "ᵃ", text)
+    text = re.sub(r"\$?\^b\$?", "ᵇ", text)
+
+    # 6. Math symbols
+    text = re.sub(r"\\+Delta", "Δ", text)
+    text = re.sub(r"\\+varepsilon", "ε", text)
+    text = re.sub(r"\\+mu", "μ", text)
+    text = re.sub(r"\\+sigma", "σ", text)
+    text = re.sub(r"\\+kappa", "κ", text)
+    text = re.sub(r"\\+phi", "ϕ", text)
+    text = re.sub(r"\\+pm", "±", text)
+    text = re.sub(r"\\+times", "×", text)
+    text = re.sub(r"\\+cdot", "·", text)
+    text = re.sub(r"\\+ge\b", "≥", text)
+    text = re.sub(r"\\+le\b", "≤", text)
+    text = re.sub(r"\\+approx", "≈", text)
+    text = re.sub(r"\\+in\b", "∈", text)
+    text = re.sub(r"\\+notin", "∉", text)
+    text = re.sub(r"\\+forall", "∀", text)
+    text = re.sub(r"\\+neq", "≠", text)
+    text = re.sub(r"\\+emptyset", "∅", text)
+    text = re.sub(r"\\+cap", "∩", text)
+    text = re.sub(r"\\+cup", "∪", text)
+    text = re.sub(r"\\+dots", "…", text)
+    text = re.sub(r"\\+sum\b", "∑", text)
+    text = re.sub(r"\\+sum", "∑", text)
+    text = re.sub(r"\\+prod\b", "∏", text)
+    text = re.sub(r"\\+partial\b", "∂", text)
+    text = re.sub(r"\\+pi\b", "π", text)
+    text = re.sub(r"\\+p_\{([^}]+)\}", r"p_{\1}", text)
+    text = re.sub(r"\\+p_([A-Za-z0-9])", r"p_\1", text)
+    text = re.sub(r"\\+p\b", "p", text)
+    text = text.replace(r"\{", "{").replace(r"\}", "}")
+
+    # 7. R2 and Delta R2
+    text = text.replace("R^2", "R²")
+    text = text.replace("ΔR^2", "ΔR²").replace("Δ R^2", "ΔR²").replace("Δ R²", "ΔR²")
+    text = text.replace("Delta R²", "ΔR²").replace("Delta R^2", "ΔR²")
+
+    # 8. Specific domain metrics
+    text = re.sub(r"\\+text\{TLU\}", "TLU", text)
+    text = re.sub(r"\\+text\{RMSE\}", "RMSE", text)
+    text = re.sub(r"\\+text\{MAE\}", "MAE", text)
+    text = re.sub(r"\\+text\{SHAP\}", "SHAP", text)
+    text = re.sub(r"\\+text\{Spatial RMSE\}", "Spatial RMSE", text)
+    text = re.sub(r"\\+text\{LightGBM\}", "LightGBM", text)
+    text = re.sub(r"\\+text\{XGBoost\}", "XGBoost", text)
+    text = re.sub(r"\\+text\{Random Forest\}", "Random Forest", text)
+    text = re.sub(r"\\+text\{vol\}", "vol", text)
+    text = re.sub(r"\\+text\{plot\}", "plot", text)
+    text = re.sub(r"\\+text\{HHI\}", "HHI", text)
+    text = re.sub(r"\\+text\{BP\}", "BP", text)
+    text = re.sub(r"\\+text\{National\}", "National", text)
+    text = re.sub(r"\\+text\{Regional\}", "Regional", text)
+    text = re.sub(r"\\+text\{reg\}", "reg", text)
+    text = re.sub(r"\\+text\{ens\}", "ens", text)
+    text = re.sub(r"\\+text\{rot\}", "rot", text)
+    text = re.sub(r"\\+text\{adult\}", "adult", text)
+    text = re.sub(r"\\+text\{train\}", "train", text)
+    text = re.sub(r"\\+text\{val\}", "val", text)
+    text = re.sub(r"\\+text\{top\}", "top", text)
+    text = re.sub(r"\\+text\{cattle\}", "cattle", text)
+    text = re.sub(r"\\+text\{donkey\}", "donkey", text)
+    text = re.sub(r"\\+text\{pig\}", "pig", text)
+    text = re.sub(r"\\+text\{goat\}", "goat", text)
+    text = re.sub(r"\\+text\{sheep\}", "sheep", text)
+    text = re.sub(r"\\+text\{poultry\}", "poultry", text)
+    text = re.sub(r"\\+mathcal\{I\}", "I", text)
+    text = re.sub(r"\\+mathcal\{F\}", "F", text)
+    text = re.sub(r"\\+mathbf\{x\}", "x", text)
+    text = re.sub(r"\\+mathbf", "", text)
+    text = re.sub(r"\\+boldsymbol", "", text)
+    text = re.sub(r"\\+operatorname\{clip\}", "clip", text)
+
+    # 9. Strip general text/mathrm/operatorname
+    text = re.sub(r"\\+text\{([^}]+)\}", r"\1", text)
+    text = re.sub(r"\\+mathrm\{([^}]+)\}", r"\1", text)
+    text = re.sub(r"\\+operatorname\{([^}]+)\}", r"\1", text)
+    text = re.sub(r"\\+text([A-Za-z]+)", r"\1", text)
+    text = re.sub(r"\\+text\b", "", text)
+
+    # 10. Known subscripts and Greek variables
+    text = text.replace("Y_{i,m}", "Yᵢ,ₘ").replace("Y_{i,v}", "Yᵢ,ᵥ").replace("Y_{i,s}", "Yᵢ,ₛ")
+    text = text.replace("A_{i,s}", "Aᵢ,ₛ").replace("Q_{i,s}", "Qᵢ,ₛ")
+    text = text.replace("p_{i,c,s}", "pᵢ,c,ₛ").replace("a_{i,c,s}", "aᵢ,c,ₛ").replace("a_{i,p,s}", "aᵢ,ₚ,ₛ")
+    text = text.replace("C_{HHI}", "C<sub>HHI</sub>").replace("C_HHI", "C<sub>HHI</sub>")
+    text = text.replace("D_{BP}", "D<sub>BP</sub>").replace("D_BP", "D<sub>BP</sub>")
+    text = text.replace("CV_{plot}", "CVₚₗₒₜ").replace("CV_plot", "CVₚₗₒₜ")
+    text = text.replace("CV_{plot,i}", "CVₚₗₒₜ,ᵢ")
+    text = text.replace("TLU_i", "TLUᵢ")
+    text = text.replace("w_{LGB}", "w<sub>LGB</sub>").replace("w_{XGB}", "w<sub>XGB</sub>").replace("w_{RF}", "w<sub>RF</sub>")
+    text = text.replace("R_{rot}", "R<sub>rot</sub>").replace("R_{rot,i}", "R<sub>rot,i</sub>")
+    text = text.replace("R²_{National}", "R²<sub>National</sub>").replace("R²_{Regional}", "R²<sub>Regional</sub>")
+    text = text.replace("R^2_{National}", "R²<sub>National</sub>").replace("R^2_{Regional}", "R²<sub>Regional</sub>")
+    text = text.replace("ϕ_{i,j}", "ϕᵢ,ⱼ")
+    text = text.replace("Q_1", "Q₁").replace("Q_3", "Q₃")
+    text = text.replace("Y_m", "Yₘ").replace("Y_v", "Yᵥ")
+    text = text.replace("Q_m", "Qₘ").replace("Q_v", "Qᵥ")
+    text = text.replace("A_i", "Aᵢ").replace("K_i", "Kᵢ").replace("M_i", "Mᵢ")
+    text = text.replace("C_m", "Cₘ").replace("C_v", "Cᵥ")
+    text = text.replace("X_k", "Xₖ").replace("X_j", "Xⱼ")
+    text = text.replace("L_1", "L₁").replace("L_2", "L₂")
+    text = text.replace("F_m", "Fₘ")
+    text = text.replace("G_i", "Gᵢ").replace("G_j", "Gⱼ")
+    text = text.replace("x_i", "xᵢ")
+    text = text.replace("10^{-5}", "10⁻⁵").replace("10^-5", "10⁻⁵")
+
+    # 11. General single-character subscripts / superscripts
+    def sub_repl(m):
+        base, sub = m.group(1), m.group(2)
+        if len(sub) == 1 and sub in UNICODE_SUBS:
+            return f"{base}{UNICODE_SUBS[sub]}"
+        return f"{base}<sub>{sub}</sub>"
+
+    def sup_repl(m):
+        base, sup = m.group(1), m.group(2)
+        if len(sup) == 1 and sup in UNICODE_SUPS:
+            return f"{base}{UNICODE_SUPS[sup]}"
+        return f"{base}<sup>{sup}</sup>"
+
+    text = re.sub(r"([A-Za-zΔȲŶM̄X̄f̂])_\{([^{}]+)\}", sub_repl, text)
+    text = re.sub(r"([A-Za-zΔȲŶM̄X̄f̂])\^\{([^{}]+)\}", sup_repl, text)
+    text = re.sub(r"([A-Za-zΔȲŶM̄X̄f̂])_([0-9a-z])\b", lambda m: f"{m.group(1)}{UNICODE_SUBS.get(m.group(2), '<sub>' + m.group(2) + '</sub>')}", text)
+
+    # Clean double dollar signs in prose if empty: e.g. $$ -> ""
+    text = re.sub(r"\$\s*\$", "", text)
+    # Strip single math dollar delimiters around simple cleaned expressions
+    text = re.sub(r"\$([A-Za-z0-9\u0080-\uffff,.\s=±–—<>≥≤∈∉…~^_/'{}()+-]+)\$", r"\1", text)
     return text
 
 
-def _add_formatted_runs(p, text: str, font_size: int = 10) -> None:
-    """Adds runs with native MS Word Equation (OMML) blocks and scientific symbols."""
+def _clean_scientific_symbols(text: str) -> str:
+    """Backwards-compatible wrapper calling clean_all_symbols."""
+    return clean_all_symbols(text)
+
+
+def _add_formatted_runs(p, text: str, font_size: float = 10, font_name: str = "Times New Roman") -> None:
+    """Renders text runs into a docx paragraph using native Word subscripts and superscripts."""
     # Clean markdown links [label](url) -> label
     text = re.sub(r"\[([^\]]+)\]\([^\)]+\)", r"\1", text)
     # Strip markdown bold inside paragraphs
@@ -1189,35 +1371,121 @@ def _add_formatted_runs(p, text: str, font_size: int = 10) -> None:
     # Strip backticks
     text = text.replace("`", "")
 
-    math_parts = re.split(r"(\$[^\$\n]+\$)", text)
-    for mp in math_parts:
-        if not mp:
+    cleaned = clean_all_symbols(text)
+
+    # Split on markdown italics *...*
+    italic_chunks = re.split(r"(\*[^*]+\*)", cleaned)
+
+    for ichunk in italic_chunks:
+        if not ichunk:
             continue
-        if mp.startswith("$") and mp.endswith("$"):
-            math_expr = mp[1:-1].strip()
-            omml_xml = _convert_latex_to_omml(math_expr)
-            if omml_xml:
-                p._p.append(parse_xml(omml_xml))
-            else:
-                cleaned_math = _clean_scientific_symbols(math_expr)
-                r = p.add_run(cleaned_math)
-                r.font.name = "Times New Roman"
-                r.font.size = Pt(font_size)
-        else:
-            cleaned_prose = _clean_scientific_symbols(mp)
-            # Handle italics (*...*) if any, but NO bold inside paragraphs
-            tokens = re.split(r"(\*[^*]+\*)", cleaned_prose)
-            for tok in tokens:
-                if not tok:
-                    continue
-                if tok.startswith("*") and tok.endswith("*") and len(tok) > 2:
-                    inner = tok[1:-1]
-                    r = p.add_run(inner)
-                    r.italic = True
-                else:
-                    r = p.add_run(tok)
-                r.font.name = "Times New Roman"
-                r.font.size = Pt(font_size)
+        is_md_italic = ichunk.startswith("*") and ichunk.endswith("*") and len(ichunk) > 2
+        chunk_str = ichunk[1:-1] if is_md_italic else ichunk
+
+        # Split on $...$ math spans
+        math_parts = re.split(r"(\$[^\$\n]+\$)", chunk_str)
+        for mpart in math_parts:
+            if not mpart:
+                continue
+            is_math_span = mpart.startswith("$") and mpart.endswith("$")
+            part_str = mpart[1:-1] if is_math_span else mpart
+
+            # Parse sub, sup, html sub/sup tags, and base variables
+            token_pattern = re.compile(
+                r"(?:<sub>([^<]+)</sub>)|"
+                r"(?:<sup>([^<]+)</sup>)|"
+                r"(?:([A-Za-zΔȲŶM̄X̄f̂\']+)(?:_\{([^}]+)\}|_([A-Za-z0-9]+))(?:\^\{([^}]+)\}|\^([A-Za-z0-9+-]+)))|"
+                r"(?:([A-Za-zΔȲŶM̄X̄f̂\']+)(?:\^\{([^}]+)\}|\^([A-Za-z0-9+-]+))(?:_\{([^}]+)\}|_([A-Za-z0-9]+)))|"
+                r"(?:([A-Za-zΔȲŶM̄X̄f̂\']+)(?:_\{([^}]+)\}|_([A-Za-z0-9]+)))|"
+                r"(?:([A-Za-zΔȲŶM̄X̄f̂\']+)(?:\^\{([^}]+)\}|\^([A-Za-z0-9+-]+)))|"
+                r"(?:_\{([^}]+)\}|_([A-Za-z0-9]+))|"
+                r"(?:\^\{([^}]+)\}|\^([A-Za-z0-9+-]+))|"
+                r"([⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱᵃᵇᶜᵈᵉᶠᵍʰʲᵏˡᵐᵒᵖʳˢᵗᵘᵛʷˣʸᶻ]+)|"
+                r"([₀₁₂₃₄₅₆₇₈₉ᵢᵣᵤᵥₓₐₑₒₘₛₚₜₖₗₙ𝓰]+)"
+            )
+
+            last_idx = 0
+            for m in token_pattern.finditer(part_str):
+                start, end = m.span()
+                if start > last_idx:
+                    plain_txt = part_str[last_idx:start]
+                    _add_plain_run(p, plain_txt, italic=is_md_italic or (is_math_span and len(plain_txt.strip()) == 1 and plain_txt.strip().isalpha()), font_size=font_size, font_name=font_name)
+
+                g = m.groups()
+                if g[0]:  # <sub>...</sub>
+                    _add_sub_run(p, g[0], font_size=font_size, font_name=font_name)
+                elif g[1]:  # <sup>...</sup>
+                    _add_sup_run(p, g[1], font_size=font_size, font_name=font_name)
+                elif g[2]:  # Base_sub^sup
+                    _add_var_run(p, g[2], sub=g[3] or g[4], sup=g[5] or g[6], font_size=font_size, font_name=font_name)
+                elif g[7]:  # Base^sup_sub
+                    _add_var_run(p, g[7], sub=g[10] or g[11], sup=g[8] or g[9], font_size=font_size, font_name=font_name)
+                elif g[12]:  # Base_sub
+                    _add_var_run(p, g[12], sub=g[13] or g[14], sup=None, font_size=font_size, font_name=font_name)
+                elif g[15]:  # Base^sup
+                    _add_var_run(p, g[15], sub=None, sup=g[16] or g[17], font_size=font_size, font_name=font_name)
+                elif g[18] or g[19]:  # _sub
+                    _add_sub_run(p, g[18] or g[19], font_size=font_size, font_name=font_name)
+                elif g[20] or g[21]:  # ^sup
+                    _add_sup_run(p, g[20] or g[21], font_size=font_size, font_name=font_name)
+                elif g[22]:  # unicode sup
+                    usup = "".join(UNICODE_SUPS.get(ch, ch) for ch in g[22])
+                    _add_sup_run(p, usup, font_size=font_size, font_name=font_name)
+                elif g[23]:  # unicode sub
+                    usub = "".join(UNICODE_SUBS.get(ch, ch) for ch in g[23])
+                    _add_sub_run(p, usub, font_size=font_size, font_name=font_name)
+
+                last_idx = end
+
+            if last_idx < len(part_str):
+                plain_txt = part_str[last_idx:]
+                _add_plain_run(p, plain_txt, italic=is_md_italic or (is_math_span and len(plain_txt.strip()) == 1 and plain_txt.strip().isalpha()), font_size=font_size, font_name=font_name)
+
+
+def _add_plain_run(p, text: str, italic: bool, font_size: float, font_name: str):
+    clean = text.replace("{", "").replace("}", "").replace("\\", "")
+    if not clean:
+        return
+    r = p.add_run(clean)
+    r.font.name = font_name
+    r.font.size = Pt(font_size)
+    if italic:
+        r.italic = True
+
+
+def _add_sub_run(p, sub_text: str, font_size: float, font_name: str):
+    clean = sub_text.replace("{", "").replace("}", "").replace("\\", "")
+    if not clean:
+        return
+    r = p.add_run(clean)
+    r.font.name = font_name
+    r.font.size = Pt(font_size)
+    r.font.subscript = True
+
+
+def _add_sup_run(p, sup_text: str, font_size: float, font_name: str):
+    clean = sup_text.replace("{", "").replace("}", "").replace("\\", "")
+    if not clean:
+        return
+    r = p.add_run(clean)
+    r.font.name = font_name
+    r.font.size = Pt(font_size)
+    r.font.superscript = True
+
+
+def _add_var_run(p, base: str, sub: str = None, sup: str = None, font_size: float = 10, font_name: str = "Times New Roman"):
+    r_base = p.add_run(base)
+    r_base.font.name = font_name
+    r_base.font.size = Pt(font_size)
+    if base in ["Y", "R", "C", "D", "H", "J", "Q", "A", "p", "a", "q", "w", "x", "f", "N", "K", "S", "M", "X", "Z", "G", "F", "Ȳ", "Ŷ", "M̄", "X̄", "f̂"]:
+        r_base.italic = True
+    elif base.startswith("Δ") and len(base) > 1 and base[1:] in ["R", "M", "H", "J", "C", "X"]:
+        r_base.italic = False
+
+    if sub:
+        _add_sub_run(p, sub, font_size=font_size, font_name=font_name)
+    if sup:
+        _add_sup_run(p, sup, font_size=font_size, font_name=font_name)
 
 
 def _render_md_table_to_docx(doc: Document, table_lines: List[str]) -> None:
@@ -1298,9 +1566,9 @@ def generate_docx_manuscript(md_text: str) -> Path:
             i += 1
             continue
 
-        # Display Equation ($$ ... $$ (N))
+        # Display Equation ($$ ... $$ (N) or $$ ... (N) $$)
         if line.startswith("$$"):
-            m_eq = re.search(r"\((\d+)\)\s*$", line)
+            m_eq = re.search(r"\((\d+)\)\s*(?:\$\$)?\s*$", line)
             eq_num = f"({m_eq.group(1)})" if m_eq else ""
             omml_str = _get_display_equation_omml(eq_num)
             p = doc.add_paragraph()
@@ -1654,6 +1922,8 @@ Our Five-Pillar Spatial Leakage Isolation Protocol demonstrates that ensemble ma
     tex_content = (
         tex_content.replace("{RUNNING_HEAD}", RUNNING_HEAD)
         .replace("{ARTICLE_TITLE}", ARTICLE_TITLE)
+        .replace("{{", "{")
+        .replace("}}", "}")
         .replace("{t1_tex}", t1_tex)
         .replace("{t2_tex}", t2_tex)
         .replace("{t3_tex}", t3_tex)
@@ -1661,8 +1931,6 @@ Our Five-Pillar Spatial Leakage Isolation Protocol demonstrates that ensemble ma
         .replace("{t5_tex}", t5_tex)
         .replace("{t6_tex}", t6_tex)
         .replace("{t7_tex}", t7_tex)
-        .replace("{{", "{")
-        .replace("}}", "}")
     )
     LATEX_PATH.write_text(tex_content, encoding="utf-8")
     logger.info("Successfully generated %s", LATEX_PATH)
