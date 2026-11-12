@@ -1,0 +1,6 @@
+.local_packages/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pycache/  
