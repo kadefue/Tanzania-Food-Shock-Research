@@ -1,0 +1,6 @@
+stage,step_name,inclusion_criteria,households_retained,households_excluded,retention_pct,scientific_justification
+1,Raw Survey Master (Catalog 69),All records in AASS2025.dta,18904,0,100.0,Initial gross survey frame (includes commercial census and smallholder sample).
+2,Population A: Valid Smallholders,"Holding_type == 2.0, Adjusted_HH_weight > 0, Valid Region & EA",17829,1075,94.31,"Purges 1,075 large-scale commercial corporations to isolate the representative smallholder target population."
+3,Population B: Valid Seasonal Producers,Valid crop production and plot area in at least one season (Masika OR Vuli),15524,2305,87.07,Restricts sample to active agricultural holdings with verifiable seasonal harvest.
+4,Population D: Bimodal Farming System,Cultivates and harvests crops in BOTH Masika AND Vuli seasons,3203,12321,20.63,Identifies smallholders in bimodal agro-ecological rainfall zones capable of seasonal comparison.
+5,Population C: Same-Crop Bimodal Cohort,Cultivates the EXACT SAME crop species in both Masika and Vuli,1989,1214,62.1,"Eliminates crop-switching and moisture-density confounding, enabling scientifically valid yield comparisons."

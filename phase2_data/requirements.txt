@@ -1,0 +1,10 @@
+# Phase 2 Reproducible Data Pipeline Requirements
+# Note: For execution within the sandboxed environment, dependencies are installed into .local_packages
+
+pandas>=2.0.0
+numpy>=1.24.0
+pyreadstat>=1.2.0
+pyarrow>=14.0.0
+pyyaml>=6.0
+openpyxl>=3.1.0
+pytest>=7.0.0

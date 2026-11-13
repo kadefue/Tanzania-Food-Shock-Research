@@ -1,0 +1,4 @@
+left_table,right_table,join_keys,join_type,expected_relation,left_records_pre,right_records_pre,merged_records_post,matched_records,left_unmatched,right_unmatched,cartesian_duplicates,status
+AASS2025,MASIKAPLOT,HHFARMID,left,1:m,17829,29750,33235,29750,3485,0,0,PASS
+AASS2025,MASIKACROP,HHFARMID,left,1:m,17829,38602,42877,38602,4275,0,0,PASS
+VULICROP,VULIPLOT,HHFARMID:FIELD__id:VULIPLOT__id,left,m:1,24664,17189,24664,24664,0,0,0,PASS

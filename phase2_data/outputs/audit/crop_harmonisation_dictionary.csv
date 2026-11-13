@@ -1,0 +1,120 @@
+unified_crop_id,standardized_crop_name,masika_crop_code,vuli_crop_code,crop_group,is_food_crop,mapping_source,review_status
+1,Amaranths,74,91,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+2,Ambarella,26,39,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+3,Apples,67,82,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+4,Avocado,57,72,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+5,Bambaranuts,23,36,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+6,Bamboo,100,302,Non-Food,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+7,Banana,56,71,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+8,Barley,7,17,Cereals,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+9,Beans,18,31,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+10,Bilimbi,81,98,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+11,Bitter Tomato,110,872,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+12,Black Pepper,8,18,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+13,Black Plum,90,203,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+14,Bread Fruit,52,67,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+15,Brocol,115,905,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+16,Bulrush Millet,4,14,Cereals,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+17,Cabbage,70,86,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+18,Cardamom,46,61,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+19,Carrot,72,89,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+20,Cashew Nut,32,46,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+21,Cassava,10,21,Roots and Tubers,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+22,Caster Seed,34,48,Oilseeds,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+23,Cauliflower,79,96,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+24,Chick Peas,22,35,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+25,Chilies,73,90,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+26,Cinnamon,49,64,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+27,Clove,51,66,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+28,Cocoa,41,56,Cash Crops,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+29,Coconut,31,45,Oilseeds,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+30,Cocoyams,14,25,Roots and Tubers,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+31,Coffee,39,54,Cash Crops,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+32,Coriander,85,102,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+33,Cotton,35,50,Cash Crops,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+34,Cowpeas,19,32,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+35,Cucumber,76,93,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+36,Custard Apple,87,200,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+37,Dates,92,210,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+38,Durian,80,97,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+39,Egg Plant,77,94,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+40,Fence Tree,103,306,Non-Food,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+41,Field Peas,24,37,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+42,"Figiri, Sukuma Wiki",114,904,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+43,Finger Millet,5,15,Cereals,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+44,Fiwi,84,101,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+45,Garlic,17,28,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+46,Ginger,16,27,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+47,God Fruit,88,201,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+48,Grapefruit,62,77,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+49,Grapes,63,78,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+50,Green Beans,106,312,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+51,Green Gram,20,33,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+52,Green Tomato,98,300,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+53,Groundnut,29,43,Oilseeds,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+54,Guava,65,80,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+55,Irish Potatoes,12,23,Roots and Tubers,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+56,Jack Fruit,54,69,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+57,Jute,47,62,Cash Crops,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+58,Kapok,44,59,Cash Crops,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+59,Lemon,108,852,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+60,Lemon Grass,104,307,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+61,Lime,107,851,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+62,Maize,1,11,Cereals,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+63,Majani Ya Kunde,117,907,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+64,Malay Apple,25,38,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+65,Mandarin,64,79,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+66,Mango,58,73,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+67,Medicinal Plant,102,305,Other,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+68,Mitobo,89,202,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+69,Mnavu/Mnafu,113,903,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+70,Monkeybread,99,301,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+71,Nutmeg,50,65,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+72,Okra,83,100,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+73,Olive,86,110,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+74,Onion,15,26,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+75,Orange,61,76,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+76,Other (Specify),119,998,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+77,Paddy,2,12,Cereals,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+78,Palm Tree,30,44,Oilseeds,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+79,Passion Fruit,55,70,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+80,Pawpaw,59,74,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+81,Peaches,69,84,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+82,Pears,68,83,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+83,Pigeon Pea,21,34,Pulses,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+84,Pineapple,60,75,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+85,Plums,66,81,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+86,Pomegranate,91,205,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+87,Pomelo,53,68,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+88,Pumpkin Leaves,116,906,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+89,Pumpkins,75,92,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+90,Pyrethrum,37,52,Cash Crops,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+91,Rambutan,82,99,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+92,Roselle,96,214,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+93,Rubber,42,57,Cash Crops,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+94,Seaweed,9,19,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+95,Sesame,28,42,Oilseeds,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+96,Sisal,38,53,Cash Crops,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+97,Sorghum,3,13,Cereals,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+98,Soursop,97,215,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+99,Soyabeans,33,47,Oilseeds,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+100,Spinach,71,88,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+101,Squash,118,921,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+102,Strawberry,95,213,Fruits and Nuts,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+103,Sugar Cane,45,60,Cash Crops,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+104,Sunflower,27,41,Oilseeds,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+105,Sweet Potato Leaves,112,902,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+106,Sweet Potatoes,11,22,Roots and Tubers,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+107,Sweet/Bell Pepper,111,901,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+108,Tamarind,48,63,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+109,Tea,40,55,Cash Crops,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+110,Timber,101,304,Non-Food,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+111,Tobacco,36,51,Cash Crops,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+112,Tomatoes,109,871,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+113,Tungamaa,93,211,Other,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+114,Upupu,105,311,Other,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+115,Vanilla,94,212,Spices,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+116,Water Mellon,78,95,Vegetables,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+117,Wattle,43,58,Cash Crops,False,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+118,Wheat,6,16,Cereals,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH
+119,Yams,13,24,Roots and Tubers,True,NBS AASS Catalog 69 Value Labels,VERIFIED_EXACT_MATCH

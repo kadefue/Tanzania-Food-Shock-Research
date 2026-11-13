@@ -1,0 +1,117 @@
+# Variable Dictionary & Schema Specifications
+# Tanzania AASS 2024/2025 (Catalog 69)
+
+tables:
+  AASS2025:
+    file: "AASS2025.dta"
+    description: "Master survey cover roster containing geographic, sampling, and household metadata."
+    primary_key: ["HHFARMID"]
+    required_variables:
+      - name: "HHFARMID"
+        type: "string/int"
+        description: "Unique household agricultural holding identifier"
+      - name: "Holding_type"
+        type: "float"
+        description: "1.0 = Commercial Large Scale (Census), 2.0 = Household Smallholder (Sample)"
+      - name: "region_id"
+        type: "float"
+        description: "Administrative region code (1 to 31)"
+      - name: "district_id"
+        type: "float"
+        description: "Administrative district code"
+      - name: "ward_id"
+        type: "float"
+        description: "Administrative ward code"
+      - name: "ea_id"
+        type: "float"
+        description: "Primary Sampling Unit (Enumeration Area ID)"
+      - name: "stratum_id"
+        type: "float"
+        description: "Stratification identifier for survey design"
+      - name: "Adjusted_HH_weight"
+        type: "float"
+        description: "Official survey sampling expansion weight (calibrated to smallholder population)"
+
+  MASIKAPLOT:
+    file: "MASIKAPLOT.dta"
+    description: "Plot roster for the Masika (main long-rains) season."
+    primary_key: ["HHFARMID", "plot_id"]
+    required_variables:
+      - name: "HHFARMID"
+        type: "string/int"
+        description: "Household holding identifier"
+      - name: "plot_id"
+        type: "float/int"
+        description: "Unique plot identifier within holding"
+      - name: "s6q03_Hectares"
+        type: "float"
+        description: "Measured/calculated plot area in hectares"
+      - name: "s6q02_Acre"
+        type: "float"
+        description: "Reported plot area in acres"
+
+  VULIPLOT:
+    file: "VULIPLOT.dta"
+    description: "Plot roster for the Vuli (short-rains) season."
+    primary_key: ["HHFARMID", "plot_id"]
+    required_variables:
+      - name: "HHFARMID"
+        type: "string/int"
+        description: "Household holding identifier"
+      - name: "plot_id"
+        type: "float/int"
+        description: "Unique plot identifier within holding"
+      - name: "s4q03_Hectares"
+        type: "float"
+        description: "Measured/calculated plot area in hectares"
+      - name: "s4q02_Acre"
+        type: "float"
+        description: "Reported plot area in acres"
+
+  MASIKACROP:
+    file: "MASIKACROP.dta"
+    description: "Crop production roster for the Masika season."
+    primary_key: ["HHFARMID", "plot_id", "MASIKACROP__id"]
+    required_variables:
+      - name: "HHFARMID"
+        type: "string/int"
+        description: "Household holding identifier"
+      - name: "plot_id"
+        type: "float/int"
+        description: "Plot identifier"
+      - name: "MASIKACROP__id"
+        type: "int"
+        description: "Masika crop code (value labeled 1 to 119)"
+      - name: "s7q02"
+        type: "float"
+        description: "Percentage/share of plot area dedicated to this crop"
+      - name: "harvest_ton"
+        type: "float"
+        description: "NBS cleaned/imputed harvest production in metric tonnes"
+      - name: "s7q08_Tonne"
+        type: "float"
+        description: "Reported harvest production in metric tonnes"
+
+  VULICROP:
+    file: "VULICROP.dta"
+    description: "Crop production roster for the Vuli season."
+    primary_key: ["HHFARMID", "plot_id", "VULICROP__id"]
+    required_variables:
+      - name: "HHFARMID"
+        type: "string/int"
+        description: "Household holding identifier"
+      - name: "plot_id"
+        type: "float/int"
+        description: "Plot identifier"
+      - name: "VULICROP__id"
+        type: "int"
+        description: "Vuli crop code (value labeled 1 to 119; distinct numeric code from Masika)"
+      - name: "s5q02"
+        type: "float"
+        description: "Percentage/share of plot area dedicated to this crop"
+      - name: "harvest_ton"
+        type: "float"
+        description: "NBS cleaned/imputed harvest production in metric tonnes"
+      - name: "s5q08_Tonne"
+        type: "float"
+        description: "Reported harvest production in metric tonnes"

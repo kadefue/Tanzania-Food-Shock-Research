@@ -1,0 +1,4 @@
+farming_system,unweighted_sample_size,weighted_population_est,mean_cultivated_area_ha,median_cultivated_area_ha,mean_hh_size,median_hh_size,top_regions
+Bimodal (Both Seasons),3203,1769593.5,1.72,1.01,5.54,5.0,4;20;3
+Unimodal Masika-Only,8801,5290693.4,2.3,1.32,4.96,5.0,14;12;1
+Unimodal Vuli-Only,3520,2183514.1,1.55,0.82,5.66,5.0,21;19;25

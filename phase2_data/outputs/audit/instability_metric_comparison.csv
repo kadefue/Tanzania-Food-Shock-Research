@@ -1,0 +1,7 @@
+metric_variable,metric_description,total_observations,valid_observations,missing_count,mean,std,median,p25,p75,boundary_spikes_count,boundary_spikes_pct,recommended_for_phase3
+y_vol_legacy,"Original Bounded Ratio [0, 2]",1560,1560,0,0.828,0.657,0.667,0.286,1.295,214,13.72,DEFECTIVE_BOUNDARY_ARTIFACT
+abs_yield_diff_kg_ha,Same-Crop Absolute Difference (kg/ha),1560,1560,0,1226.134,4676.395,489.152,165.18,1148.786,0,0.0,RECOMMENDED
+rel_yield_change,Relative Yield Change ((Y_v - Y_m) / Y_m),1560,1433,127,0.631,3.186,-0.005,-0.515,0.706,0,0.0,DEFECTIVE_BOUNDARY_ARTIFACT
+log_yield_ratio,Log Yield Ratio ln(Y_v / Y_m),1560,1327,233,-0.011,1.072,0.0,-0.518,0.607,0,0.0,RECOMMENDED
+symm_relative_diff,Symmetric Relative Difference (2|Y_m - Y_v| / (Y_m + Y_v)),1560,1541,19,0.838,0.655,0.667,0.286,1.308,214,13.89,DEFECTIVE_BOUNDARY_ARTIFACT
+downside_shortfall_kg_ha,"Downside Yield Shortfall (max(0, Y_m - Y_v))",1560,1560,0,827.036,4684.5,0.0,0.0,495.16,0,0.0,RECOMMENDED
