@@ -1,8 +1,0 @@
-variable_name,role_in_design,description,is_present,non_null_records,unique_values_count,min_value,max_value,audit_verdict
-HHFARMID,ID,Secondary Sampling Unit (SSU) / Household Agricultural Holding ID,True,3,3,,,VERIFIED_OPERATIONAL
-ea_id,Cluster / PSU,Primary Sampling Unit (PSU) / Enumeration Area ID,True,3,3,101.0,103.0,VERIFIED_OPERATIONAL
-stratum_id,Stratum,Survey Stratification Identifier,True,3,3,10.0,30.0,VERIFIED_OPERATIONAL
-Adjusted_HH_weight,Weight,Final Post-Stratified Survey Expansion Weight,True,3,3,450.0,650.0,VERIFIED_OPERATIONAL
-region_id,Geographic Strata,Administrative Region (1 to 31),True,3,3,1.0,3.0,VERIFIED_OPERATIONAL
-district_id,Geographic Sub-strata,Administrative District,True,3,3,101.0,103.0,VERIFIED_OPERATIONAL
-Holding_type,Domain Indicator,"1=Commercial Large Scale Census, 2=Smallholder Sample",True,3,1,2.0,2.0,VERIFIED_OPERATIONAL

@@ -1,2 +1,0 @@
-population_key,population_description,unweighted_sample_size,weighted_population_estimate,weight_min,weight_q25,weight_median,weight_q75,weight_max,weight_mean,weight_cv,psu_cluster_count,strata_count
-pop_a,Population A: All Valid Smallholders,3,600.0,100.0,150.0,200.0,250.0,300.0,200.0,0.5,2,2
